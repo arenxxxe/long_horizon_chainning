@@ -141,10 +141,9 @@ class SkillLearningTrainer(BaseTrainer):
 
         # 反向传播
         if not seed_until_steps(ep_start_step):
-            if self.is_chef:
-                metrics = self.agent.update(self.buffer, self.demo_buffer)
-            if self.use_multiple_workers:
-                self.agent.sync_networks()
+            
+            metrics = self.agent.update(self.buffer, self.demo_buffer)
+
 
         # 日志记录
         if metrics is not None and log_every_episodes(self.global_episode) and self.is_chef:
@@ -213,7 +212,7 @@ class SkillLearningTrainer(BaseTrainer):
 
 ######初始化并配置环境
     
-def make_env(cfg)：
+def make_env(cfg):
     env = gym.make(cfg.task)
     if cfg.task == 'L-v0':
         if cfg.skill_chaining:
@@ -698,6 +697,11 @@ class HerReplayBufferWithGT:
 
 #神经网络
 #经典工厂模式 
+    
+##来点头文件 测试用
+import torch.nn as nn
+import torch
+import  numpy as np
 AGENTS = {
     'SL_DDPGBC': SkillLearningDDPGBC,
     'SL_DEX': SkillLearningDEX,
@@ -706,6 +710,1000 @@ AGENTS = {
     'SC_SAC': SkillChainingSAC,
     'SC_SAC_SIL': SkillChainingSACSIL,
 }
+
+class BaseAgent(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def train(self, training=True):
+        self.training = training
+        self.actor.train(training)
+        self.critic.train(training)
+
+    def get_samples(self, replay_buffer):
+		# sample replay buffer 
+        transitions = replay_buffer.sample()
+
+        # preprocess
+        o, o_next, g = transitions['obs'], transitions['obs_next'], transitions['g']
+        transitions['obs'], transitions['g'] = self._preproc_og(o, g)
+        transitions['obs_next'], transitions['g_next'] = self._preproc_og(o_next, g)
+
+        obs_norm = self.o_norm.normalize(transitions['obs'])
+        g_norm = self.g_norm.normalize(transitions['g'])
+        inputs_norm = np.concatenate([obs_norm, g_norm], axis=1)
+
+        obs_next_norm = self.o_norm.normalize(transitions['obs_next'])
+        g_next_norm = self.g_norm.normalize(transitions['g_next'])
+        inputs_next_norm = np.concatenate([obs_next_norm, g_next_norm], axis=1)
+
+        obs = self.to_torch(inputs_norm)
+        next_obs = self.to_torch(inputs_next_norm)
+        action = self.to_torch(transitions['actions'])
+        reward = self.to_torch(transitions['r'])
+        done = self.to_torch(transitions['dones'])
+
+        return obs, action, reward, done, next_obs
+    
+    def update_target(self):
+        # Update the frozen target models
+        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+    def update_normalizer(self, episode_batch):
+        mb_obs, mb_ag, mb_g, mb_actions, dones = episode_batch.obs, episode_batch.ag, episode_batch.g, \
+                                                    episode_batch.actions, episode_batch.dones
+        mb_obs_next = mb_obs[:, 1:, :]
+        mb_ag_next = mb_ag[:, 1:, :]
+        # get the number of normalization transitions
+        num_transitions = mb_actions.shape[1]
+        # create the new buffer to store them
+        buffer_temp = {'obs': mb_obs, 
+                       'ag': mb_ag,
+                       'g': mb_g, 
+                       'actions': mb_actions, 
+                       'obs_next': mb_obs_next,
+                       'ag_next': mb_ag_next,
+                       }
+        transitions = self.her_sampler.sample_her_transitions(buffer_temp, num_transitions)
+        obs, g = transitions['obs'], transitions['g']
+        # pre process the obs and g
+        transitions['obs'], transitions['g'] = self._preproc_og(obs, g)
+        # update
+        self.o_norm.update(transitions['obs'])
+        self.g_norm.update(transitions['g'])
+        # recompute the stats
+        self.o_norm.recompute_stats()
+        self.g_norm.recompute_stats()
+
+    def _preproc_og(self, o, g):
+        o = np.clip(o, -self.clip_obs, self.clip_obs)
+        g = np.clip(g, -self.clip_obs, self.clip_obs)
+        return o, g
+
+    def _preproc_inputs(self, o, g, dim=0, device=None):
+        o_norm = self.o_norm.normalize(o, device=device)
+        g_norm = self.g_norm.normalize(g, device=device)
+ 
+        if isinstance(o_norm, np.ndarray):
+            inputs = np.concatenate([o_norm, g_norm], dim)
+            inputs = torch.tensor(inputs, dtype=torch.float32).unsqueeze(0).to(self.device)
+        elif isinstance(o_norm, torch.Tensor): 
+            inputs = torch.cat([o_norm, g_norm], dim=1)
+        return inputs
+
+    def to_torch(self, array, copy=True):
+        if copy:
+            return torch.tensor(array, dtype=torch.float32).to(self.device)
+        return torch.as_tensor(array).to(self.device)
+
+
+class SkillLearningDDPGBC(BaseAgent):
+    def __init__(
+        self,
+        env_params,
+        sampler,
+        agent_cfg,
+    ):  
+        super().__init__()
+
+        self.discount = agent_cfg.discount
+        self.reward_scale = agent_cfg.reward_scale
+        self.update_epoch = agent_cfg.update_epoch
+        self.her_sampler = sampler    # same as which in buffer
+        self.device = agent_cfg.device
+
+        self.noise_eps = agent_cfg.noise_eps
+        self.aux_weight = agent_cfg.aux_weight
+        self.p_dist = agent_cfg.p_dist
+        self.soft_target_tau = agent_cfg.soft_target_tau
+
+        self.clip_obs = agent_cfg.clip_obs
+        self.norm_clip = agent_cfg.norm_clip
+        self.norm_eps = agent_cfg.norm_eps
+
+        self.dima = env_params['act']
+        self.dimo, self.dimg = env_params['obs'], env_params['goal']
+
+        self.max_action = env_params['max_action']
+        self.act_sampler = env_params['act_rand_sampler']
+
+        # normarlizer
+        self.o_norm = Normalizer(
+            size=self.dimo, 
+            default_clip_range=self.norm_clip,
+            eps=agent_cfg.norm_eps
+        )
+        self.g_norm = Normalizer(
+            size=self.dimg, 
+            default_clip_range=self.norm_clip,
+            eps=agent_cfg.norm_eps
+        )
+
+        # build policy
+        self.actor = DeterministicActor(
+            self.dimo+self.dimg, self.dima, agent_cfg.hidden_dim).to(agent_cfg.device)
+        self.actor_target = copy.deepcopy(self.actor).to(agent_cfg.device)
+
+        self.critic = Critic(
+            self.dimo+self.dimg+self.dima, agent_cfg.hidden_dim).to(agent_cfg.device)
+        self.critic_target = copy.deepcopy(self.critic).to(agent_cfg.device)
+
+        # optimizer
+        self.actor_optimizer = torch.optim.Adam(
+            self.actor.parameters(), lr=agent_cfg.actor_lr
+        )
+        self.critic_optimizer = torch.optim.Adam(
+            self.critic.parameters(), lr=agent_cfg.critic_lr
+        )
+
+    def get_action(self, state, noise=False):
+        # random action at initial stage
+        with torch.no_grad():
+            o, g = state['observation'], state['desired_goal']
+            input_tensor = self._preproc_inputs(o, g)
+            action = self.actor(input_tensor).cpu().data.numpy().flatten()
+
+            # Gaussian noise
+            if noise:
+                action = (action + self.max_action * self.noise_eps * np.random.randn(action.shape[0])).clip(
+                    -self.max_action, self.max_action)
+
+        return action
+    
+    def update_critic(self, obs, action, reward, next_obs):
+        metrics = dict()
+
+        with torch.no_grad():
+            action_out = self.actor_target(next_obs)
+            target_V = self.critic_target(next_obs, action_out)
+            target_Q = self.reward_scale * reward + (self.discount * target_V).detach()
+
+            clip_return = 1 / (1 - self.discount)
+            target_Q = torch.clamp(target_Q, -clip_return, 0).detach()
+
+        Q = self.critic(obs, action)
+        critic_loss = F.mse_loss(Q, target_Q)
+
+        # optimize critic loss
+        self.critic_optimizer.zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer.step()      
+        
+        metrics['critic_target_q'] = target_Q.mean().item()
+        metrics['critic_q'] = Q.mean().item()
+        metrics['critic_loss'] = critic_loss.item()
+        return metrics
+
+    def update_actor(self, obs, action, is_demo=False):
+        metrics = dict()
+
+        action_out = self.actor(obs)
+        Q_out = self.critic(obs, action_out)
+
+        # refer to https://arxiv.org/pdf/1709.10089.pdf
+        if is_demo:
+            bc_loss = self.norm_dist(action_out, action)
+            # q-filter
+            with torch.no_grad():
+                q_filter = self.critic_target(obs, action) >= self.critic_target(obs, action_out)
+            bc_loss = q_filter * bc_loss
+            actor_loss = -(Q_out + self.aux_weight * bc_loss).mean()
+        else:
+            actor_loss = -(Q_out).mean()
+
+        actor_loss += action_out.pow(2).mean()
+
+        # optimize actor loss
+        self.actor_optimizer.zero_grad()
+        actor_loss.backward()
+        self.actor_optimizer.step()
+
+        metrics['actor_loss'] = actor_loss.item()
+        return metrics
+
+    def update(self, replay_buffer, demo_buffer):
+        metrics = dict()
+
+        for i in range(self.update_epoch):
+            # sample from replay buffer 
+            obs, action, reward, done, next_obs = self.get_samples(replay_buffer)
+    
+            # ppdate critic and actor
+            metrics.update(self.update_critic(obs, action, reward, next_obs))
+            metrics.update(self.update_actor(obs, action))
+
+            # sample from demo buffer 
+            obs, action, reward, done, next_obs = self.get_samples(demo_buffer)
+
+            # update critic and actor
+            self.update_critic(obs, action, reward, next_obs)
+            self.update_actor(obs, action, is_demo=True)
+
+            # update target critic and actor
+            self.update_target()
+        return metrics
+
+    def update_target(self):
+        # update the frozen target models
+        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+        for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+    def norm_dist(self, a1, a2):
+        self.p_dist = np.inf if self.p_dist == -1 else self.p_dist
+        return - torch.norm(a1 - a2, p=self.p_dist, dim=1, keepdim=True).pow(2) / self.dima 
+
+class SkillLearningDEX(SkillLearningDDPGBC):
+    def __init__(
+        self,
+        env_params,
+        sampler,
+        agent_cfg,
+    ):
+        super().__init__(env_params, sampler, agent_cfg)
+        self.k = 5
+
+    def get_samples(self, replay_buffer):
+        '''Addtionally sample next action for guidance propagation'''
+        transitions = replay_buffer.sample()
+
+        # preprocess
+        o, o_next, g = transitions['obs'], transitions['obs_next'], transitions['g']
+        transitions['obs'], transitions['g'] = self._preproc_og(o, g)
+        transitions['obs_next'], transitions['g_next'] = self._preproc_og(o_next, g)
+
+        obs_norm = self.o_norm.normalize(transitions['obs'])
+        g_norm = self.g_norm.normalize(transitions['g'])
+        inputs_norm = np.concatenate([obs_norm, g_norm], axis=1)
+
+        obs_next_norm = self.o_norm.normalize(transitions['obs_next'])
+        g_next_norm = self.g_norm.normalize(transitions['g_next'])
+        inputs_next_norm = np.concatenate([obs_next_norm, g_next_norm], axis=1)
+
+        obs = self.to_torch(inputs_norm)
+        next_obs = self.to_torch(inputs_next_norm)
+        action = self.to_torch(transitions['actions'])
+        next_action = self.to_torch(transitions['next_actions'])
+        reward = self.to_torch(transitions['r'])
+        done = self.to_torch(transitions['dones'])
+        return obs, action, reward, done, next_obs, next_action
+
+    def update_critic(self, obs, action, reward, next_obs, next_obs_demo, next_action_demo):
+        with torch.no_grad():
+            next_action_out = self.actor_target(next_obs)
+            target_V = self.critic_target(next_obs, next_action_out)
+            target_Q = self.reward_scale * reward + (self.discount * target_V).detach()
+
+            # exploration guidance
+            topk_actions = self.compute_propagated_actions(next_obs, next_obs_demo, next_action_demo)
+            act_dist = self.norm_dist(topk_actions, next_action_out)
+            target_Q += self.aux_weight * act_dist 
+
+            clip_return = 5 / (1 - self.discount)
+            target_Q = torch.clamp(target_Q, -clip_return, 0).detach()
+
+        Q = self.critic(obs, action)
+        critic_loss = F.mse_loss(Q, target_Q)
+
+        # optimize critic loss
+        self.critic_optimizer.zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer.step() 
+        
+        metrics = AttrDict(
+            critic_q=Q.mean().item(),
+            critic_target_q=target_Q.mean().item(),
+            critic_loss=critic_loss.item(),
+            bacth_reward=reward.mean().item()
+        )
+        return metrics
+
+    def update_actor(self, obs, obs_demo, action_demo):
+        action_out = self.actor(obs)
+        Q_out = self.critic(obs, action_out)
+
+        topk_actions = self.compute_propagated_actions(obs, obs_demo, action_demo)
+        act_dist = self.norm_dist(action_out, topk_actions) 
+        actor_loss = -(Q_out + self.aux_weight * act_dist).mean()
+        actor_loss += action_out.pow(2).mean()
+
+        # optimize actor loss
+        self.actor_optimizer.zero_grad()
+        actor_loss.backward()
+        self.actor_optimizer.step()
+
+        metrics = AttrDict(
+            actor_loss=actor_loss.item(),
+            act_dist=act_dist.mean().item()
+        )
+        return metrics
+
+    def update(self, replay_buffer, demo_buffer):
+        for i in range(self.update_epoch):
+            # sample from replay buffer 
+            obs, action, reward, done, next_obs, next_action = self.get_samples(replay_buffer)
+            obs_, action_, reward_, done_, next_obs_, next_action_ = self.get_samples(demo_buffer)
+
+            with torch.no_grad():
+                next_action_out = self.actor_target(next_obs)
+                target_V = self.critic_target(next_obs, next_action_out)
+                target_Q = self.reward_scale * reward + (self.discount * target_V).detach()
+
+                l2_pair = torch.cdist(next_obs, next_obs_)
+                topk_value, topk_indices = l2_pair.topk(self.k, dim=1, largest=False)
+                topk_weight = F.softmin(topk_value.sqrt(), dim=1)
+                topk_actions = torch.ones_like(next_action_)
+
+                for i in range(topk_actions.size(0)):
+                    topk_actions[i] = torch.mm(topk_weight[i].unsqueeze(0), next_action_[topk_indices[i]]).squeeze(0)
+                intr = self.norm_dist(topk_actions, next_action_out)
+                target_Q += self.aux_weight * intr 
+                next_action_out_ =self.actor_target(next_obs_)
+                target_V_ = self.critic_target(next_obs_, next_action_out_)
+                target_Q_ = self.reward_scale * reward_ + (self.discount * target_V_).detach()
+                intr_ = self.norm_dist(next_action_, next_action_out_)
+                target_Q_ += self.aux_weight * intr_ 
+
+                clip_return = 5 / (1 - self.discount)
+                target_Q = torch.clamp(target_Q, -clip_return, 0).detach()
+                target_Q_ = torch.clamp(target_Q_, -clip_return, 0).detach()
+
+
+            Q = self.critic(obs, action)
+            Q_ = self.critic(obs_, action_)
+            critic_loss = F.mse_loss(Q, target_Q) + F.mse_loss(Q_, target_Q_)
+
+            # optimize critic loss
+            self.critic_optimizer.zero_grad()
+            critic_loss.backward()
+            self.critic_optimizer.step()      
+
+            action_out = self.actor(obs)
+            action_out_ = self.actor(obs_)
+            Q_out = self.critic(obs, action_out)
+            Q_out_ = self.critic(obs_, action_out_)
+
+            with torch.no_grad():
+                l2_pair = torch.cdist(obs, obs_)
+                topk_value, topk_indices = l2_pair.topk(self.k, dim=1, largest=False)
+                topk_weight = F.softmin(topk_value.sqrt(), dim=1)
+                topk_actions = torch.ones_like(action)
+                
+                for i in range(topk_actions.size(0)):
+                    topk_actions[i] = torch.mm(topk_weight[i].unsqueeze(0), action_[topk_indices[i]]).squeeze(0)
+
+            intr2 = self.norm_dist(action_out, topk_actions)
+            intr3 = self.norm_dist(action_out_, action_)
+
+            # Refer to https://arxiv.org/pdf/1709.10089.pdf
+            actor_loss = - (Q_out + self.aux_weight * intr2).mean()
+            actor_loss += -(Q_out_ + self.aux_weight * intr3).mean()
+
+            actor_loss += action_out.pow(2).mean()
+            actor_loss += action_out_.pow(2).mean()
+
+            #actor_loss += self.action_l2 * action_out.pow(2).mean()
+
+            # Optimize actor loss
+            self.actor_optimizer.zero_grad()
+            actor_loss.backward()
+            self.actor_optimizer.step()
+
+            self.update_target()
+
+        metrics = AttrDict(
+            batch_reward=reward.mean().item(),
+            critic_q=Q.mean().item(),
+            critic_q_=Q_.mean().item(),
+            critic_target_q=target_Q.mean().item(),
+            critic_loss=critic_loss.item(),
+            actor_loss=actor_loss.item()
+        )
+        return metrics
+
+
+class SkillChainingDDPG(BaseAgent):
+    def __init__(
+            self,
+            env_params,
+            agent_cfg,
+            sl_agent,
+    ):
+        super().__init__()
+
+        self.sl_agent = sl_agent
+
+        self.discount = agent_cfg.discount
+        self.reward_scale = agent_cfg.reward_scale
+        self.update_epoch = agent_cfg.update_epoch
+        self.device = agent_cfg.device
+        self.env_params = env_params
+
+        self.random_eps = agent_cfg.random_eps
+        self.noise_eps = agent_cfg.noise_eps
+        self.soft_target_tau = agent_cfg.soft_target_tau
+
+        self.normalize = agent_cfg.normalize
+        self.clip_obs = agent_cfg.clip_obs
+        self.norm_clip = agent_cfg.norm_clip
+        self.norm_eps = agent_cfg.norm_eps
+        self.intr_reward = agent_cfg.intr_reward
+        self.raw_env_reward = agent_cfg.raw_env_reward
+
+        self.dima = env_params['act_sc']   #
+        self.dimo = env_params['obs']
+        self.max_action = env_params['max_action_sc']
+        self.goal_adapator = env_params['adaptor_sc']
+
+        # TODO: normarlizer 
+        self.o_norm = {subtask: Normalizer(
+            size=self.dimo, 
+            default_clip_range=self.norm_clip,
+            eps=agent_cfg.norm_eps) for subtask in env_params['middle_subtasks']}
+
+        # build policy
+        self.actor = SkillChainingActor(
+            in_dim=self.dimo, 
+            out_dim=self.dima, 
+            hidden_dim=agent_cfg.hidden_dim, 
+            max_action=self.max_action,
+            middle_subtasks=env_params['middle_subtasks'],
+            last_subtask=env_params['last_subtask']
+        ).to(agent_cfg.device)
+        self.actor_target = copy.deepcopy(self.actor).to(agent_cfg.device)
+
+        self.critic = SkillChainingCritic(
+            in_dim=self.dimo+self.dima, 
+            hidden_dim=agent_cfg.hidden_dim, 
+            middle_subtasks=env_params['middle_subtasks'],
+            last_subtask=env_params['last_subtask']
+        ).to(agent_cfg.device)
+        self.critic_target = copy.deepcopy(self.critic).to(agent_cfg.device)
+
+        # optimizer
+        self.actor_optimizer = {subtask: torch.optim.Adam(
+            self.actor.parameters(), lr=agent_cfg.actor_lr) for subtask in env_params['middle_subtasks']}
+        self.critic_optimizer = {subtask: torch.optim.Adam(
+            self.critic.parameters(), lr=agent_cfg.critic_lr) for subtask in env_params['middle_subtasks']}
+
+    def init(self, task, sl_agent):
+        '''Initialize the actor, critic and normalizers of last subtask.'''
+        self.actor.init_last_subtask_actor(task, sl_agent[task].actor)
+        self.actor_target.init_last_subtask_actor(task, sl_agent[task].actor_target)
+        self.critic.init_last_subtask_q(task, sl_agent[task].critic)
+        self.critic_target.init_last_subtask_q(task, sl_agent[task].critic_target)
+        self.sl_normarlizer = {subtask: sl_agent[subtask]._preproc_inputs
+                                for subtask in self.env_params['subtasks']}
+
+    def get_samples(self, replay_buffer, subtask):
+        next_subtask = self.env_params['next_subtasks'][subtask]
+
+        obs, action, reward, next_obs, done, gt_action, idxs = replay_buffer[subtask].sample(return_idxs=True)
+        sl_norm_next_obs = self.sl_normarlizer[next_subtask](next_obs, gt_action, dim=1)    # only for terminal subtask
+        obs = self._preproc_obs(obs, subtask)
+        next_obs = self._preproc_obs(next_obs, next_subtask)
+        action = self.to_torch(action)
+        reward = self.to_torch(reward)
+        done = self.to_torch(done)
+        gt_action = self.to_torch(gt_action)
+
+        if next_subtask == self.env_params['last_subtask'] and self.raw_env_reward:
+            assert len(replay_buffer[subtask]) == len(replay_buffer[next_subtask])
+            _, _, raw_reward, _, _, _ = replay_buffer[next_subtask].sample(idxs=idxs)
+            return obs, action, reward, next_obs, done, sl_norm_next_obs, self.to_torch(raw_reward)
+
+        return obs, action, reward, next_obs, done, sl_norm_next_obs, None
+    
+    def get_action(self, state, subtask, noise=False):
+        # random action at initial stage
+        with torch.no_grad():
+            input_tensor = self._preproc_obs(state, subtask)
+            action = self.actor[subtask](input_tensor).cpu().data.numpy().flatten()
+            # Gaussian noise
+            if noise:
+                action = (action + self.max_action * self.noise_eps * np.random.randn(action.shape[0])).clip(
+                    -self.max_action, self.max_action)
+        return action
+
+    def update_critic(self, obs, action, reward, next_obs):
+        metrics = AttrDict()
+
+        with torch.no_grad():
+            action_out = self.actor_target(next_obs)
+            target_V = self.critic_target(next_obs, action_out)
+            target_Q = self.reward_scale * reward + (self.discount * target_V).detach()
+
+            clip_return = 1 / (1 - self.discount)
+            target_Q = torch.clamp(target_Q, -clip_return, 0).detach()
+
+        Q = self.critic(obs, action)
+        critic_loss = F.mse_loss(Q, target_Q)
+
+        # Optimize critic loss
+        self.critic_optimizer.zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer.step()      
+        
+        metrics = AttrDict(
+            critic_target_q=target_Q.mean().item(),
+            critic_q=Q.mean().item(),
+            critic_loss=critic_loss.item()
+        )
+        return metrics
+
+    def update_actor(self, obs, action, is_demo=False):
+        action_out = self.actor(obs)
+        Q_out = self.critic(obs, action_out)
+        actor_loss = -(Q_out).mean()
+
+        # Optimize actor loss
+        self.actor_optimizer.zero_grad()
+        actor_loss.backward()
+        self.actor_optimizer.step()
+
+        metrics = AttrDict(
+            actor_loss=actor_loss.item()
+        ) 
+        return metrics
+
+    def update(self, replay_buffer):
+        metrics = AttrDict()
+
+        for i in range(self.update_epoch):
+            # Sample from replay buffer 
+            obs, action, reward, next_obs, done = self.get_samples(replay_buffer)
+            # Update critic and actor
+            metrics.update(self.update_critic(obs, action, reward, next_obs))
+            metrics.update(self.update_actor(obs, action))
+
+        # Update target critic and actor
+        self.update_target()
+        return metrics
+
+    def _preproc_obs(self, o, subtask):
+        o = np.clip(o, -self.clip_obs, self.clip_obs)
+        if self.normalize and subtask != self.env_params.last_subtask:
+            o = self.o_norm[subtask].normalize(o)
+        inputs = torch.tensor(o, dtype=torch.float32).to(self.device)
+        return inputs
+    
+    def update_target(self):
+        # Update the frozen target models
+        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+        for param, target_param in zip(self.actor.parameters(), self.actor_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+    def update_normalizer(self, rollouts, subtask):
+        for transition in rollouts:
+            obs, _, _, _, _, _ = transition
+            # update
+            self.o_norm[subtask].update(obs)
+            # recompute the stats
+            self.o_norm[subtask].recompute_stats()
+
+
+
+class SkillChainingAWAC(SkillChainingSAC):
+    def __init__(
+            self,
+            env_params,
+            agent_cfg,
+            sl_agent
+    ):
+        super().__init__(env_params, agent_cfg, sl_agent)
+
+        # AWAC parameters
+        self.n_action_samples = agent_cfg.n_action_samples
+        self.lam = agent_cfg.lam
+
+    def update_critic(self, obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask):
+        assert subtask != self.env_params['last_subtask'] 
+
+        with torch.no_grad():
+            next_subtask = self.env_params['next_subtasks'][subtask]
+            if next_subtask != self.env_params['last_subtask']:
+                dist = self.actor(next_obs, next_subtask)
+                action_out = dist.rsample()
+                target_V = self.critic_target.q(next_obs, action_out, next_subtask)
+
+        if self.raw_env_reward and next_subtask == self.env_params['last_subtask']:
+            target_Q = self.reward_scale * reward  + (self.discount * raw_reward)
+        else:
+            target_Q =  self.reward_scale * reward + (self.discount * target_V).detach()
+
+        current_Q1, current_Q2 = self.critic(obs, action, subtask)
+        critic_loss = F.mse_loss(current_Q1, target_Q) + F.mse_loss(current_Q2, target_Q)
+
+        # Optimize critic loss
+        self.critic_optimizer[subtask].zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer[subtask].step()      
+        
+        metrics = AttrDict(
+            critic_target_q=target_Q.mean().item(),
+            critic_q=current_Q1.mean().item(),
+            critic_loss=critic_loss.item()
+        )
+        return prefix_dict(metrics, subtask + '_')
+
+    def update_actor(self, obs, action, subtask):
+        # compute log probability
+        dist = self.actor(obs, subtask)
+        log_probs = dist.log_prob(action).sum(-1, keepdim=True)
+
+        # compute exponential weight
+        weights = self._compute_weights(obs, action, subtask)
+        actor_loss = -(log_probs * weights).sum()
+
+        self.actor_optimizer[subtask].zero_grad()
+        actor_loss.backward()
+        self.actor_optimizer[subtask].step()
+
+        metrics = AttrDict(
+            log_probs=log_probs.mean(),
+            actor_loss=actor_loss.item()
+        )
+        return prefix_dict(metrics, subtask + '_')
+
+    def update(self, replay_buffer, demo_buffer):
+        metrics = AttrDict()
+
+        for i in range(self.update_epoch):
+            for subtask in self.env_params['middle_subtasks']:
+                # sample from replay buffer 
+                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(replay_buffer, subtask)
+                action = action / self.max_action
+
+                # update critic and actor
+                metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                metrics.update(self.update_actor(obs, action, subtask))
+
+                # sample from replay buffer 
+                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(demo_buffer, subtask)
+                action = action / self.max_action
+
+                # update critic and actor
+                metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                metrics.update(self.update_actor(obs, action, subtask))
+
+                # update target critic and actor
+                self.update_target()
+
+        return metrics
+    
+    def _compute_weights(self, obs, act, subtask):
+        with torch.no_grad():
+            batch_size = obs.shape[0]
+
+            # compute action-value
+            q_values = self.critic.q(obs, act, subtask)
+            
+            # sample actions
+            policy_actions = self.actor.sample_n(obs, subtask, self.n_action_samples)
+            flat_actions = policy_actions.reshape(-1, self.dima)
+
+            # repeat observation
+            reshaped_obs = obs.view(batch_size, 1, *obs.shape[1:])
+            reshaped_obs = reshaped_obs.expand(batch_size, self.n_action_samples, *obs.shape[1:])
+            flat_obs = reshaped_obs.reshape(-1, *obs.shape[1:])
+
+            # compute state-value
+            flat_v_values = self.critic.q(flat_obs, flat_actions, subtask)
+            reshaped_v_values = flat_v_values.view(obs.shape[0], -1, 1)
+            v_values = reshaped_v_values.mean(dim=1)
+
+            # compute normalized weight
+            adv_values = (q_values - v_values).view(-1)
+            weights = F.softmax(adv_values / self.lam, dim=0).view(-1, 1)
+
+        return weights * adv_values.numel()
+
+
+
+
+class SkillChainingSAC(SkillChainingDDPG):
+    def __init__(
+            self,
+            env_params,
+            agent_cfg,
+            sl_agent
+    ):
+        super(SkillChainingDDPG, self).__init__()
+
+        self.sl_agent = sl_agent
+
+        self.discount = agent_cfg.discount
+        self.reward_scale = agent_cfg.reward_scale
+        self.update_epoch = agent_cfg.update_epoch
+        self.device = agent_cfg.device
+        self.raw_env_reward = agent_cfg.raw_env_reward
+        self.env_params = env_params
+
+        # SAC parameters
+        self.learnable_temperature = agent_cfg.learnable_temperature
+        self.soft_target_tau = agent_cfg.soft_target_tau
+
+        self.normalize = agent_cfg.normalize
+        self.clip_obs = agent_cfg.clip_obs
+        self.norm_clip = agent_cfg.norm_clip
+        self.norm_eps = agent_cfg.norm_eps
+
+        self.dima = env_params['act_sc']   
+        self.dimo = env_params['obs']
+        self.max_action = env_params['max_action_sc']
+        self.goal_adapator = env_params['adaptor_sc']
+
+        # normarlizer
+        self.o_norm = Normalizer(
+            size=self.dimo, 
+            default_clip_range=self.norm_clip,
+            eps=agent_cfg.norm_eps
+        )
+
+        # build policy
+        self.actor = SkillChainingDiagGaussianActor(
+            in_dim=self.dimo, 
+            out_dim=self.dima, 
+            hidden_dim=agent_cfg.hidden_dim, 
+            max_action=self.max_action,
+            middle_subtasks=env_params['middle_subtasks'],
+            last_subtask=env_params['last_subtask']
+        ).to(agent_cfg.device)
+
+        self.critic = SkillChainingDoubleCritic(
+            in_dim=self.dimo+self.dima, 
+            hidden_dim=agent_cfg.hidden_dim, 
+            middle_subtasks=env_params['middle_subtasks'],
+            last_subtask=env_params['last_subtask']
+        ).to(agent_cfg.device)
+        self.critic_target = copy.deepcopy(self.critic).to(agent_cfg.device)
+
+        # entropy term 
+        if self.learnable_temperature:
+            self.target_entropy = -self.dima
+            self.log_alpha = {subtask : torch.tensor(
+                np.log(agent_cfg.init_temperature)).to(self.device) for subtask in env_params['middle_subtasks']}
+            for subtask in env_params['middle_subtasks']:
+                self.log_alpha[subtask].requires_grad = True
+        else:
+            self.log_alpha = {subtask : torch.tensor(
+                np.log(agent_cfg.init_temperature)).to(self.device) for subtask in env_params['middle_subtasks']}
+
+        # optimizer
+        self.actor_optimizer = {subtask: torch.optim.Adam(
+            self.actor.parameters(), lr=agent_cfg.actor_lr) for subtask in env_params['middle_subtasks']}
+        self.critic_optimizer = {subtask: torch.optim.Adam(
+            self.critic.parameters(), lr=agent_cfg.critic_lr) for subtask in env_params['middle_subtasks']}
+        self.temp_optimizer = {subtask: torch.optim.Adam(
+            [self.log_alpha[subtask]], lr=agent_cfg.temp_lr) for subtask in env_params['middle_subtasks']}
+
+    def init(self, task, sl_agent):
+        '''Initialize the actor, critic and normalizers of last subtask.'''
+        self.actor.init_last_subtask_actor(task, sl_agent[task].actor)
+        self.critic.init_last_subtask_q(task, sl_agent[task].critic)
+        self.critic_target.init_last_subtask_q(task, sl_agent[task].critic_target)
+        self.sl_normarlizer = {subtask: sl_agent[subtask]._preproc_inputs
+                                for subtask in self.env_params['subtasks']}
+
+    def alpha(self, subtask):
+        return self.log_alpha[subtask].exp()
+
+    def get_action(self, state, subtask, noise=False):
+        with torch.no_grad():
+        #state = {key: self.to_torch(state[key].reshape([1, -1])) for key in state.keys()}  # unsqueeze
+            input_tensor = self._preproc_obs(state, subtask)
+            dist = self.actor(input_tensor, subtask)
+            if noise:
+                action = dist.sample()
+            else:
+                action = dist.mean
+
+        return action.cpu().data.numpy().flatten() * self.max_action
+
+    def get_q_value(self, state, action, subtask):
+        with torch.no_grad():
+            input_tensor = self._preproc_obs(state, subtask)
+            action = self.to_torch(action)
+            q_value = self.critic.q(input_tensor, action, subtask)
+
+        return q_value
+
+    def update_critic(self, obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask):
+        assert subtask != self.env_params['last_subtask'] 
+
+        with torch.no_grad():
+            next_subtask = self.env_params['next_subtasks'][subtask]
+            if next_subtask != self.env_params['last_subtask']:
+                dist = self.actor(next_obs, next_subtask)
+                action_out = dist.rsample()
+                log_prob = dist.log_prob(action_out).sum(-1, keepdim=True)
+                target_V = self.critic_target.q(next_obs, action_out, next_subtask)
+                target_V = target_V - self.alpha(next_subtask).detach() * log_prob
+            else:
+                action_out = self.actor[next_subtask](sl_norm_next_obs)
+                target_V = self.critic[next_subtask](sl_norm_next_obs, action_out).squeeze(0)
+
+        if self.raw_env_reward and next_subtask == self.env_params['last_subtask']:
+            target_Q = self.reward_scale * reward  + (self.discount * raw_reward)
+        else:
+            target_Q =  self.reward_scale * reward + (self.discount * target_V).detach()
+
+        current_Q1, current_Q2 = self.critic(obs, action, subtask)
+        critic_loss = F.mse_loss(current_Q1, target_Q) + F.mse_loss(current_Q2, target_Q)
+
+        # optimize critic loss
+        self.critic_optimizer[subtask].zero_grad()
+        critic_loss.backward()
+        self.critic_optimizer[subtask].step()      
+        
+        metrics = AttrDict(
+            critic_target_q=target_Q.mean().item(),
+            critic_q=current_Q1.mean().item(),
+            critic_loss=critic_loss.item()
+        )
+        return prefix_dict(metrics, subtask + '_')
+
+    def update_actor_and_alpha(self, obs, subtask):
+        # compute log probability
+        dist = self.actor(obs, subtask)
+        action = dist.rsample()
+        log_probs = dist.log_prob(action).sum(-1, keepdim=True)
+
+        # compute state value
+        actor_Q = self.critic.q(obs, action, subtask)
+        actor_loss = (self.alpha(subtask).detach() * log_probs - actor_Q).mean()
+
+        # optimize actor loss
+        self.actor_optimizer[subtask].zero_grad()
+        actor_loss.backward()
+        self.actor_optimizer[subtask].step()
+
+        metrics = AttrDict(
+            log_probs=log_probs.mean(),
+            actor_loss=actor_loss.item()
+        )
+
+        # compute temp loss
+        if self.learnable_temperature:
+            temp_loss = (self.alpha(subtask) * (-log_probs - self.target_entropy).detach()).mean()
+            self.temp_optimizer[subtask].zero_grad()
+            temp_loss.backward()
+            self.temp_optimizer[subtask].step()
+
+            metrics.update(AttrDict(
+                temp_loss=temp_loss.item(),
+                temp=self.alpha(subtask)
+            ))
+        return prefix_dict(metrics, subtask + '_')
+
+    def update(self, replay_buffer, demo_buffer):
+        metrics = AttrDict()
+
+        for i in range(self.update_epoch):
+            for subtask in self.env_params['middle_subtasks']:
+                # sample from replay buffer 
+                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(replay_buffer, subtask)
+                action = action / self.max_action
+
+                # update critic and actor
+                metrics.update(self.update_critic( obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                metrics.update(self.update_actor_and_alpha(obs, subtask))
+                
+                # update target critic and actor
+                self.update_target()
+
+        return metrics
+
+    def update_target(self):
+        # update the frozen target models
+        for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
+            target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
+
+class SkillChainingSACSIL(SkillChainingAWAC):
+    def __init__(
+            self,
+            env_params,
+            agent_cfg,
+            sl_agent
+    ):
+        super().__init__(env_params, agent_cfg, sl_agent)
+        self.policy_delay = agent_cfg.policy_delay
+
+    def update_actor_and_alpha(self, obs, action, subtask, sil=False):
+        if sil:
+            #metrics = super(SkillChainingSACSIL, self).update_actor(obs, action, subtask)
+            # compute log probability
+            dist = self.actor(obs, subtask)
+            log_probs = dist.log_prob(action).sum(-1, keepdim=True)
+            # compute exponential weight
+            weights = self._compute_weights(obs, action, subtask)
+            actor_loss = -(log_probs * weights).sum()
+
+            # optimize actor loss
+            self.actor_optimizer[subtask].zero_grad()
+            actor_loss.backward()
+            self.actor_optimizer[subtask].step()
+
+            metrics = AttrDict(
+                log_probs=log_probs.mean(),
+                actor_loss=actor_loss.item()
+            )
+            metrics = prefix_dict(metrics, 'sil_')
+        else:
+            # compute log probability
+            #metrics = super(SkillChainingAWAC, self).update_actor_and_alpha(obs, subtask)
+            dist = self.actor(obs, subtask)
+            action = dist.rsample()
+            log_probs = dist.log_prob(action).sum(-1, keepdim=True)
+            # compute state value
+            actor_Q = self.critic.q(obs, action, subtask)
+            actor_loss = (- actor_Q).mean() 
+
+            # optimize actor loss
+            self.actor_optimizer[subtask].zero_grad()
+            actor_loss.backward()
+            self.actor_optimizer[subtask].step()
+
+            metrics = AttrDict(
+                log_probs=log_probs.mean(),
+                actor_loss=actor_loss.item()
+            )
+
+        return prefix_dict(metrics, subtask + '_')
+
+    def update(self, replay_buffer, demo_buffer):
+        metrics = AttrDict()
+
+        for subtask in self.env_params['middle_subtasks']:
+            for i in range(self.update_epoch):
+                # sample from replay buffer 
+                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(replay_buffer, subtask)
+                action = (action / self.max_action)
+
+                # update critic and actor
+                metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                if (i + 1) % self.policy_delay == 0:
+                    metrics.update(self.update_actor_and_alpha(obs, action, subtask, sil=False))
+                
+                # sample from replay buffer 
+                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(demo_buffer, subtask)
+                action = (action / self.max_action)
+
+                # update actor
+                metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                metrics.update(self.update_actor_and_alpha(obs, action, subtask, sil=True))
+
+                # update target critic and actor
+                self.update_target()
+
+        return metrics
+
+
 
 
 
