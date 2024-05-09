@@ -39,7 +39,7 @@ project_name: viskill
 entity_name: qinsongwei
 
 mpi: {rank: null, is_chef: null, num_workers: null}
-# Working space
+# 存数据和模型的地方
 hydra:
   run:
     dir: ./exp/viskill/${task}/${sc_agent.name}_${sl_agent.name}/d${num_demo}/rs${sc_agent.reward_scale}/s${seed}

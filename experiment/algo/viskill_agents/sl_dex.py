@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from ..utils.general_utils import AttrDict
+from .utils.general_utils import AttrDict
 from .sl_ddpgbc import SkillLearningDDPGBC
 
 

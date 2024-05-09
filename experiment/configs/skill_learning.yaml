@@ -32,8 +32,8 @@ use_wb: True
 project_name: viskill
 entity_name: qinsongwei
 
-mpi: {rank: null, is_chef: null, num_workers: null}
-# Working space
+
+#存数据和模型的地方
 hydra:
   run:
     dir: ./exp/skill_learning/${task}/${agent.name}/d${num_demo}/s${seed}/${subtask}

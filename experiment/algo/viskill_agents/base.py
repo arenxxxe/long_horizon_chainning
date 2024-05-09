@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from ..utils.mpi import sync_networks
+
 
 
 class BaseAgent(nn.Module):
@@ -43,7 +43,9 @@ class BaseAgent(nn.Module):
         # Update the frozen target models
         for param, target_param in zip(self.critic.parameters(), self.critic_target.parameters()):
             target_param.data.copy_(self.soft_target_tau * param.data + (1 - self.soft_target_tau) * target_param.data)
-
+#巨量的新的交互数据出来 进这里 obs和goal 首先切到合理范围 然后更新归一化器
+            #更新是数据进去 算总量 算均值和方差  那么随着obs增加 里面记录的总量也追踪着变化
+            #obs归一化的时候  减去均值除以总量 信息就是这里追踪的
     def update_normalizer(self, episode_batch):
         mb_obs, mb_ag, mb_g, mb_actions, dones = episode_batch.obs, episode_batch.ag, episode_batch.g, \
                                                     episode_batch.actions, episode_batch.dones
@@ -90,6 +92,3 @@ class BaseAgent(nn.Module):
         if copy:
             return torch.tensor(array, dtype=torch.float32).to(self.device)
         return torch.as_tensor(array).to(self.device)
-
-    def sync_networks(self):
-        sync_networks(self)

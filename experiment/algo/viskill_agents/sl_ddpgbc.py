@@ -4,9 +4,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from ..components.normalizer import Normalizer
-from ..modules.critics import Critic
-from ..modules.policies import DeterministicActor
+from .components.normalizer import Normalizer
+from .modules.critics import Critic
+from .modules.policies import DeterministicActor
 from .base import BaseAgent
 
 

@@ -1,7 +1,7 @@
 import torch
 
-from ..components.checkpointer import CheckpointHandler
-from ..utils.general_utils import AttrDict, prefix_dict
+from .components.checkpointer import CheckpointHandler
+from .utils.general_utils import AttrDict, prefix_dict
 from .base import BaseAgent
 from .factory import make_sc_agent, make_sl_agent
 
