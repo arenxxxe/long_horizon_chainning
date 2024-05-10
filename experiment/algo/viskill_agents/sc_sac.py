@@ -4,10 +4,10 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from ..components.normalizer import Normalizer
-from ..modules.critics import SkillChainingDoubleCritic
-from ..modules.policies import SkillChainingDiagGaussianActor
-from ..utils.general_utils import AttrDict, prefix_dict
+from .components.normalizer import Normalizer
+from .modules.critics import SkillChainingDoubleCritic
+from .modules.policies import SkillChainingDiagGaussianActor
+from .utils.general_utils import AttrDict, prefix_dict
 from .sc_ddpg import SkillChainingDDPG
 
 

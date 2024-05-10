@@ -1,4 +1,4 @@
-from ..utils.general_utils import AttrDict, prefix_dict
+from .utils.general_utils import AttrDict, prefix_dict
 from .sc_awac import SkillChainingAWAC
 
 

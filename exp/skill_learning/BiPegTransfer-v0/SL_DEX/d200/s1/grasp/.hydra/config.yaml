@@ -32,7 +32,7 @@ replay_buffer_capacity: 100000
 checkpoint_frequency: 20000
 update_epoch: 80
 batch_size: 128
-device: cuda:0
+device: cpu
 seed: 1
 task: BiPegTransfer-v0
 subtask: grasp

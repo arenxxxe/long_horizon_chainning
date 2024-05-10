@@ -4,10 +4,10 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from ..components.normalizer import Normalizer
-from ..modules.critics import SkillChainingCritic
-from ..modules.policies import SkillChainingActor
-from ..utils.general_utils import AttrDict
+from .components.normalizer import Normalizer
+from .modules.critics import SkillChainingCritic
+from .modules.policies import SkillChainingActor
+from .utils.general_utils import AttrDict
 from .base import BaseAgent
 
 
