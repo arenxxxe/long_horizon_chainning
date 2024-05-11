@@ -14,18 +14,23 @@ from ..viskill_agents.modules.replay_buffer import HER_sampler_seq
 from gym import spaces
 import numpy as np
 
+
+import os
+
 ##模仿真正的输入来生成东西
 class MimicEnv:
      def __init__(self,cfg):
         #取到cfg
           self.cfg=cfg
         #agent里面需要的env参数 写死
+          #接口分析：env提供 一个类似字典的东西  动作空间 动作上限  动作随机采样器  
         #2024/5/10 
                #模仿env里面设置动作和观察空间
+          self.env_params={}
           ACTION_SIZE = 5  # (dx, dy, dz, dyaw/dpitch, open/close)#根据机械臂自由度和电机来设置这个东西
           self.action_size=ACTION_SIZE #
           self.action_space = spaces.Box(-1, 1, shape=(self.action_size,), dtype='float32')
-          self.env_params={}
+          
           self.env_params['act']=self.action_space.shape[0]
           self.env_params['max_action']= self.action_space.high[0]
           self.env_params['act_rand_sampler'] = self.action_space.sample
@@ -128,7 +133,24 @@ class MimicEnv:
 #     def test_demo_buffer(self, num_episodes, render=False):
 #          pass
 
+def load_npz():
 
+     demo_path = os.path.join(os.getcwd(),'experiment\\algo\customize_agent\data')
+     file_name = "data_test"
+     file_name += ".npz"
+
+     demo_path = os.path.join(demo_path, file_name)
+
+     arr1 = np.array([1, 2, 3])
+     arr2 = np.array([[4, 5], [6, 7]])
+
+# 将数组写入npz文件
+     np.savez( demo_path, arr1=arr1, arr2=arr2)
+
+
+     demo = np.load(demo_path,allow_pickle=True)
+
+     return demo
 
 
 @hydra.main(version_base=None, config_path="../../configs", config_name="skill_learning")
@@ -146,6 +168,7 @@ def main(cfg):
      )
      # make 出agent 
      agent = make_sl_agent(env_params, buffer_sampler, cfg.agent)
+     data=load_npz()
      import pdb;pdb.set_trace()
 
      SimpleTest = SimpleTest(env,agent, 100)
