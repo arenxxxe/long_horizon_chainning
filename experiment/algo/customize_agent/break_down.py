@@ -71,13 +71,13 @@ class MimicEnv:
           if len(ag.shape) == 1:
                #为什么这些goal和真正env中的goal不同？
                #因为这些goal是env wrapper引入的
-     #                   if self.subtask == 'grasp':
-     #        obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['observation'][7: 10], [psm1col, psm2col]])#后面这两个是机械臂和物体的碰撞
-     #    elif self.subtask == 'handover':
-     #        obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['observation'][0: 3], [psm1col, psm2col]])
-     #    elif self.subtask == 'release':
-     #        obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['achieved_goal'], [psm1col, psm2col]])
-     #    obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
+          #                   if self.subtask == 'grasp':
+          #        obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['observation'][7: 10], [psm1col, psm2col]])#后面这两个是机械臂和物体的碰撞
+          #    elif self.subtask == 'handover':
+          #        obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['observation'][0: 3], [psm1col, psm2col]])
+          #    elif self.subtask == 'release':
+          #        obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['achieved_goal'], [psm1col, psm2col]])
+          #    obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
                if self.subtask == 'release':
                     #self._is_success(achieved_goal, desired_goal).astype(np.float32) - 1.
                     #        d = goal_distance(achieved_goal, desired_goal)
@@ -149,7 +149,7 @@ def load_npz():
 
 
      demo = np.load(demo_path,allow_pickle=True)
-
+     import pdb;pdb.set_trace()
      return demo
 
 
@@ -169,7 +169,7 @@ def main(cfg):
      # make 出agent 
      agent = make_sl_agent(env_params, buffer_sampler, cfg.agent)
      data=load_npz()
-     import pdb;pdb.set_trace()
+
 
      SimpleTest = SimpleTest(env,agent, 100)
 
