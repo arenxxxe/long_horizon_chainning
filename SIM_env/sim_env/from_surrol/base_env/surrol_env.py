@@ -8,7 +8,7 @@ from gym.utils import seeding
 import pybullet as p
 import pybullet_data
 import pkgutil
-from surrol.utils.pybullet_utils import (
+from ..utils.pybullet_utils import (
     step,
     render_image,
 )
@@ -61,14 +61,18 @@ class SurRoLEnv(gym.Env):
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.configureDebugVisualizer(lightPosition=(10.0, 0.0, 10.0))
         p.setGravity(0, 0, -9.81)
-        p.loadURDF("plane.urdf", (0, 0, -0.001))
+        p.loadURDF("plane.urdf", (0, 0, -1))
+        #获取物体信息的开始
         self.obj_ids = {'fixed': [], 'rigid': [], 'deformable': []}
 
         self.seed()
 
         # self.actions = []  # only for demo
+        
         self._env_setup()
+        
         step(0.25)
+        
         self.goal = self._sample_goal()  # tasks are all implicitly goal-based
         self._sample_goal_callback()
         obs = self._get_obs()
