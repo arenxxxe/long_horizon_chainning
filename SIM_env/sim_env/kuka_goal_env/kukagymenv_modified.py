@@ -306,19 +306,18 @@ class KukaGraspEnv(SurRoLGoalEnv):
         #############必须自己实现的
         #1 初始化 基本采用原始代码的初始化流程
         def __init__(self,):
-
+                #父类的逻辑
                 #1设置渲染模式 开启bullet服务器
-                super().__init__(render_mode='human')
                 #2 相机参数设置 无需修正
                 #3 种子设置--源代码中没有真正启用 gym的 torch的 numpy的 bullet的估计不用
-
                 #4 bullet ui 搜索路径等服务参数配置
                 #5 物理仿真参数配置 加载地板 objid字典创建 
                 #6 场景设置--修改_env_setup
-
                 #7 初始goal拿到 self._sample_goal和self._sample_goal_callback()
                 #8 观察和动作空间设置 _get_obs()  保证是dict才行
                 #9 仿真时间间隙 无需修正
+                super().__init__(render_mode='human')
+        
         #2 初始化流程中的场景设置
         #2024/5/21场景设置完成 父类的 self.goal = self._sample_goal()之前认为功能是正常的       
         def _env_setup(self):
@@ -351,11 +350,13 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         obj_id = p.loadURDF(os.path.join(self.ASSET_DIR_PATH, 'sphere/sphere.urdf'),
                                         globalScaling=self.SCALING)
                         self.obj_ids['fixed'].append(obj_id)  # 0
+        
         #3 获取多种最终目标
         def _sample_goal(self) -> np.ndarray:
                 #1 逻辑上来看 是物体的最终要达到的位置
                 goal = np.array(get_link_pose(self.obj_ids['rigid'][0], -1))
                 return goal.copy()
+        
         #4 初始化流程中的子目标（路点）设置
         def _sample_goal_callback(self):
                 #1 把之前没用到的sphere设置位置 为了可视化显式路点
@@ -363,75 +364,155 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #2 路点的容器--列表 要多少个就给多少个
                 self._waypoints = [None, None, None, None, None, None, None] 
                 #3 路点怎么设置？
-        #5 有了路点之后 就可以设置专家策略
-        #goal引导的动作
-        def get_oracle_action(self, obs) -> np.ndarray:
-                pass
-        #6 专家策略的动作 进到机械臂执行
-        def _set_action(self, action: np.ndarray):
-                pass
-        #6 动作执行之后 得到纯观察
-        def _get_obs(self) -> dict:
-                pass
-        #7 以上两个核心动作执行完之后  进行封装 经典的env.step()
+
+
+
+
+        #5  进行封装 经典的env.step()
         def step(self, action: np.ndarray):
-                pass
-        #7 另一个经典的gym接口 env.reset()
-        def reset(self):
-                pass
+                #父类的逻辑
+                #1 动作归一化
+                #2 set action进机器人
+                #3 物理步进
+                #4 
+                #5 拿obs
+                #6 计算奖励和其他信息 封装为旧gym的四元素obs,reward,done,info
+                obs, reward, done, info=super().step(action)
+                return obs, reward, done, info
 
-        def _is_success(self, achieved_goal, desired_goal):
-                pass
+        def _set_action(self, action: np.ndarray):
+                dv = 0.005
+                dx = action[0] * dv
+                dy = action[1] * dv
+                da = action[2] * 0.05
+                f = 0.3
+                realAction = [dx, dy, -0.002, da, f]
+                self._actionRepeat=1
+                for i in range(self._actionRepeat):
+                        self._kuka.applyAction(realAction)
+                        p.stepSimulation()
+                
+                #有个问题 termination怎么回事？为什么goalenv没有termination的函数？
+                #专门额外操控gripper 可能认为是到了近的位置了 才开始抓
+                state = p.getLinkState(self._kuka.kukaUid, self._kuka.kukaEndEffectorIndex)
+                actualEndEffectorPos = state[0]
+                maxDist = 0.005
+                closestPoints = p.getClosestPoints(self._kuka.trayUid, self._kuka.kukaUid, maxDist)
+                if (len(closestPoints)):
+                     #start grasp and terminate
+                        fingerAngle = 0.3
+                        for i in range(100):
+                                graspAction = [0, 0, 0.0001, 0, fingerAngle]
+                                self._kuka.applyAction(graspAction)
+                                p.stepSimulation()
+                                fingerAngle = fingerAngle - (0.3 / 100.)
+                                if (fingerAngle < 0):
+                                        fingerAngle = 0
 
-        def _meet_contact_constraint_requirement(self):
-                pass
-
-        def subgoal_grasp(self):
-                pass
-        
-        def is_success(self, achieved_goal, desired_goal):
-                pass
-        #@property各种需要的property
-        #以下是基类的东西
-        def compute_reward(self, achieved_goal: np.ndarray, desired_goal: np.ndarray, info):
-                pass
-        # def _env_setup(self):
-        #         pass
-        def _get_robot_state(self, idx: int) -> np.ndarray:
-                pass
-
-        def _is_success(self, achieved_goal, desired_goal):
-                pass
-       
-        def _step_callback(self):
-                pass
-        #被子类覆盖
-        def _sample_goal(self) -> np.ndarray:
-                pass
-        #被子类覆盖
-
+                        for i in range(1000):
+                                graspAction = [0, 0, 0.001, 0, fingerAngle]
+                                self._kuka.applyAction(graspAction)
+                                p.stepSimulation()
+                                blockPos, blockOrn = p.getBasePositionAndOrientation(self.blockUid)
+                                if (blockPos[2] > 0.23):
+                                #print("BLOCKPOS!")
+                                #print(blockPos[2])
+                                        break
+                                state = p.getLinkState(self._kuka.kukaUid, self._kuka.kukaEndEffectorIndex)
+                                actualEndEffectorPos = state[0]
+                                if (actualEndEffectorPos[2] > 0.5):
+                                        break         
+        #怀疑是激活抓取
         def _activate(self, idx: int):
                 pass
-        def _release(self, idx: int):
+       
+        #做出抓的动作之后 让物体粘在末端执行器上面 模拟力封闭抓取             
+        def _step_callback(self):
+                
                 pass
-        #被子类覆盖
+        
         def _meet_contact_constraint_requirement(self) -> bool:
                 pass
-        #goal env的东西
+        
+        def _release(self, idx: int):
+                pass
+  
 
+        def _get_obs(self) -> dict:
+                #来自kuka gym  拿纯观察
+                self._observation = []
+                self._observation = self._kuka.getObservation()
+                gripperState = p.getLinkState(self._kuka.kukaUid, self._kuka.kukaGripperIndex)
+                gripperPos = gripperState[0]
+                gripperOrn = gripperState[1]
+                blockPos, blockOrn = p.getBasePositionAndOrientation(self.blockUid)
 
+                invGripperPos, invGripperOrn = p.invertTransform(gripperPos, gripperOrn)
+                gripperMat = p.getMatrixFromQuaternion(gripperOrn)
+                dir0 = [gripperMat[0], gripperMat[3], gripperMat[6]]
+                dir1 = [gripperMat[1], gripperMat[4], gripperMat[7]]
+                dir2 = [gripperMat[2], gripperMat[5], gripperMat[8]]
 
-        #最初始的env的东西：
-        #实现的
+                gripperEul = p.getEulerFromQuaternion(gripperOrn)
+                #print("gripperEul")
+                #print(gripperEul)
+                blockPosInGripper, blockOrnInGripper = p.multiplyTransforms(invGripperPos, invGripperOrn,
+                                                                                blockPos, blockOrn)
+                projectedBlockPos2D = [blockPosInGripper[0], blockPosInGripper[1]]
+                blockEulerInGripper = p.getEulerFromQuaternion(blockOrnInGripper)
+                #print("projectedBlockPos2D")
+                #print(projectedBlockPos2D)
+                #print("blockEulerInGripper")
+                #print(blockEulerInGripper)
+
+                #we return the relative x,y position and euler angle of block in gripper space
+                blockInGripperPosXYEulZ = [blockPosInGripper[0], blockPosInGripper[1], blockEulerInGripper[2]]
+
+                #p.addUserDebugLine(gripperPos,[gripperPos[0]+dir0[0],gripperPos[1]+dir0[1],gripperPos[2]+dir0[2]],[1,0,0],lifeTime=1)
+                #p.addUserDebugLine(gripperPos,[gripperPos[0]+dir1[0],gripperPos[1]+dir1[1],gripperPos[2]+dir1[2]],[0,1,0],lifeTime=1)
+                #p.addUserDebugLine(gripperPos,[gripperPos[0]+dir2[0],gripperPos[1]+dir2[1],gripperPos[2]+dir2[2]],[0,0,1],lifeTime=1)
+
+                self._observation.extend(list(blockInGripperPosXYEulZ))
+        #拿机器人状态
+        def _get_robot_state(self, idx: int) -> np.ndarray:
+              pass  
+
+        def _is_success(self, achieved_goal, desired_goal):
+                pass                
+        
+        def is_success(self, achieved_goal, desired_goal):
+                
+                return self._is_success(achieved_goal, desired_goal)
+       
+        def compute_reward(self, achieved_goal, desired_goal, info):
+                pass
+
+        #6 另一个经典的gym接口 env.reset()
+        def reset(self):
+                #父类的逻辑
+                #1 模拟关 重力设置 ui关
+                #2 重新load场景 并且步进
+                #3 重新拿goal
+                #4 开ui
+                #5 拿obs
+                super().reset()
+        
+        #7 关仿真 没啥说的
+        def close(self):
+                super().close()
+
         #env成功的标志：过程中返回的奖励ok 专家策略能执行成功
         def test(self, horizon=100):
                 steps, done = 0, False
+                #1 reset能成功 
                 obs = self.reset()
                 while not done and steps <= horizon:
                         tic = time.time()
+                        #2 示教动作能拿到
                         action = self.get_oracle_action(obs)
                         print('\n -> step: {}, action: {}'.format(steps, np.round(action, 4)))
                         # print('action:', action)
+                        #3 step能成功
                         obs, reward, done, info = self.step(action)
                         if isinstance(obs, dict):
                                 print(" -> achieved goal: {}".format(np.round(obs['achieved_goal'], 4)))
@@ -444,42 +525,29 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         print(" -> step time: {:.4f}".format(toc - tic))
                         time.sleep(0.05)
                 print('\n -> Done: {}\n'.format(done > 0))
-                
+
+        #没有在主逻辑看见调用 可以认为是测试用 测试子目标设计的有没有问题 能不能成功执行抓取
+        def subgoal_grasp(self):
+                pass
+        
+        #@property各种需要的property
+        #以下是基类的东西
+
         def seed(self, seed=None):
                 pass
+        
+        #渲染图片的  记录的时候需要
         def render(self, mode='rgb_array'):
                 pass
-        def close(self):
-                pass
-        #被子类覆盖
-        def reset(self):
-                pass
-        #未实现
-        def get_oracle_action(self, obs) -> np.ndarray:
-                pass
-        def _step_callback(self):
-                pass
+
         def _render_callback(self, mode):
                 pass
-        def _sample_goal_callback(self):
-                pass
-        def _sample_goal(self):
-                pass
-        def _is_success(self, achieved_goal, desired_goal):
-                pass
-        def _set_action(self, action):
-                pass
-        def _get_obs(self):
-                pass
-        # def _env_setup(self):
-        #         pass
-        def compute_reward(self, achieved_goal, desired_goal, info):
-                pass
+        
+   
 
-        #########采用原版代码的
-        def close(self):
-                super().reset()
-                print("原版的close")
+
+
+
 
 
 ##############原始的环境测试代码
