@@ -73,10 +73,13 @@ class SurRoLEnv(gym.Env):
         
         step(0.25)
         
-        self.goal = self._sample_goal()  # tasks are all implicitly goal-based
+
+        #self.goal = self._sample_goal()  # tasks are all implicitly goal-based
         self._sample_goal_callback()
         obs = self._get_obs()
-        self.action_space = spaces.Box(-1, 1, shape=(self.action_size,), dtype='float32')
+
+
+        self.action_space = spaces.Box(-2, 2, shape=(self.action_size,), dtype='float32')
         if isinstance(obs, np.ndarray):
             # gym.Env
             self.observation_space = spaces.Box(-np.inf, np.inf, shape=obs.shape, dtype='float32')
@@ -101,7 +104,7 @@ class SurRoLEnv(gym.Env):
         self._set_action(action)
         # time1 = time.time()
         # TODO: check the best way to step simulation
-        step(self._duration)
+        #step(self._duration)
 
         # time2 = time.time()
         # print(" -> robot action time: {:.6f}, simulation time: {:.4f}".format(time1 - time0, time2 - time1))
@@ -109,6 +112,7 @@ class SurRoLEnv(gym.Env):
         obs = self._get_obs()
 
         done = False
+
         info = {
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
         } if isinstance(obs, dict) else {'achieved_goal': None}
@@ -130,9 +134,9 @@ class SurRoLEnv(gym.Env):
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
         # p.configureDebugVisualizer(p.COV_ENABLE_PLANAR_REFLECTION, 0)
 
-        p.loadURDF("plane.urdf", (0, 0, -0.001))
+        p.loadURDF("plane.urdf", (0, 0, -1))
         self._env_setup()
-        step(0.25)
+        #step(0.25)
         self.goal = self._sample_goal().copy()
         self._sample_goal_callback()
 

@@ -718,6 +718,7 @@ def get_link_inertial_pose(body, link):
 
 
 def get_link_pose(body, link):
+    
     if link == BASE_LINK:
         return get_body_pose(body)
     # if set to 1 (or True), the Cartesian world position/orientation will be recomputed using forward kinematics.

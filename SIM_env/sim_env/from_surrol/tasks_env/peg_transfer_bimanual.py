@@ -125,7 +125,7 @@ class BiPegTransfer(PsmsEnv):
         nsd_pos_mid1 = pos_mid1 + noise
         nsd_pos_mid2 = pos_mid2 + noise
 
-        #----------------------------Subtask 1----------------------------
+        #----------------------------Subtask 1---------------------------- 抓取
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2] + 0.015 * self.SCALING, yaw1, 0.5,
                                          pos_obj2[0], pos_obj2[1], pos_mid2[2], yaw2, 0.5]))  # psm2 above object 0
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2] + 0.015 * self.SCALING, yaw1, 0.5,
@@ -135,15 +135,19 @@ class BiPegTransfer(PsmsEnv):
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2] + 0.015 * self.SCALING, yaw1, 0.5,
                                          pos_obj2[0], pos_obj2[1], nsd_pos_mid2[2], yaw2, -0.5]))  # psm2 lift up 3 
 
-        #----------------------------Subtask 2----------------------------
+        #----------------------------Subtask 2---------------------------- 转移
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2] + 0.015 * self.SCALING, yaw1, 0.5,
-                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5]))  # psm2 move to middle 4
+                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5])) 
+                                          # psm2 move to middle 4
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2], yaw1, 0.5,
-                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5]))  # psm1 pre grasp 5 
+                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5])) 
+                                          # psm1 pre grasp 5 
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2], yaw1, -0.5,
-                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5]))  # psm1 grasp 6 
+                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, -0.5])) 
+                                          # psm1 grasp 6 
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2], yaw1, -0.5,
-                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, 0.5]))  # psm2 release 7
+                                         nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2], yaw2, 0.5])) 
+                                          # psm2 release 7
         self._waypoints.append(np.array([nsd_pos_mid1[0], nsd_pos_mid1[1], nsd_pos_mid1[2], yaw1, -0.5,
                                          nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2] + 0.015 * self.SCALING, yaw2, 0.5]))  # psm2 lift up 8
         pos_place = [self.goal[0] + pos_obj1[0] - pos_peg[0],
@@ -153,7 +157,7 @@ class BiPegTransfer(PsmsEnv):
         self._waypoints.append(np.array([middle_place[0] , middle_place[1], pos_place[2], yaw1, -0.5,
                                          nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2] + 0.015 * self.SCALING, yaw2, 0.5]))  # middle point 9
 
-        #----------------------------Subtask 3----------------------------
+        #----------------------------Subtask 3---------------------------- 扔下去peg
         self._waypoints.append(np.array([pos_place[0], pos_place[1], pos_place[2], yaw1, -0.5,
                                          nsd_pos_mid2[0], nsd_pos_mid2[1], nsd_pos_mid2[2] + 0.015 * self.SCALING, yaw2, 0.5]))  # above goal 10
         self._waypoints.append(np.array([pos_place[0], pos_place[1], pos_place[2], yaw1, 0.5,
