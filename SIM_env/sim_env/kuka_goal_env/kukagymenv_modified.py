@@ -290,7 +290,7 @@ class KukaGymEnv(gym.Env):
 from ..from_surrol.base_env.surrol_goalenv import SurRoLGoalEnv
 from ..from_surrol.utils.pybullet_utils import reset_camera
 from ..from_surrol.utils.pybullet_utils import get_link_pose, wrap_angle
-#################################尝试直接改变环境代码##############
+#################################尝试直接改变环境代码################################
 pybullet_wierd_offset=0.02
 class KukaGraspEnv(SurRoLGoalEnv):
         #surol自带的3d模型
@@ -298,10 +298,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
         #调整各种位置和大小的东西 其实没啥用处
         ee_offset=0.25
         SCALING = 1.
-
         #A 完成上层调用逻辑     env = KukaGraspEnv() 
         #TODO 已经完成书写
-        def __init__(self,):
+        def __init__(self,render_mode='rgb_array'):
                 
                 #1设置渲染模式 开启bullet服务器--无需修改
                 #2 相机参数设置-无需修改
@@ -313,12 +312,14 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #8 示教策略和subgoal设置--self._sample_goal_callback()
                 #9 观察和动作空间设置-- _get_obs()   
                 #10 仿真时间间隙-- 无需修正
-                super().__init__(render_mode='human')
+                #man what can i say?  初始化的时候也是要拿obs 来做观察空间参数的初始化的
+                self.touch_object_once=False
+                super().__init__(render_mode=render_mode)
+
         @property
         def action_size(self):
-                return 5 #xyz 末端执行器旋转 +夹爪开合
-
-   
+                return 5 #xyz 末端执行器关节旋转 +夹爪开合
+ 
         def _env_setup(self): 
                 """
                 处于的流程: A-6 场景设置
@@ -360,7 +361,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
         
                 self.goal=self._sample_goal()
                 self._sample_goal_callback()
-                self.kuka_action_control_test()
+                #self.kuka_action_control_test()
                         
         def _sample_goal(self):
                 """
@@ -372,7 +373,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 TODO 基本已经完成
                 goal--物体最终落地之后的位置 
                 """
-                goal = [0.4102, 0.5388,-0.9910]
+                #改变了之后 物体的位置也是会改变的 
+                goal = [0.4233 , 0.5769 ,-0.9875]
                 np_goal=np.array(goal)
                 return np_goal.copy()
         
@@ -450,17 +452,37 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 """
                 
                 #1 机器人状态
-        
+                object_pos, _ = p.getBasePositionAndOrientation(self.blockUid)
+                np_object_pos=np.array(object_pos)
+
                 self.kuka_ee_state = self._kuka.getObservation()
                                 #夹爪开合角度
                 _,joint_angle=self._kuka.getEE_pos()
                 
-                self.kuka_ee_state.extend([joint_angle])  #3+3+1              
+                #判断是否接近物体 接近很近了  就以物体作为达成目标 
+                        #1 服用issuccess来判断物体是否接近
+
+                np_ee_pos=np.array(self.kuka_ee_state[0:3])
+                np_ee_pos[2]-=self.ee_offset#忘记了 末端执行器和夹爪之间有距离的
+                print(f"物体位置{np_object_pos}")
+                print(f"夹爪位置{np_ee_pos}")
+                touch_once=self._is_success(np_ee_pos,np_object_pos,0.03)
+                print(f"互相接近的最短距离！！！！！！！！！{self.goal_distance(np_ee_pos, np_object_pos)}")         
+                        #2 如果接近过一次 那之后 第三步一直必须成立
+                if touch_once:
+                        self.touch_object_once=True
+
+                        #3 如果接近过一次 之后的达成目标就是物体位置
+                if self.touch_object_once:
+                        achieved_goal=np_object_pos
+
+                self.kuka_ee_state.extend([joint_angle])  #4+1              
                 
                 robot_state=np.array(self.kuka_ee_state)
                         
-                object_pos, _ = p.getBasePositionAndOrientation(self.blockUid)
-                np_object_pos=np.array(object_pos)
+
+
+
                 object_rel_pos1=object_pos - robot_state[0: 3]
                 np_object_rel_pos1=np.array(object_rel_pos1)
                 #参考的连接处状态
@@ -476,7 +498,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         #源代码核心逻辑：没有拿着物体自由移动的时候 没有达成的目标 不存在任何的达成目标 拿着物体的时候 物体位置就是达成目标
                         #TODO 实现判断物体是否被拿着的逻辑
                 #achieved_goal = np.array(list(object_pos))
-                achieved_goal=np.array([0.000000000000000001,0.000000000000000001,0.000000000000000001])#0很特殊 可能导致维度不对
+                #触发式的  就是没有达成某个条件之前 布尔值一直是false  达成一次之后 以后全部是true
+                if not self.touch_object_once:
+                        achieved_goal=np.array([0.000000000000000001,0.000000000000000001,0.000000000000000001])#0很特殊 可能导致维度不对
 
                 #3 总观察
                 obs = {
@@ -595,8 +619,6 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 # p.changeConstraint(self._contact_constraint, maxForce=20)        
                 # pass
                 
-                
-
         def step(self, action: np.ndarray):
                 """
                 处于的流程: B-3 传入action 完成一次仿真步进
@@ -623,31 +645,33 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 输出：  
                 目的: 进行一次完整的仿真步进成功执行步骤
                 TODO  
-                """   
-                list_action=action.tolist()  
-                
-          
+                """
+                   
+                list_action=action.tolist() 
+
+               
+
                 assert len(action) == self.action_size
+                #如果是示教动作  全是0的时候说明示教路点已经走完 不应该允许再往下下发动作指令并仿真
+
+                
                 #一次动60  是源代码的一次动作的仿真步
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [list_action[0],list_action[1],list_action[2]-self.ee_offset], (0, 0, 0, 1))
-                
-                for i in range(500):
+                list_action[2]+=0.02#因为pybullet奇怪的逆运动学计算 差为0.02 不确定是kuka机械臂的问题还是所有机械臂共性问题
+                for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()
                         time.sleep(1.0 / 30.0)
-      
-  
-     
+           
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取
                 pass
-        
-       
+           
         def goal_distance(self,goal_a, goal_b):
                 assert goal_a.shape == goal_b.shape
                 return np.linalg.norm(goal_a - goal_b, axis=-1)
         
-        def _is_success(self, achieved_goal, desired_goal):
+        def _is_success(self, achieved_goal, desired_goal,threshold=0.005):
                 """
                 处于的流程: B-3-8 判断是否到达最终目标
                 输入： np_array:achieved_goal, np_array:desired_goal
@@ -655,15 +679,13 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 目的: 比较现在目标和最终目标
                 TODO  
                 """
-                self.distance_threshold=0.005
+                self.distance_threshold=threshold
                 d = self.goal_distance(achieved_goal, desired_goal)
                 return (d < self.distance_threshold).astype(np.float32)                  
 
         def compute_reward(self, achieved_goal, desired_goal, info):
 
                 return self._is_success(achieved_goal, desired_goal).astype(np.float32) - 1.
-
-
 
         def reset(self):
                 """
@@ -681,11 +703,11 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #5 拿obs _get_obs()
                 
                 obs=super().reset()
-                print(f"重置之后的末端执行器观察{obs['observation'][0:3]}")
+                #print(f"重置之后的末端执行器观察{obs['observation'][0:3]}")
+                #重置之后 一定没有拿过 
+                self.touch_object_once=False
                 return obs
                 
-
-
         def _get_robot_state(self) -> np.ndarray:
 
                 #1 机器人状态
@@ -699,10 +721,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 robot_state=np.array(self.kuka_ee_state)
                 return robot_state
 
-
         def close(self):
                 super().close()
-
 
         def get_oracle_action(self, obs) :
                 """
@@ -710,8 +730,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 输入： dic:obs
                 输出：  list:action
                 目的: 根据观察 判断和路点的距离 根据距离 切换路点
-                TODO 基本认为完成 如果不行 那就是距离判定的计算有问题 
+                TODO 基本认为完成 如果不行 那就是距离判定的计算有问题 当然比较本质的肯定是信息的获取的准确的问题
                 """
+                action=[0]*5
                 for i, waypoint in enumerate(self._waypoints):
                         #1 完成的路点跳过
                         if waypoint is None:
@@ -724,10 +745,12 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         print(f"路点{waypoint}")
                         print(f"末端观察{obs['observation'][0: 3]}")
                         delta_pos=(waypoint[0: 3] - obs['observation'][0: 3]) /0.01 / 5.      
-                        delta_yaw= (waypoint[3] - obs['observation'][5]).clip(-1, 1)
+                        delta_yaw= (waypoint[3] - obs['observation'][3]).clip(-1, 1)
                         if np.abs(delta_pos).max() > 1:
                                 delta_pos /= np.abs(delta_pos).max()
                         print(f"位置原始差：{delta_pos}")
+                        print(f"欧拉角：{obs['observation'][3]},{obs['observation'][4]},{obs['observation'][5]}")
+                        print(f"路点旋转指令：{waypoint[3]}")
                         print(f"旋转原始差：{delta_yaw}")
                         scale_factor = 0.4
                         delta_pos *= scale_factor 
@@ -735,13 +758,17 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
                         #4 判断是否到达位置 删路点
                         if np.linalg.norm(delta_pos) * 0.01 / scale_factor < 2e-3 and np.abs(delta_yaw) < np.deg2rad(2.):
-                                print(f"第{i}个路点已经执行完毕")
-                                self._waypoints[i] = None
+                                print(f"第{i+1}个路点已经执行完毕")
+                                if i == 5:
+                                        print("最后一个路点不会归零")
+
+                                
+                                self._waypoints[i] = None if i< len(self._waypoints)-1 else self._waypoints[i]
                         #5 没到达位置 继续执行原来路点
                         break
                 return action,i
-       
         
+        #B 完成上层调用逻辑     env.test()    
         def test(self, horizon=250):
                 """
                 B 上层调用逻辑     env.test() 
@@ -759,11 +786,13 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 obs = self.reset()
                 
                 while not done and steps <= horizon: #step特指每一次仿真步进 rollout或者episode指的是从头到尾完整执行一次仿真任务
+
                         tic = time.time()
                         action,i = self.get_oracle_action(obs)
+                        
                         np_action=np.array(action)
                         print('\n -> step: {}, action: {}'.format(steps, np.round(action, 4)))
-                        # print('action:', action)
+                        
                         obs, reward, done, info = self.step(np_action)
                         
                         print(reward)
@@ -779,16 +808,11 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         time.sleep(0.05)
                 print('\n -> Done: {}\n'.format(done > 0))
 
-
-        
-
-
         def seed(self, seed=None):
                 pass
-        
-        #图像和视频留存
+        #c 完成上层调用逻辑     env.render()
         def render(self, mode='rgb_array'):
-                pass
+                return super().render()
 
         def _render_callback(self, mode):
                 pass
@@ -803,8 +827,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
 ##############原始的环境测试代码
 if __name__ == "__main__":
         env = KukaGraspEnv()  # create one process and corresponding env
-
-        env.test()
+        rgb=env.render()
         import pdb;pdb.set_trace()
+        env.test()
+
 #     env.close()
 #     time.sleep(2)

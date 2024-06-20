@@ -93,11 +93,14 @@ class Kuka:
     observation = []
     state = p.getLinkState(self.kukaUid, self.kukaEndEffectorIndex)
     pos = state[0]
-    orn = state[1]
-    euler = p.getEulerFromQuaternion(orn)
+    ee_rotate_joint_angle=p.getJointState(self.kukaUid,7)
+    #虽然拿欧拉角确实很真实 但是不是很确定究竟要不要拿欧拉角  因为对动作根本没影响 目前apply action的欧拉角 都是写死的 只有末端执行器的关节在动
+    # orn = state[1]
+    # euler = p.getEulerFromQuaternion(orn)
 
     observation.extend(list(pos))
-    observation.extend(list(euler))
+    observation.extend([ee_rotate_joint_angle[0]])
+    # observation.extend(list(euler))
 
     return observation
 
@@ -127,6 +130,7 @@ class Kuka:
       # endEffectorPos=endEffectorPos.copy()
       
       endEffectorPos=self.endEffectorPos.copy()
+
       endEffectorPos.extend([self.endEffectorAngle])
       if not hasattr(self, "has_run"):
         print("这段代码仅执行一次")
@@ -137,13 +141,13 @@ class Kuka:
       
       np_endEffectorPosOrn=np.array( endEffectorPos)
       np_relative_posorn=np_target_ee-np_endEffectorPosOrn
-         
+  
       np_motorCommands=np_relative_posorn*dv
       motorCommands=np_motorCommands.tolist()
-
+      # print(np_endEffectorPosOrn[3])
       #print(f"targetee{target_ee}")
-      eeobs,_=self.getEE_pos()
-      print(f"eeobs{eeobs[2]}")
+      # eeobs,_=self.getEE_pos()
+      # print(f"eeobs{eeobs[2]}")
       #print(self.endEffectorPos[2])
       #print(self.endEffectorPos[2])
 
@@ -155,7 +159,9 @@ class Kuka:
       da = motorCommands[3]
       fingerAngle = target_ee[4]
       
+      #da_angle=p.getJointState(self.kukaUid,7)
 
+      #print(da_angle)
       #print("pos[2] (getLinkState(kukaEndEffectorIndex)")
       #print(actualEndEffectorPos[2])
 
@@ -225,7 +231,8 @@ class Kuka:
                                                     self.kukaEndEffectorIndex,
                                                     pos,
                                                     orn,
-                                                    jointDamping=self.jd)
+                                                    jointDamping=self.jd
+                                                    ,maxNumIterations=200)
         else:
           jointPoses = p.calculateInverseKinematics(self.kukaUid, self.kukaEndEffectorIndex, pos)
 
