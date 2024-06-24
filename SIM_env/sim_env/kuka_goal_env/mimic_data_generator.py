@@ -10,6 +10,7 @@ import time
 import numpy as np
 import imageio
 from surrol.const import ROOT_DIR_PATH
+from kuka_slsc_wrapper import KukagraspSLWrapper
 
 parser = argparse.ArgumentParser(description='generate demonstrations for imitation')
 parser.add_argument('--env', type=str, required=True,
@@ -18,51 +19,71 @@ parser.add_argument('--video', action='store_true',
                     help='whether or not to record video')
 parser.add_argument('--steps', type=int,
                     help='how many steps allowed to run')
+parser.add_argument('--subtask', type=str,
+                    help='how many steps allowed to run', default='grasp')
 args = parser.parse_args()
 
 actions = []
 observations = []
 infos = []
-
+terminals = []
 images = []  # record video
 masks = []
+gt_actions = []
+global success_counter 
+
+#开始的路点index-完成
+SUBTASK_START = {
+    'grasp': 0,
+}
+
+#结束的路点index-完成
+SUBTASK_END = {
+    'grasp': 3,
+    'release': 5
+}
 
 
 def main():
-    #1 取得环境并初始化
+    #1 先register 然后make出来--涉及到模块的结构组织 --并且初始化 看不出明显问题 --未测试
     env = gym.make(args.env, render_mode='rgb_array')  # 'human'
-    num_itr = 100 if not args.video else 10
+    env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
+
+    num_itr = 200 if not args.video else 10
     cnt = 0
+    success_counter = 0
     init_state_space = 'random'
-    #2 环境重置
+    #2 检查reset的接口
     env.reset()
     print("Reset!")
     init_time = time.time()
-
+    #3 检查是否有env.max_episode_steps属性
     if args.steps is None:
-        args.steps = env._max_episode_steps
-    #3 重置--根据观察拿示教动作--执行--记录
+        args.steps = env.max_episode_steps
+
     print()
-    while cnt < num_itr:
-        obs = env.reset()
-        print("ITERATION NUMBER ", len(actions))
-        goToGoal(env, obs)
+    while len(infos) < num_itr:
+        #4  再次检查reset接口返回值
+        obs_, obs = env.reset()
+        print("ITERATION NUMBER ", len(infos))
+        #5  检查能否满足goto的接口
+        goToGoal(env, obs_, obs)
         cnt += 1
 
     file_name = "data_"
     file_name += args.env
     file_name += "_" + init_state_space
     file_name += "_" + str(num_itr)
-    file_name += ".npz"
+    file_name += "_primitive_new" + args.subtask + ".npz"
 
     folder = 'demo' if not args.video else 'video'
     folder = os.path.join(ROOT_DIR_PATH, 'data', folder)
-    #4 保存示教数据
+
     np.savez_compressed(os.path.join(folder, file_name),
-                        acs=actions, obs=observations, info=infos)  # save the file
+                        actions=actions, observations=observations, terminals=terminals, gt_actions=gt_actions)  # save the file
 
     if args.video:
-        video_name = "video_"
+        video_name = "video"
         video_name += args.env + ".mp4"
         writer = imageio.get_writer(os.path.join(folder, video_name), fps=20)
         for img in images:
@@ -79,47 +100,73 @@ def main():
     print("Saved data at:", folder)
     print("Time used: {:.1f}m, {:.1f}s\n".format(used_time // 60, used_time % 60))
     print(f"Trials: {num_itr}/{cnt}")
-    #5  关闭环境
+    #6 检查 关闭仿真环境的接口  
     env.close()
 
-#就是env中的test 改了些过程  action接口可能要改 因为这些顶层的调用全部是numpy数组
-def goToGoal(env, last_obs):
+
+def goToGoal(env, last_obs_, last_obs):
     episode_acs = []
     episode_obs = []
     episode_info = []
+    episode_terminals = []
+    episode_gt_acs = []
 
     time_step = 0  # count the total number of time steps
     episode_init_time = time.time()
-    episode_obs.append(last_obs)
+    
+    episode_obs.append(last_obs_)
 
-    obs, success = last_obs, False
+    obs_, obs, success = last_obs_, last_obs, False
+    while time_step < min(env.max_episode_steps, args.steps):
+        #5-1 检查拿施教动作的接口 action必须是numpy数组  i是整数
+        action, i = env.get_oracle_action(obs)
+        #print(time_step)
 
-    while time_step < min(env._max_episode_steps, args.steps):
-
-        action = env.get_oracle_action(obs)
+        if i == SUBTASK_END[args.subtask]:
+            info['is_success'] = 1
+            action = np.zeros_like(action)
+            if args.subtask == 'grasp':
+                action[-1] = -0.5
+                action [4] = 0.5
+            elif args.subtask == 'handover':
+                action[-1] = 0.5
+                action[4] = -0.5
+            elif args.subtask == 'release':
+                action[-1] = -0.5
+                action[4] = -0.5
+        #5-2 检查是否能正常渲染图片  
         if args.video:
             # img, mask = env.render('img_array')
             img = env.render('rgb_array')
             images.append(img)
             # masks.append(mask)
-
-        obs, reward, done, info = env.step(action)
+        #5-3  检查step接口是否正常
+        obs_, reward, done, info, obs = env.step(action)
         # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1
+        #print(reward, i)
 
         if isinstance(obs, dict) and info['is_success'] > 0 and not success:
             print("Timesteps to finish:", time_step)
             success = True
 
+        # # if i >= 4 and i < 9:
+        # if i >= SUBTASK_START[args.subtask] and i < SUBTASK_END[args.subtask]:
         episode_acs.append(action)
         episode_info.append(info)
-        episode_obs.append(obs)
+        episode_obs.append(obs_)
+        episode_terminals.append(done)
+        episode_gt_acs.append(info['gt_goal'])
+        last_obs_ = obs_
+
     print("Episode time used: {:.2f}s\n".format(time.time() - episode_init_time))
 
     if success:
         actions.append(episode_acs)
         observations.append(episode_obs)
         infos.append(episode_info)
+        terminals.append(episode_terminals)
+        gt_actions.append(episode_gt_acs)
 
 
 if __name__ == "__main__":

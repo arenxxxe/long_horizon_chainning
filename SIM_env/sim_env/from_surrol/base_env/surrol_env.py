@@ -46,7 +46,7 @@ class SurRoLEnv(gym.Env):
             if socket.gethostname().startswith('pc') or True:
                 # TODO: not able to run on remote server
                 egl = pkgutil.get_loader('eglRenderer')
-                import pdb;pdb.set_trace()
+                
                 plugin = p.loadPlugin(egl.get_filename(), "_eglRendererPlugin")
 
         # camera related setting

@@ -45,7 +45,7 @@ class SkillLearningTrainer(BaseTrainer):
         #设定好每次日志的名字 执行任务 子任务 agent名字 种子名字 后缀
         exp_name = f"SL_{self.cfg.task}_{self.cfg.subtask}_{self.cfg.agent.name}_seed{self.cfg.seed}"
         if self.cfg.postfix is not None:
-        exp_name =  exp_name + '_' + self.cfg.postfix 
+                exp_name =  exp_name + '_' + self.cfg.postfix 
         #一个普通的本地日志 一个wanb上传到网页可以看的日志
         self.wb = WandBLogger(exp_name=exp_name, project_name=self.cfg.project_name, entity=self.cfg.entity_name, \
                 path=self.work_dir, conf=self.cfg)

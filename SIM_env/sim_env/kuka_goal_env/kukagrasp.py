@@ -294,7 +294,7 @@ from ..from_surrol.utils.pybullet_utils import get_link_pose, wrap_angle
 pybullet_wierd_offset=0.02
 class KukaGraspEnv(SurRoLGoalEnv):
         #surol自带的3d模型
-        ASSET_DIR_PATH="/home/aren/PYTHON/PYBULLET_SIM/long_horizon_chainning/SIM_env/sim_env/from_surrol/3d_model/from_surrol/"
+        ASSET_DIR_PATH="/home/wyq/SW/long_horizon_chainning/SIM_env/sim_env/from_surrol/3d_model/from_surrol"
         #调整各种位置和大小的东西 其实没啥用处
         ee_offset=0.25
         SCALING = 1.
@@ -374,7 +374,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 goal--物体最终落地之后的位置 
                 """
                 #改变了之后 物体的位置也是会改变的 
-                goal = [0.4233 , 0.5769 ,-0.9875]
+                goal = [0.4039 , 0.5577 ,-0.991]
                 np_goal=np.array(goal)
                 return np_goal.copy()
         
@@ -464,10 +464,10 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
                 np_ee_pos=np.array(self.kuka_ee_state[0:3])
                 np_ee_pos[2]-=self.ee_offset#忘记了 末端执行器和夹爪之间有距离的
-                print(f"物体位置{np_object_pos}")
-                print(f"夹爪位置{np_ee_pos}")
+                #print(f"物体位置{np_object_pos}")
+                #print(f"夹爪位置{np_ee_pos}")
                 touch_once=self._is_success(np_ee_pos,np_object_pos,0.03)
-                print(f"互相接近的最短距离！！！！！！！！！{self.goal_distance(np_ee_pos, np_object_pos)}")         
+                #print(f"互相接近的最短距离！！！！！！！！！{self.goal_distance(np_ee_pos, np_object_pos)}")         
                         #2 如果接近过一次 那之后 第三步一直必须成立
                 if touch_once:
                         self.touch_object_once=True
@@ -716,7 +716,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                 #夹爪开合角度
                 _,joint_angle=self._kuka.getEE_pos()
                 
-                self.kuka_ee_state.extend([joint_angle])  #3+3+1              
+                self.kuka_ee_state.extend([joint_angle])  #4+1             
                 
                 robot_state=np.array(self.kuka_ee_state)
                 return robot_state
@@ -742,20 +742,20 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         action=waypoint
                         np_waypoint=np.array(waypoint)
                         #3 计算观察中的东西和路点之间的距离--取自论文源代码
-                        print(f"路点{waypoint}")
-                        print(f"末端观察{obs['observation'][0: 3]}")
+                        #print(f"路点{waypoint}")
+                        #print(f"末端观察{obs['observation'][0: 3]}")
                         delta_pos=(waypoint[0: 3] - obs['observation'][0: 3]) /0.01 / 5.      
                         delta_yaw= (waypoint[3] - obs['observation'][3]).clip(-1, 1)
                         if np.abs(delta_pos).max() > 1:
                                 delta_pos /= np.abs(delta_pos).max()
-                        print(f"位置原始差：{delta_pos}")
-                        print(f"欧拉角：{obs['observation'][3]},{obs['observation'][4]},{obs['observation'][5]}")
-                        print(f"路点旋转指令：{waypoint[3]}")
-                        print(f"旋转原始差：{delta_yaw}")
+                        #print(f"位置原始差：{delta_pos}")
+                        #print(f"欧拉角：{obs['observation'][3]},{obs['observation'][4]},{obs['observation'][5]}")
+                        #print(f"路点旋转指令：{waypoint[3]}")
+                        #print(f"旋转原始差：{delta_yaw}")
                         scale_factor = 0.4
                         delta_pos *= scale_factor 
-                        print(f"位置差{np.linalg.norm(delta_pos) * 0.01 / scale_factor}")
-                        print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
+                        #print(f"位置差{np.linalg.norm(delta_pos) * 0.01 / scale_factor}")
+                        #print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
                         #4 判断是否到达位置 删路点
                         if np.linalg.norm(delta_pos) * 0.01 / scale_factor < 2e-3 and np.abs(delta_yaw) < np.deg2rad(2.):
                                 print(f"第{i+1}个路点已经执行完毕")
@@ -766,7 +766,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                 self._waypoints[i] = None if i< len(self._waypoints)-1 else self._waypoints[i]
                         #5 没到达位置 继续执行原来路点
                         break
-                return action,i
+                return np.array(action),i
         
         #B 完成上层调用逻辑     env.test()    
         def test(self, horizon=250):
@@ -790,12 +790,12 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         tic = time.time()
                         action,i = self.get_oracle_action(obs)
                         
-                        np_action=np.array(action)
+
                         print('\n -> step: {}, action: {}'.format(steps, np.round(action, 4)))
                         
-                        obs, reward, done, info = self.step(np_action)
+                        obs, reward, done, info = self.step(action)
                         
-                        print(reward)
+                        print(f"奖励{reward}")
                         if isinstance(obs, dict):
                                 print(" -> achieved goal: {}".format(np.round(obs['achieved_goal'], 4)))
                                 print(" -> desired goal: {}".format(np.round(obs['desired_goal'], 4)))
@@ -817,6 +817,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
         def _render_callback(self, mode):
                 pass
         
+        # @property
+        # def _max_episode_steps(self):
+        #       return 26  #执行完正好26步 不懂要设置多少
    
 
 
@@ -827,9 +830,10 @@ class KukaGraspEnv(SurRoLGoalEnv):
 ##############原始的环境测试代码
 if __name__ == "__main__":
         env = KukaGraspEnv()  # create one process and corresponding env
+        env.test()
         rgb=env.render()
         import pdb;pdb.set_trace()
-        env.test()
+
 
 #     env.close()
 #     time.sleep(2)
