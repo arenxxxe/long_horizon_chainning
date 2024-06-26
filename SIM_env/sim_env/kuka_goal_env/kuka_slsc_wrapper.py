@@ -35,12 +35,15 @@ class SkillLearningWrapper(gym.Wrapper):
     @contextmanager
     def switch_subtask(self, subtask=None):
         '''Temporally switch subtask, default: next subtask'''
+        #env step的时候走这里
         if subtask is not None:
             curr_subtask = self.subtask            
             self.subtask = subtask
             yield
             self.subtask = curr_subtask
+        #env reset的时候走这里
         else:
+            #看起来是切换为上一个任务 可是为什么？
             self.subtask = self.SUBTASK_PREV_SUBTASK[self.subtask]
             yield
             self.subtask = self.SUBTASK_NEXT_SUBTASK[self.subtask]
@@ -117,12 +120,12 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def reset(self):
         #1 这个命令调用 可能是在子任务中 可能是整个任务 --不改
         self.subtask = self._start_subtask
-        #2 不在子任务中 那就重置为最开始--不改 index这些设置完了
+        #2 第一个任务走这里
         if self.subtask not in self.SUBTASK_RESET_INDEX.keys():
             obs = self.env.reset() 
             self._elapsed_steps = 0 
-        #2 如果是子任务调用的  复杂一点 重置为最开始 然后示教动作做完前面的动作  然后到目标子任务的开始状态
-        else:
+        #2 后续的任务走这里 --这里的目的是切换到子任务的开始状态   
+        else: 
             success = False
             while not success:
                 #1 不成功 重置 不改
@@ -137,8 +140,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                     obs, reward, done, info = self.env.step(action)
                     action, skill_index = self.env.get_oracle_action(obs)
                     count += 1
-
-                #3 奇怪的逻辑  观察和信息流程需要梳理一遍  --未完成
+                #到这里的时候 可以认为是 执行了 前面的所有的子任务的施教技能  
+                #3 在这里需要知道什么？ 需要知道究竟前面的施教执行成功没有  真正的核心不是replace 而是 comutereward  
+                    #之前的那个子任务的goal信息 需要用之前子任务写在这个类中的信息来拿到  但是是临时的 只是为了判断是否成功  所以使用context manager
                 with self.switch_subtask():
                     obs_ = self._replace_goal_with_subgoal(obs.copy())  # in case repeatedly replace goal
                     success = self.compute_reward(obs_['achieved_goal'], obs_['desired_goal']) + 1
@@ -148,12 +152,16 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #TODO 未完成
     def _replace_goal_with_subgoal(self, obs):
         """Replace ag and g"""
-        subgoal = self._subgoal()    
+        subgoal = self._subgoal()   
+        #添加奇怪的接触信息  
         kukacol = pairwise_collision(self.env.obj_id, self._kuka.body)
+        #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
+        #抓取的时候达到的目的  是两个机械臂的位置
 
         if self.subtask == 'grasp':
             obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['observation'][7: 10], [kukacol]])
-
+        #释放的时候大概率是物体位置反正无所谓了  不行再改了  
+            
         elif self.subtask == 'release':
             obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['achieved_goal'], [kukacol]])
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
