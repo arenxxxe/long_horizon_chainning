@@ -8,8 +8,9 @@ import argparse
 import time
 import numpy as np
 import imageio
-from surrol.const import ROOT_DIR_PATH
-from kuka_slsc_wrapper import KukagraspSLWrapper
+from ENV.will_be_deprecated.viskill_chaos_utility.const import ROOT_DIR_PATH
+from ENV.agent_interface_env.kuka_slsc_wrapper import KukagraspSLWrapper
+import gym
 
 parser = argparse.ArgumentParser(description='generate demonstrations for imitation')
 parser.add_argument('--env', type=str, required=True,
@@ -44,7 +45,7 @@ SUBTASK_END = {
 
 
 def main():
-    #1 先register 然后make出来--涉及到模块的结构组织 --并且初始化 看不出明显问题 --未测试
+    #1 gym make的链路给我打通
     env = gym.make(args.env, render_mode='rgb_array')  # 'human'
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
 
@@ -74,7 +75,6 @@ def main():
     file_name += "_" + init_state_space
     file_name += "_" + str(num_itr)
     file_name += "_primitive_new" + args.subtask + ".npz"
-
     folder = 'demo' if not args.video else 'video'
     folder = os.path.join(ROOT_DIR_PATH, 'data', folder)
 
