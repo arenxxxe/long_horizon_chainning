@@ -8,7 +8,7 @@ from gym.utils import seeding
 import pybullet as p
 import pybullet_data
 import pkgutil
-from ..utils.pybullet_utils import (
+from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import (
     step,
     render_image,
 )

@@ -23,9 +23,9 @@ RENDER_WIDTH = 960
 
 
 
-from ..from_surrol.base_env.surrol_goalenv import SurRoLGoalEnv
-from ..from_surrol.utils.pybullet_utils import reset_camera
-from ..from_surrol.utils.pybullet_utils import get_link_pose, wrap_angle
+from ENV.base_env.viskill_base_env.surrol_goalenv import SurRoLGoalEnv
+from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import reset_camera
+from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import get_link_pose, wrap_angle
 #################################尝试直接改变环境代码################################
 pybullet_wierd_offset=0.02
 class KukaGraspEnv(SurRoLGoalEnv):
