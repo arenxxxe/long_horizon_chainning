@@ -48,22 +48,27 @@ def main():
     #1 gym make的链路给我打通
     env = gym.make(args.env, render_mode='rgb_array')  # 'human'
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
-
+    #检查1 ：env与wrapper成功初始化
+    breakpoint()
     num_itr = 200 if not args.video else 10
     cnt = 0
     success_counter = 0
     init_state_space = 'random'
-    #2 检查reset的接口
+
     env.reset()
+    #检查2 ：reset的返回值
+    breakpoint()
     print("Reset!")
     init_time = time.time()
-    #3 检查是否有env.max_episode_steps属性
+
     if args.steps is None:
         args.steps = env.max_episode_steps
-
+    #检查3 ：env.max_episode_steps属性
+    breakpoint()
     print()
     while len(infos) < num_itr:
-        #4  再次检查reset接口返回值
+        #检查4 ：再次检查reset的返回值
+
         obs_, obs = env.reset()
         print("ITERATION NUMBER ", len(infos))
         #5  检查能否满足goto的接口
@@ -117,7 +122,7 @@ def goToGoal(env, last_obs_, last_obs):
 
     obs_, obs, success = last_obs_, last_obs, False
     while time_step < min(env.max_episode_steps, args.steps):
-        #5-1 检查拿施教动作的接口 action必须是numpy数组  i是整数
+        #检查7 ：检查示教动作的接口
         action, i = env.get_oracle_action(obs)
         #print(time_step)
 
@@ -133,13 +138,13 @@ def goToGoal(env, last_obs_, last_obs):
             elif args.subtask == 'release':
                 action[-1] = -0.5
                 action[4] = -0.5
-        #5-2 检查是否能正常渲染图片  
+ 
         if args.video:
-            # img, mask = env.render('img_array')
+            #检查8 ：检查图片渲染接口
             img = env.render('rgb_array')
             images.append(img)
             # masks.append(mask)
-        #5-3  检查step接口是否正常
+        #检查8 ：检查环境步进接口
         obs_, reward, done, info, obs = env.step(action)
         # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1

@@ -97,12 +97,14 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def __init__(self, env, subtask='grasp', output_raw_obs=False):
         super().__init__(env, subtask, output_raw_obs)
         self.done_subtasks = {key: False for key in self.SUBTASK_STEPS.keys()}
-    #env设置最大的episode step-怀疑是register方法设置的--需要测试
+        #检查点1 初始化效果
+        breakpoint()
+
     @property
     def max_episode_steps(self):
         assert np.sum([x for x in self.SUBTASK_STEPS.values()]) == self.env._max_episode_steps
         return self.SUBTASK_STEPS[self.subtask]
-    #TODO 施工中  就是那两个接口
+
     def step(self, action):
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
@@ -128,14 +130,19 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         else: 
             success = False
             while not success:
-                #1 不成功 重置 不改
+                #检查点2 重置效果
+                breakpoint()
                 obs = self.env.reset() 
                 self.subtask = self._start_subtask
                 self._elapsed_steps = 0 
                 #拿动作不改
+                #检查点3 示教动作
+                breakpoint()
                 action, skill_index = self.env.get_oracle_action(obs)
                 count, max_steps = 0, self.SUBTASK_RESET_MAX_STEPS[self.subtask]
                 #2 不断拿施教动作去step  直到subtak的index发生变化 或者总步长达到-step不改 之前检查了
+                #检查点4 检查是示教运行到某个子任务之前
+                breakpoint()
                 while skill_index < self.SUBTASK_RESET_INDEX[self.subtask] and count < max_steps:
                     obs, reward, done, info = self.env.step(action)
                     action, skill_index = self.env.get_oracle_action(obs)
@@ -143,6 +150,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                 #到这里的时候 可以认为是 执行了 前面的所有的子任务的施教技能  
                 #3 在这里需要知道什么？ 需要知道究竟前面的施教执行成功没有  真正的核心不是replace 而是 comutereward  
                     #之前的那个子任务的goal信息 需要用之前子任务写在这个类中的信息来拿到  但是是临时的 只是为了判断是否成功  所以使用context manager
+                
+                #检查点5 检查任务临时切换和奖励计算结果
+                breakpoint()
                 with self.switch_subtask():
                     obs_ = self._replace_goal_with_subgoal(obs.copy())  # in case repeatedly replace goal
                     success = self.compute_reward(obs_['achieved_goal'], obs_['desired_goal']) + 1
@@ -152,9 +162,14 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #TODO 未完成
     def _replace_goal_with_subgoal(self, obs):
         """Replace ag and g"""
+        #检查点6 检查子目标拿的对不对
+        breakpoint()
         subgoal = self._subgoal()   
         #添加奇怪的接触信息  
+        #检查点7 检查传入参数id是否正确  接触信息是否获取到
+        breakpoint()
         kukacol = pairwise_collision(self.env.obj_id, self._kuka.body)
+
         #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
         #抓取的时候达到的目的  是两个机械臂的位置
 
@@ -163,8 +178,12 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #释放的时候大概率是物体位置反正无所谓了  不行再改了  
             
         elif self.subtask == 'release':
-            obs['achieved_goal'] = np.concatenate([obs['observation'][7: 10], obs['achieved_goal'], [kukacol]])
+            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['achieved_goal'], [kukacol]])
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
+        
+        #检查点8  检查传入参数id是否正确  接触信息是否获取到
+        breakpoint()
+        
         return obs
     #不用改
     def _subgoal(self):
@@ -174,6 +193,8 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #TODO 未完成
     def compute_reward(self, ag, g, info=None):
         """Compute reward that indicates the success of subtask"""
+        #检查点8 检查传入的信息 更改奖励计算的逻辑
+        breakpoint()
         if len(ag.shape) == 1:
             if self.subtask == 'release':
                 goal_reach = self.env.compute_reward(ag[-5:-2], g[-5:-2], None) + 1
