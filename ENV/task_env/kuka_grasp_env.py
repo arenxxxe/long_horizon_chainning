@@ -4,6 +4,9 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 print("current_dir=" + currentdir)
 os.sys.path.insert(0, currentdir)
 
+
+
+
 import math
 import gym
 from gym import spaces
@@ -11,7 +14,7 @@ from gym.utils import seeding
 import numpy as np
 import time
 import pybullet as p
-from .kuka_arm import Kuka
+from ENV.robot.kuka_arm import Kuka
 import random
 import pybullet_data
 from pkg_resources import parse_version
@@ -23,6 +26,9 @@ RENDER_WIDTH = 960
 
 
 
+
+
+
 from ENV.base_env.viskill_base_env.surrol_goalenv import SurRoLGoalEnv
 from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import reset_camera
 from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import get_link_pose, wrap_angle
@@ -30,7 +36,8 @@ from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import ge
 pybullet_wierd_offset=0.02
 class KukaGraspEnv(SurRoLGoalEnv):
         #surol自带的3d模型
-        ASSET_DIR_PATH="/home/wyq/SW/long_horizon_chainning/SIM_env/sim_env/from_surrol/3d_model/from_surrol"
+        ASSET_DIR_PATH=os.path.abspath("../3d_asset/3d_model/from_surrol")
+        
         #调整各种位置和大小的东西 其实没啥用处
         ee_offset=0.25
         SCALING = 1.
@@ -73,7 +80,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
                 #2 部署机器人和场景物体
                 #2a 封装好的kuka机器人
-                self._urdfRoot=pybullet_data.getDataPath()
+                self._urdfRoot=os.path.abspath("../3d_asset/3d_model/kuka_grasp")
+                
                 self._timeStep = 1. / 240.
                 self._kuka = Kuka(urdfRootPath=self._urdfRoot, timeStep=self._timeStep)
                 #2b 桌子
@@ -90,7 +98,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 self.obj_ids['rigid'].append(self.blockUid)
 
                 #3 导入显式路点的那个小红点模型
-                obj_id = p.loadURDF(os.path.join(self.ASSET_DIR_PATH, 'sphere/sphere.urdf'),
+                obj_id = p.loadURDF(os.path.join(self._urdfRoot, 'sphere/sphere.urdf'),
                                 globalScaling=self.SCALING*10)
                 self.obj_ids['fixed'].append(obj_id)  # 0
                 #简单测试区域 前面的东西认为是没问题的

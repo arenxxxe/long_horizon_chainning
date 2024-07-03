@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import gym
 import numpy as np
 import torch
-from surrol.utils.pybullet_utils import (pairwise_collision,
+from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import (pairwise_collision,
                                          pairwise_link_collision)
 
 
