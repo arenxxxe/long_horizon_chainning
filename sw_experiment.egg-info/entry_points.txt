@@ -1,0 +1,3 @@
+[console_scripts]
+demon_data_gen = chaining_package.EXPERIMENT.demonstraton_data_gen.mimic_data_generator:main
+kuka_grasp_test = chaining_package.ENV.task_env.kuka_grasp_env:main

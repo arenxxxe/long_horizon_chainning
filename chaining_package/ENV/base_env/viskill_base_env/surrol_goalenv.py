@@ -1,6 +1,6 @@
 import gym
 from gym import error
-from surrol_env import SurRoLEnv
+from .surrol_env import SurRoLEnv
 
 
 class SurRoLGoalEnv(SurRoLEnv):

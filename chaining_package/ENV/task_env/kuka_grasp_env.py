@@ -14,7 +14,7 @@ from gym.utils import seeding
 import numpy as np
 import time
 import pybullet as p
-from ENV.robot.kuka_arm import Kuka
+from chaining_package.ENV.robot.kuka_arm import Kuka
 import random
 import pybullet_data
 from pkg_resources import parse_version
@@ -27,23 +27,21 @@ RENDER_WIDTH = 960
 
 
 
-
-
-from ENV.base_env.viskill_base_env.surrol_goalenv import SurRoLGoalEnv
-from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import reset_camera
-from ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import get_link_pose, wrap_angle
+from chaining_package.ENV.base_env.viskill_base_env.surrol_goalenv import SurRoLGoalEnv
+from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import reset_camera
+from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import get_link_pose, wrap_angle
 #################################尝试直接改变环境代码################################
 pybullet_wierd_offset=0.02
 class KukaGraspEnv(SurRoLGoalEnv):
         #surol自带的3d模型
-        ASSET_DIR_PATH=os.path.abspath("../3d_asset/3d_model/from_surrol")
+        ASSET_DIR_PATH=os.path.abspath("./chaining_package/ENV/3d_asset/3d_model/kuka_grasp")
         
         #调整各种位置和大小的东西 其实没啥用处
         ee_offset=0.25
         SCALING = 1.
         #A 完成上层调用逻辑     env = KukaGraspEnv() 
         #TODO 已经完成书写
-        def __init__(self,render_mode='rgb_array'):
+        def __init__(self,render_mode='human'):
                 
                 #1设置渲染模式 开启bullet服务器--无需修改
                 #2 相机参数设置-无需修改
@@ -80,7 +78,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
                 #2 部署机器人和场景物体
                 #2a 封装好的kuka机器人
-                self._urdfRoot=os.path.abspath("../3d_asset/3d_model/kuka_grasp")
+                self._urdfRoot=os.path.abspath("./chaining_package/ENV/3d_asset/3d_model/kuka_grasp")
                 
                 self._timeStep = 1. / 240.
                 self._kuka = Kuka(urdfRootPath=self._urdfRoot, timeStep=self._timeStep)
@@ -401,6 +399,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 
                 #一次动60  是源代码的一次动作的仿真步
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [list_action[0],list_action[1],list_action[2]-self.ee_offset], (0, 0, 0, 1))
+
                 list_action[2]+=0.02#因为pybullet奇怪的逆运动学计算 差为0.02 不确定是kuka机械臂的问题还是所有机械臂共性问题
                 for i in range(60):
                         self._kuka.applyAction(list_action)
@@ -506,6 +505,11 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                 if i == 5:
                                         print("最后一个路点不会归零")
 
+
+
+
+
+
                                 
                                 self._waypoints[i] = None if i< len(self._waypoints)-1 else self._waypoints[i]
                         #5 没到达位置 继续执行原来路点
@@ -572,12 +576,12 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
 
 ##############原始的环境测试代码
-if __name__ == "__main__":
+def main():
+
         env = KukaGraspEnv()  # create one process and corresponding env
         env.test()
         rgb=env.render()
         import pdb;pdb.set_trace()
-
 
 #     env.close()
 #     time.sleep(2)

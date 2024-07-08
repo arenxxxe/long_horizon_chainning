@@ -8,8 +8,8 @@ import argparse
 import time
 import numpy as np
 import imageio
-from ENV.will_be_deprecated.viskill_chaos_utility.const import ROOT_DIR_PATH
-from ENV.agent_interface_env.kuka_slsc_wrapper import KukagraspSLWrapper
+from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.const import ROOT_DIR_PATH
+from chaining_package.ENV.agent_interface_env.kuka_slsc_wrapper import KukagraspSLWrapper
 import gym
 
 parser = argparse.ArgumentParser(description='generate demonstrations for imitation')
