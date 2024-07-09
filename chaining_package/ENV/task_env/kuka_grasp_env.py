@@ -82,6 +82,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 
                 self._timeStep = 1. / 240.
                 self._kuka = Kuka(urdfRootPath=self._urdfRoot, timeStep=self._timeStep)
+                self.kuka_body=self._kuka.kukaUid
                 #2b 桌子
                 p.loadURDF(os.path.join(self._urdfRoot, "table/table.urdf"), 0.5000000, 0.00000, -0.63000,
                         0.000000, 0.000000, 0.0, 1.0)
@@ -411,6 +412,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 pass
            
         def goal_distance(self,goal_a, goal_b):
+                
+                #很明显的是 作了目标替换之后  计算奖励的逻辑出问题了
                 assert goal_a.shape == goal_b.shape
                 return np.linalg.norm(goal_a - goal_b, axis=-1)
         

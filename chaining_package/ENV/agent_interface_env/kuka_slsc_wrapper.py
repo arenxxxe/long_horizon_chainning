@@ -98,11 +98,15 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         super().__init__(env, subtask, output_raw_obs)
         self.done_subtasks = {key: False for key in self.SUBTASK_STEPS.keys()}
         #检查点1 初始化效果
-        breakpoint()
+        #breakpoint() #2 就是设置了一些属性 也看不出对不对
 
     @property
     def max_episode_steps(self):
-        assert np.sum([x for x in self.SUBTASK_STEPS.values()]) == self.env._max_episode_steps
+        # breakpoint() #这里出过错 调整的权宜之计是register的时候写死
+        assert np.sum([x for x in self.SUBTASK_STEPS.values()]) == self.env._max_episode_steps #根据调试器的信息 这东西果然是register的时候写的那个东西
+        #实际上这个逻辑会引申出很多问题？
+        #为什么要规定这些动作要这个时间段完成？
+        #
         return self.SUBTASK_STEPS[self.subtask]
 
     def step(self, action):
@@ -163,32 +167,33 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def _replace_goal_with_subgoal(self, obs):
         """Replace ag and g"""
         #检查点6 检查子目标拿的对不对
-        breakpoint()
+        #breakpoint() 设函数里面 别设外面
         subgoal = self._subgoal()   
         #添加奇怪的接触信息  
-        #检查点7 检查传入参数id是否正确  接触信息是否获取到
-        breakpoint()
-        kukacol = pairwise_collision(self.env.obj_id, self._kuka.body)
-
+        #检查点7 检查传入参数id是否正确  接触信息是否获取到  
+        #breakpoint() # 第一次检查完毕 正常
+        kukacol = pairwise_collision(self.env.blockUid, self.env.kuka_body) #所谓的body 源代码拿得是什么东西？psm1的body  这东西怎么来的？loadurdf文件返回的   机器人在pybullet中的uid sdf
+        
         #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
         #抓取的时候达到的目的  是两个机械臂的位置
 
         if self.subtask == 'grasp':
-            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['observation'][7: 10], [kukacol]])
+            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3],obs['achieved_goal'], [kukacol]])
         #释放的时候大概率是物体位置反正无所谓了  不行再改了  
             
         elif self.subtask == 'release':
             obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['achieved_goal'], [kukacol]])
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
-        
+        #这两个goal需要同样的维度吗？从源代码看 并不是
         #检查点8  检查传入参数id是否正确  接触信息是否获取到
-        breakpoint()
+        #breakpoint() #并未检查出问题 两个goal 一个是7维度 一个四维度 看不出区别
         
         return obs
     #不用改
     def _subgoal(self):
         """Output goal of subtask"""
         goal = self.env.subgoals[self.SUBTASK_ORDER[self.subtask]]
+        #breakpoint()# 4 有两个子目标 分别是抓取上来和释放的位置 都是物体的 看起来没问题
         return goal
     #TODO 未完成
     def compute_reward(self, ag, g, info=None):

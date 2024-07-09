@@ -13,7 +13,7 @@ from chaining_package.ENV.agent_interface_env.kuka_slsc_wrapper import Kukagrasp
 import gym
 
 parser = argparse.ArgumentParser(description='generate demonstrations for imitation')
-parser.add_argument('--env', type=str, required=True,
+parser.add_argument('--env', type=str, required=False,default='KukaGrasp-v0',
                     help='the environment to generate demonstrations')
 parser.add_argument('--video', action='store_true',
                     help='whether or not to record video')
@@ -46,10 +46,10 @@ SUBTASK_END = {
 
 def main():
     #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode='rgb_array')  # 'human'
+    env = gym.make(args.env, render_mode='human')  # 'human' 'rgb_array'
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化
-    breakpoint()
+    #breakpoint() #1完成
     num_itr = 200 if not args.video else 10
     cnt = 0
     success_counter = 0
@@ -57,14 +57,14 @@ def main():
 
     env.reset()
     #检查2 ：reset的返回值
-    breakpoint()
+    #breakpoint() #3 reset没看到明显的问题
     print("Reset!")
     init_time = time.time()
 
     if args.steps is None:
-        args.steps = env.max_episode_steps
+        args.steps = env.max_episode_steps #拿到的是子任务的
     #检查3 ：env.max_episode_steps属性
-    breakpoint()
+    #breakpoint() #没看到明显的问题
     print()
     while len(infos) < num_itr:
         #检查4 ：再次检查reset的返回值
