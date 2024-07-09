@@ -50,7 +50,7 @@ def main():
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化
     #breakpoint() #1完成
-    num_itr = 200 if not args.video else 10
+    num_itr = 200 if not args.video else 10 #不用视频数据200次 要的话10次？
     cnt = 0
     success_counter = 0
     init_state_space = 'random'
@@ -121,30 +121,32 @@ def goToGoal(env, last_obs_, last_obs):
     episode_obs.append(last_obs_)
 
     obs_, obs, success = last_obs_, last_obs, False
+    final_action_saved=False
+    #执行一个episode 整个从子任务开始到结束
     while time_step < min(env.max_episode_steps, args.steps):
         #检查7 ：检查示教动作的接口
         action, i = env.get_oracle_action(obs)
         #print(time_step)
-
-        if i == SUBTASK_END[args.subtask]:
+        #如果是子任务结束动作 之后的动作 
+        if i >= SUBTASK_END[args.subtask]: 
             info['is_success'] = 1
-            action = np.zeros_like(action)
-            if args.subtask == 'grasp':
-                action[-1] = -0.5
-                action [4] = 0.5
-            elif args.subtask == 'handover':
-                action[-1] = 0.5
-                action[4] = -0.5
-            elif args.subtask == 'release':
-                action[-1] = -0.5
-                action[4] = -0.5
+            if not final_action_saved:
+                final_action=action
+                final_action_saved=True #只用一次
+            action = final_action #最后的动作一直保持
+
+            #动作清零？ 目的是什么？代表着之后不要再拿新的下一个动作了 但是为什么是清零？ 都是给入绝对位姿
+            #没有观察到归零之后向0走的迹象
+            #检查最后数据里面有没有0的记录 有至少五个记录 说明这个东西也step下去了
+            #作用猜测:断了之后的施教动作 待在原来结束的状态不变 他这里是通过其他set0和末端执行器原来状态达到的
+
  
         if args.video:
             #检查8 ：检查图片渲染接口
             img = env.render('rgb_array')
             images.append(img)
             # masks.append(mask)
-        #检查8 ：检查环境步进接口
+        #检查8 ：检查环境步进接口 
         obs_, reward, done, info, obs = env.step(action)
         # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1

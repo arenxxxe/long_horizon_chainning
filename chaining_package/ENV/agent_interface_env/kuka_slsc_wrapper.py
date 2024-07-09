@@ -117,6 +117,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         info['is_success'] = reward + 1
         done = self._elapsed_steps == self.max_episode_steps
         # save groud truth goal
+        #这个东西到底是干什么的？
         with self.switch_subtask(self.LAST_SUBTASK):
             info['gt_goal'] = self._replace_goal_with_subgoal(next_obs.copy())['desired_goal']
 
@@ -200,13 +201,17 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         """Compute reward that indicates the success of subtask"""
         #检查点8 检查传入的信息 更改奖励计算的逻辑
         breakpoint()
+        #更改了goal之后 使用原始的env的奖励计算是不可能的
+
+
         if len(ag.shape) == 1:
-            if self.subtask == 'release':
-                goal_reach = self.env.compute_reward(ag[-5:-2], g[-5:-2], None) + 1
-            else:
-                goal_reach = self.env.compute_reward(ag[:-2], g[:-2], None) + 1
-            contact_cond = np.all(ag[-2:]==g[-2:])
+            #还是需要原来的奖励函数的
+            goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
+            # 在原来的奖励函数的基础上加碰撞条件的奖励 
+            contact_cond = np.all(ag[-2:]==g[-2:])#不仅要到位置 而且能碰撞？
             reward = (goal_reach and contact_cond) - 1
+            #TODO 出bug了 施教动作到不了位置
+
         else:
             if self.subtask == 'release':
                 goal_reach = self.env.compute_reward(ag[:,-5:-2], g[:,-5:-2], None).reshape(-1, 1) + 1
@@ -214,6 +219,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                 goal_reach = self.env.compute_reward(ag[:,:-2], g[:,:-2], None).reshape(-1, 1) + 1
             contact_cond = np.all(ag[:, -2:]==g[:, -2:], axis=1).reshape(-1, 1)
             reward = np.all(np.hstack([goal_reach, contact_cond]), axis=1) - 1.
+        
         return reward
 
 
