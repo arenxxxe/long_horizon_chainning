@@ -405,7 +405,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()
-                        time.sleep(1.0 / 30.0)
+                        time.sleep(1.0 / 240.0)
            
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取

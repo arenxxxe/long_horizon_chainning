@@ -200,7 +200,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def compute_reward(self, ag, g, info=None):
         """Compute reward that indicates the success of subtask"""
         #检查点8 检查传入的信息 更改奖励计算的逻辑
-        breakpoint()
+        #breakpoint()
         #更改了goal之后 使用原始的env的奖励计算是不可能的
 
 

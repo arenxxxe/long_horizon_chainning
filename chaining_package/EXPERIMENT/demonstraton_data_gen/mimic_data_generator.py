@@ -23,6 +23,7 @@ parser.add_argument('--subtask', type=str,
                     help='how many steps allowed to run', default='grasp')
 args = parser.parse_args()
 
+
 actions = []
 observations = []
 infos = []
@@ -39,7 +40,7 @@ SUBTASK_START = {
 
 #结束的路点index-完成
 SUBTASK_END = {
-    'grasp': 3,
+    'grasp': 4,
     'release': 5
 }
 
@@ -74,6 +75,7 @@ def main():
         #5  检查能否满足goto的接口
         goToGoal(env, obs_, obs)
         cnt += 1
+        
 
     file_name = "data_"
     file_name += args.env
@@ -117,7 +119,7 @@ def goToGoal(env, last_obs_, last_obs):
 
     time_step = 0  # count the total number of time steps
     episode_init_time = time.time()
-    
+     
     episode_obs.append(last_obs_)
 
     obs_, obs, success = last_obs_, last_obs, False
@@ -140,6 +142,7 @@ def goToGoal(env, last_obs_, last_obs):
             #检查最后数据里面有没有0的记录 有至少五个记录 说明这个东西也step下去了
             #作用猜测:断了之后的施教动作 待在原来结束的状态不变 他这里是通过其他set0和末端执行器原来状态达到的
 
+
  
         if args.video:
             #检查8 ：检查图片渲染接口
@@ -153,6 +156,7 @@ def goToGoal(env, last_obs_, last_obs):
         #print(reward, i)
 
         if isinstance(obs, dict) and info['is_success'] > 0 and not success:
+            
             print("Timesteps to finish:", time_step)
             success = True
 
@@ -164,10 +168,11 @@ def goToGoal(env, last_obs_, last_obs):
         episode_terminals.append(done)
         episode_gt_acs.append(info['gt_goal'])
         last_obs_ = obs_
-
+        #breakpoint()
     print("Episode time used: {:.2f}s\n".format(time.time() - episode_init_time))
-
+    
     if success:
+        
         actions.append(episode_acs)
         observations.append(episode_obs)
         infos.append(episode_info)
