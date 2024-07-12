@@ -47,7 +47,7 @@ SUBTASK_END = {
 
 def main():
     #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode='human')  # 'human' 'rgb_array'
+    env = gym.make(args.env, render_mode='rgb_array')  # 'human' 'rgb_array'
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化
     #breakpoint() #1完成
@@ -69,7 +69,7 @@ def main():
     print()
     while len(infos) < num_itr:
         #检查4 ：再次检查reset的返回值
-
+        #print(f"循环停止条件{len(infos)}")
         obs_, obs = env.reset()
         print("ITERATION NUMBER ", len(infos))
         #5  检查能否满足goto的接口
@@ -125,7 +125,8 @@ def goToGoal(env, last_obs_, last_obs):
     obs_, obs, success = last_obs_, last_obs, False
     final_action_saved=False
     #执行一个episode 整个从子任务开始到结束
-    while time_step < min(env.max_episode_steps, args.steps):
+
+    while time_step < min(env.max_episode_steps+1, args.steps+1):
         #检查7 ：检查示教动作的接口
         action, i = env.get_oracle_action(obs)
         #print(time_step)
@@ -142,8 +143,9 @@ def goToGoal(env, last_obs_, last_obs):
             #检查最后数据里面有没有0的记录 有至少五个记录 说明这个东西也step下去了
             #作用猜测:断了之后的施教动作 待在原来结束的状态不变 他这里是通过其他set0和末端执行器原来状态达到的
 
-
- 
+        if time_step == 13:
+            breakpoint()
+        print(f"时间步{time_step}")
         if args.video:
             #检查8 ：检查图片渲染接口
             img = env.render('rgb_array')
@@ -154,7 +156,7 @@ def goToGoal(env, last_obs_, last_obs):
         # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1
         #print(reward, i)
-
+        #print(f"成功的奖励信号{info['is_success']}")
         if isinstance(obs, dict) and info['is_success'] > 0 and not success:
             
             print("Timesteps to finish:", time_step)
@@ -168,11 +170,11 @@ def goToGoal(env, last_obs_, last_obs):
         episode_terminals.append(done)
         episode_gt_acs.append(info['gt_goal'])
         last_obs_ = obs_
-        #breakpoint()
+        
     print("Episode time used: {:.2f}s\n".format(time.time() - episode_init_time))
     
     if success:
-        
+
         actions.append(episode_acs)
         observations.append(episode_obs)
         infos.append(episode_info)

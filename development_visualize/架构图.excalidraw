@@ -71,7 +71,7 @@
       "containerId": "MuvfaoQeMVge1-P3lqcb6",
       "originalText": "算法",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -141,12 +141,12 @@
       "containerId": "jc5s72b9zso5S_4sjJ_p-",
       "originalText": "环境env",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "text",
-      "version": 23,
-      "versionNonce": 624911841,
+      "version": 24,
+      "versionNonce": 1437549894,
       "isDeleted": false,
       "id": "DZQeHo_Bqd3rk2ZjmHLUQ",
       "fillStyle": "solid",
@@ -159,14 +159,14 @@
       "y": 217.90377044677734,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 80,
+      "width": 79.99993896484375,
       "height": 25,
       "seed": 170228422,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813274,
+      "updated": 1720768788152,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -247,7 +247,7 @@
       "containerId": "I9LT0T4CRSEpFqbab2spG",
       "originalText": "实验与数据区",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -317,7 +317,7 @@
       "containerId": "x20D0Pmsb-AnIMIZu2KAP",
       "originalText": "公共接口",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -387,7 +387,7 @@
       "containerId": "VpK0Ghfgr4mItLua4Bp6T",
       "originalText": "内部实现",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -457,7 +457,7 @@
       "containerId": "zLz1CsjbIZKxu6tLcspD8",
       "originalText": "示教数据生成器",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 44
     },
     {
       "type": "rectangle",
@@ -527,7 +527,7 @@
       "containerId": "9ilfjggxEZTyRNe1yI3mj",
       "originalText": "训练与测试",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -597,7 +597,7 @@
       "containerId": "TUy4fu_5dJt3JODyJ9FF_",
       "originalText": "数据储存区",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -667,7 +667,7 @@
       "containerId": "0yLn-6P8PeU6JaROz8KR1",
       "originalText": "agent储存区",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -737,7 +737,7 @@
       "containerId": "4lGlC3m9Qm2ldqb9amyZw",
       "originalText": "实验结果储存区",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 44
     },
     {
       "type": "rectangle",
@@ -807,7 +807,7 @@
       "containerId": "dzElkrKdpgfEWaj2JJwts",
       "originalText": "训练器",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -877,7 +877,7 @@
       "containerId": "fJAnPvrhwf7YCA_Gn6o4Y",
       "originalText": "viskill训练器和配置",
       "lineHeight": 1.25,
-      "baseline": 46
+      "baseline": 44
     },
     {
       "type": "rectangle",
@@ -947,7 +947,7 @@
       "containerId": "1kG4itw1lqriQij6WIUqB",
       "originalText": "3d模型资产",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -1017,7 +1017,7 @@
       "containerId": "Fl_UGNdcHfS_cx1I8FjJw",
       "originalText": "agent接口env",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -1087,7 +1087,7 @@
       "containerId": "fuczqYDqo5vksG4uoJHSc",
       "originalText": "符合gym接口和仿真环境基本交互的的基本env",
       "lineHeight": 1.25,
-      "baseline": 96
+      "baseline": 94
     },
     {
       "type": "rectangle",
@@ -1157,7 +1157,7 @@
       "containerId": "Vsq16lptdp3n8H1Ic85eN",
       "originalText": "机械臂和底层仿真环境交互的封装",
       "lineHeight": 1.25,
-      "baseline": 71
+      "baseline": 69
     },
     {
       "type": "rectangle",
@@ -1227,12 +1227,12 @@
       "containerId": "jqWvEC10-15xJy0owAw1W",
       "originalText": "机械臂+不同资产进行不同任务的task env",
       "lineHeight": 1.25,
-      "baseline": 71
+      "baseline": 69
     },
     {
       "type": "text",
-      "version": 25,
-      "versionNonce": 1564157103,
+      "version": 26,
+      "versionNonce": 331815450,
       "isDeleted": false,
       "id": "h4jXe-OLgV1ZHTESF0OJO",
       "fillStyle": "solid",
@@ -1245,14 +1245,14 @@
       "y": 92.2482528686524,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 104.17996215820312,
+      "width": 104.17990112304688,
       "height": 25,
       "seed": 1953061672,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813275,
+      "updated": 1720768788152,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1267,8 +1267,8 @@
     },
     {
       "type": "text",
-      "version": 45,
-      "versionNonce": 49938881,
+      "version": 46,
+      "versionNonce": 1130540166,
       "isDeleted": false,
       "id": "Bcw8UbBh2_rf9jSMktJ3S",
       "fillStyle": "solid",
@@ -1281,14 +1281,14 @@
       "y": 140.5482406616211,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 40,
+      "width": 39.999969482421875,
       "height": 25,
       "seed": 1572906328,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813275,
+      "updated": 1720768788153,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1303,8 +1303,8 @@
     },
     {
       "type": "text",
-      "version": 68,
-      "versionNonce": 1123071695,
+      "version": 69,
+      "versionNonce": 449890010,
       "isDeleted": false,
       "id": "n4kNO7FnBhX88EKW4ujCj",
       "fillStyle": "solid",
@@ -1317,14 +1317,14 @@
       "y": 187.74825286865234,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 60,
+      "width": 59.99995422363281,
       "height": 25,
       "seed": 2102533464,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813276,
+      "updated": 1720768788153,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1339,8 +1339,8 @@
     },
     {
       "type": "text",
-      "version": 56,
-      "versionNonce": 716579233,
+      "version": 57,
+      "versionNonce": 1286024134,
       "isDeleted": false,
       "id": "j6B-rbD1friH9eZWUMxJB",
       "fillStyle": "solid",
@@ -1353,14 +1353,14 @@
       "y": 1045.0482406616209,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 60,
+      "width": 59.99995422363281,
       "height": 25,
       "seed": 720113704,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813276,
+      "updated": 1720768788154,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1375,8 +1375,8 @@
     },
     {
       "type": "text",
-      "version": 98,
-      "versionNonce": 477037807,
+      "version": 99,
+      "versionNonce": 361159578,
       "isDeleted": false,
       "id": "Rjq3ewQ5oK3iHbo-soV1x",
       "fillStyle": "solid",
@@ -1389,14 +1389,14 @@
       "y": 1122.9481124877927,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 90.33993530273438,
+      "width": 90.33990478515625,
       "height": 25,
       "seed": 615306024,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813276,
+      "updated": 1720768788154,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1411,8 +1411,8 @@
     },
     {
       "type": "text",
-      "version": 67,
-      "versionNonce": 1772307841,
+      "version": 68,
+      "versionNonce": 261735174,
       "isDeleted": false,
       "id": "WQ0bdzc-wyI9M5gesYmyo",
       "fillStyle": "solid",
@@ -1425,14 +1425,14 @@
       "y": 299.74813079833984,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 146.7799072265625,
+      "width": 146.77984619140625,
       "height": 25,
       "seed": 430891816,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813277,
+      "updated": 1720768788154,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1447,8 +1447,8 @@
     },
     {
       "type": "text",
-      "version": 74,
-      "versionNonce": 1765707535,
+      "version": 75,
+      "versionNonce": 572282970,
       "isDeleted": false,
       "id": "bKhlGc8k49vL1AnbC7dxf",
       "fillStyle": "solid",
@@ -1461,14 +1461,14 @@
       "y": 473.74816131591797,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 166.7799072265625,
+      "width": 166.7798309326172,
       "height": 25,
       "seed": 1175245864,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813277,
+      "updated": 1720768788155,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1483,8 +1483,8 @@
     },
     {
       "type": "text",
-      "version": 74,
-      "versionNonce": 989916513,
+      "version": 75,
+      "versionNonce": 1589080646,
       "isDeleted": false,
       "id": "_xEP1INFqVoV_Kx22-pc0",
       "fillStyle": "solid",
@@ -1497,14 +1497,14 @@
       "y": 638.1481246948242,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 166.7799072265625,
+      "width": 166.7798309326172,
       "height": 25,
       "seed": 895459160,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813277,
+      "updated": 1720768788155,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1519,8 +1519,8 @@
     },
     {
       "type": "text",
-      "version": 72,
-      "versionNonce": 601347375,
+      "version": 73,
+      "versionNonce": 543440154,
       "isDeleted": false,
       "id": "0zocv24H4vEn4s1Li6Q1Q",
       "fillStyle": "solid",
@@ -1533,14 +1533,14 @@
       "y": 802.9481735229492,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 166.7799072265625,
+      "width": 166.7798309326172,
       "height": 25,
       "seed": 1707035224,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813277,
+      "updated": 1720768788155,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1555,8 +1555,8 @@
     },
     {
       "type": "text",
-      "version": 12,
-      "versionNonce": 102668609,
+      "version": 13,
+      "versionNonce": 886913414,
       "isDeleted": false,
       "id": "V9HfA8OuniZgUISMFThtT",
       "fillStyle": "solid",
@@ -1569,14 +1569,14 @@
       "y": 860.6481246948241,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 40,
+      "width": 39.999969482421875,
       "height": 25,
       "seed": 1239627864,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813277,
+      "updated": 1720768788156,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1591,8 +1591,8 @@
     },
     {
       "type": "text",
-      "version": 34,
-      "versionNonce": 1671649103,
+      "version": 35,
+      "versionNonce": 2110884314,
       "isDeleted": false,
       "id": "NqfGj9Ed4TefSQoP_Ovc9",
       "fillStyle": "solid",
@@ -1605,14 +1605,14 @@
       "y": 531.4481735229492,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 104.17996215820312,
+      "width": 104.17990112304688,
       "height": 25,
       "seed": 958875432,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813278,
+      "updated": 1720768788156,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1627,8 +1627,8 @@
     },
     {
       "type": "text",
-      "version": 29,
-      "versionNonce": 475777313,
+      "version": 30,
+      "versionNonce": 692590790,
       "isDeleted": false,
       "id": "8ZHs28kaXQ6--7Pze9TuU",
       "fillStyle": "solid",
@@ -1641,14 +1641,14 @@
       "y": 698.6481246948242,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 146.8599090576172,
+      "width": 146.85983276367188,
       "height": 25,
       "seed": 542800216,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1719939813278,
+      "updated": 1720768788156,
       "link": null,
       "locked": false,
       "fontSize": 20,
@@ -1729,7 +1729,7 @@
       "containerId": "vwTdEBHftqTEwsFytNRDz",
       "originalText": "分析图表",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -1799,7 +1799,7 @@
       "containerId": "316MzIz-fnHQMzT9I7wnI",
       "originalText": "原始数据",
       "lineHeight": 1.25,
-      "baseline": 21
+      "baseline": 19
     },
     {
       "type": "rectangle",
@@ -1869,7 +1869,7 @@
       "containerId": "0zRJ-GiHUdkA2m_UtijeV",
       "originalText": "自定义训练器与hydra配置",
       "lineHeight": 1.25,
-      "baseline": 43
+      "baseline": 44
     }
   ],
   "appState": {
