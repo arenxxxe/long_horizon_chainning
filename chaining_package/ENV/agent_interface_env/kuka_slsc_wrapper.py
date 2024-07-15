@@ -60,9 +60,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     }    
     #子任务步长env step的步长吧--完成
     SUBTASK_STEPS = {
-        'grasp': 13,
+        'grasp': 20,
 
-        'release': 13
+        'release': 20
     }
     #与reset有关 源代码逻辑是除了开始的任务 后面的任务都写进来  不管了--完成
     SUBTASK_RESET_INDEX = {
@@ -73,7 +73,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #重置到一个子任务开始状态 环境首先需要执行多少步--完成
     SUBTASK_RESET_MAX_STEPS = {
 
-        'release': 13
+        'release': 20
     }
     #对之前任务的了解-完成
     SUBTASK_PREV_SUBTASK = {
@@ -113,7 +113,10 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
+        
+        #print(f"到达的目标{next_obs_['achieved_goal']}   期望到达的目标{next_obs_['desired_goal']}")
         reward = self.compute_reward(next_obs_['achieved_goal'], next_obs_['desired_goal'])
+        #print(f"此时的奖励{reward}")
         info['is_success'] = reward + 1
         done = self._elapsed_steps == self.max_episode_steps
         # save groud truth goal
@@ -173,8 +176,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #添加奇怪的接触信息  
         #检查点7 检查传入参数id是否正确  接触信息是否获取到  
         #breakpoint() # 第一次检查完毕 正常
-        kukacol = pairwise_collision(self.env.blockUid, self.env.kuka_body) #所谓的body 源代码拿得是什么东西？psm1的body  这东西怎么来的？loadurdf文件返回的   机器人在pybullet中的uid sdf
         
+        kukacol = pairwise_collision(self.env.blockUid, self.env.kuka_body) #所谓的body 源代码拿得是什么东西？psm1的body  这东西怎么来的？loadurdf文件返回的   机器人在pybullet中的uid sdf
+        #print(f"有没有撞倒？{kukacol}")
         #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
         #抓取的时候达到的目的  是两个机械臂的位置
 
@@ -188,7 +192,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #这两个goal需要同样的维度吗？从源代码看 并不是
         #检查点8  检查传入参数id是否正确  接触信息是否获取到
         #breakpoint() #并未检查出问题 两个goal 一个是7维度 一个四维度 看不出区别
-        
+        #print(f"replace里面的东西{obs['achieved_goal'] }")
         return obs
     #不用改
     def _subgoal(self):
@@ -208,9 +212,13 @@ class KukagraspSLWrapper(SkillLearningWrapper):
             #还是需要原来的奖励函数的
             goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
             # 在原来的奖励函数的基础上加碰撞条件的奖励 
-            contact_cond = np.all(ag[-2:]==g[-2:])#不仅要到位置 而且能碰撞？
+            contact_cond = np.all(ag[-1:]==g[-1:])#注意切片的问题
+            #print(f"看看是不是切片的问题{ag[-2:]}")
             reward = (goal_reach and contact_cond) - 1
             #TODO 出bug了 施教动作到不了位置
+            
+            
+           
 
         else:
             if self.subtask == 'release':

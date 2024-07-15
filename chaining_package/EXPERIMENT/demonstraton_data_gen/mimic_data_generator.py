@@ -47,7 +47,7 @@ SUBTASK_END = {
 
 def main():
     #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode='rgb_array')  # 'human' 'rgb_array'
+    env = gym.make(args.env, render_mode= 'rgb_array')  # 'human' 'rgb_array'
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化
     #breakpoint() #1完成
@@ -75,6 +75,7 @@ def main():
         #5  检查能否满足goto的接口
         goToGoal(env, obs_, obs)
         cnt += 1
+        #print(f"计数看看{cnt}")
         
 
     file_name = "data_"
@@ -83,7 +84,14 @@ def main():
     file_name += "_" + str(num_itr)
     file_name += "_primitive_new" + args.subtask + ".npz"
     folder = 'demo' if not args.video else 'video'
-    folder = os.path.join(ROOT_DIR_PATH, 'data', folder)
+    #文件-文件夹-上层文件夹
+    #breakpoint()
+    current_file_path=os.path.abspath(__file__)
+    current_dir_path=os.path.dirname(current_file_path)
+    parent_dir_path=os.path.dirname(current_dir_path)
+
+    storage_path=os.path.join(parent_dir_path,"data_storage")
+    folder = os.path.join(storage_path, 'demonstration_data')
 
     np.savez_compressed(os.path.join(folder, file_name),
                         actions=actions, observations=observations, terminals=terminals, gt_actions=gt_actions)  # save the file
@@ -116,36 +124,35 @@ def goToGoal(env, last_obs_, last_obs):
     episode_info = []
     episode_terminals = []
     episode_gt_acs = []
-
     time_step = 0  # count the total number of time steps
     episode_init_time = time.time()
      
     episode_obs.append(last_obs_)
 
     obs_, obs, success = last_obs_, last_obs, False
-    final_action_saved=False
     #执行一个episode 整个从子任务开始到结束
 
-    while time_step < min(env.max_episode_steps+1, args.steps+1):
+    while time_step < min(env.max_episode_steps, args.steps):
         #检查7 ：检查示教动作的接口
         action, i = env.get_oracle_action(obs)
         #print(time_step)
-        #如果是子任务结束动作 之后的动作 
+        #准备到结束动作了 开始记录每次返回的施教动作
+        if i == SUBTASK_END[args.subtask]-1: 
+            final_action=action
+        #在结束动作处 按照上个施教动作的末尾动作运行
+
         if i >= SUBTASK_END[args.subtask]: 
             info['is_success'] = 1
-            if not final_action_saved:
-                final_action=action
-                final_action_saved=True #只用一次
-            action = final_action #最后的动作一直保持
 
+            action = final_action #最后的动作一直保持
+            #print(f"最后的动作{action}当前的")
             #动作清零？ 目的是什么？代表着之后不要再拿新的下一个动作了 但是为什么是清零？ 都是给入绝对位姿
             #没有观察到归零之后向0走的迹象
             #检查最后数据里面有没有0的记录 有至少五个记录 说明这个东西也step下去了
             #作用猜测:断了之后的施教动作 待在原来结束的状态不变 他这里是通过其他set0和末端执行器原来状态达到的
 
-        if time_step == 13:
-            breakpoint()
-        print(f"时间步{time_step}")
+
+        #print(f"时间步{time_step}")
         if args.video:
             #检查8 ：检查图片渲染接口
             img = env.render('rgb_array')
@@ -155,6 +162,7 @@ def goToGoal(env, last_obs_, last_obs):
         obs_, reward, done, info, obs = env.step(action)
         # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1
+        #print(f"时间步{time_step}对应的动作id{i}")
         #print(reward, i)
         #print(f"成功的奖励信号{info['is_success']}")
         if isinstance(obs, dict) and info['is_success'] > 0 and not success:

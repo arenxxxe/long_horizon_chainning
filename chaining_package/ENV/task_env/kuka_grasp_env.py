@@ -158,7 +158,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 
                 open_close=[-0.035,0.3]
                                 #1.1 先定位
-                above_object_wp=[init_object_posx,init_object_posy,lift_pos,0,open_close[1]]
+                above_object_wp=[init_object_posx,init_object_posy,lift_pos-0.1,0,open_close[1]]
                                 #1.2 接近物体
                 reach_object_wp=[init_object_posx,init_object_posy,init_object_pos[0][2]+self.ee_offset,1.5,open_close[1]]                                
                                 #1.3 抓取
@@ -173,11 +173,11 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
                 self._waypoints = [above_object_wp,reach_object_wp,grasp_object_wp,lift_object_wp,move_object_wp,release_object_wp] 
                 #3 根据路点 设置子目标--物体移动的中间位置 动了才能叫作子目标 而不是末端执行器的 
-                above_object_goal=[above_object_wp[0],above_object_wp[1],above_object_wp[2]]
+                lift_object_goal=[lift_object_wp[0],lift_object_wp[1],lift_object_wp[2]]
                 
                 release_object_goal=[release_object_wp[0],release_object_wp[1],release_object_wp[2]]
 
-                self.subgoals=[above_object_goal,release_object_goal]
+                self.subgoals=[lift_object_goal,release_object_goal]
                 
         def _get_obs(self) :
                 """
@@ -405,7 +405,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()
-                        time.sleep(1.0 / 240.0)
+                        #time.sleep(1.0 / 240.0)
            
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取
@@ -504,7 +504,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         #print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
                         #4 判断是否到达位置 删路点
                         if np.linalg.norm(delta_pos) * 0.01 / scale_factor < 2e-3 and np.abs(delta_yaw) < np.deg2rad(2.):
-                                print(f"第{i+1}个路点已经执行完毕")
+                                #print(f"第{i+1}个路点已经执行完毕")
                                 if i == 5:
                                         print("最后一个路点不会归零")
 
