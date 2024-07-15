@@ -3,4 +3,4 @@ __pycache__/
 .idea
 /sw_experiment.egg-info
 
-./chaining_package/EXPERIMENT/data_storage/*
+/chaining_package/EXPERIMENT/data_storage/*
