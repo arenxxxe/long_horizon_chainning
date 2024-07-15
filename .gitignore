@@ -1,9 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
 .idea
-surrol.egg-info
-logs
-policies
-surrol/data/demo
-surrol/data/video
-EXPERIMENT/data_storage
+/sw_experiment.egg-info
+
+/chaining_package/EXPERIMENT/data_storage/*
