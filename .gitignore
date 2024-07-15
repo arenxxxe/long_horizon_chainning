@@ -1,6 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
 .idea
-/sw_experiment.egg-info
+sw_experiment.egg-info
 
-/chaining_package/EXPERIMENT/data_storage/*
+chaining_package/EXPERIMENT/data_storage/
