@@ -41,13 +41,14 @@ SUBTASK_START = {
 #结束的路点index-完成
 SUBTASK_END = {
     'grasp': 4,
-    'release': 5
+    'release': 6
 }
 
 
 def main():
     #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode= 'rgb_array')  # 'human' 'rgb_array'
+    env = gym.make(args.env, render_mode= 'human')  # 'human' 'rgb_array'
+
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化
     #breakpoint() #1完成
@@ -92,7 +93,7 @@ def main():
 
     storage_path=os.path.join(parent_dir_path,"data_storage")
     folder = os.path.join(storage_path, 'demonstration_data')
-
+    breakpoint()
     np.savez_compressed(os.path.join(folder, file_name),
                         actions=actions, observations=observations, terminals=terminals, gt_actions=gt_actions)  # save the file
 

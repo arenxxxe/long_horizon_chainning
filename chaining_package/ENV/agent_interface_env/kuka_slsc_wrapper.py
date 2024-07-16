@@ -17,6 +17,7 @@ class SkillLearningWrapper(gym.Wrapper):
     #不需要修改
     def __init__(self, env, subtask, output_raw_obs):
         super().__init__(env)
+        
         self.subtask = subtask
         self._start_subtask = subtask
         self._elapsed_steps = None
@@ -67,7 +68,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #与reset有关 源代码逻辑是除了开始的任务 后面的任务都写进来  不管了--完成
     SUBTASK_RESET_INDEX = {
 
-        'release': 3 #第四个路点
+        'release': 4 #第四个路点
     }
     
     #重置到一个子任务开始状态 环境首先需要执行多少步--完成
@@ -94,7 +95,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     }
     #最后一个子任务--完成
     LAST_SUBTASK = 'release'
-    def __init__(self, env, subtask='grasp', output_raw_obs=False):
+    def __init__(self, env, subtask='release', output_raw_obs=False):
         super().__init__(env, subtask, output_raw_obs)
         self.done_subtasks = {key: False for key in self.SUBTASK_STEPS.keys()}
         #检查点1 初始化效果
@@ -104,9 +105,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def max_episode_steps(self):
         # breakpoint() #这里出过错 调整的权宜之计是register的时候写死
         assert np.sum([x for x in self.SUBTASK_STEPS.values()]) == self.env._max_episode_steps #根据调试器的信息 这东西果然是register的时候写的那个东西
-        #实际上这个逻辑会引申出很多问题？
-        #为什么要规定这些动作要这个时间段完成？
-        #
+
         return self.SUBTASK_STEPS[self.subtask]
 
     def step(self, action):
@@ -139,18 +138,20 @@ class KukagraspSLWrapper(SkillLearningWrapper):
             success = False
             while not success:
                 #检查点2 重置效果
-                breakpoint()
+                #breakpoint()
+
                 obs = self.env.reset() 
                 self.subtask = self._start_subtask
                 self._elapsed_steps = 0 
                 #拿动作不改
                 #检查点3 示教动作
-                breakpoint()
+                #breakpoint()
                 action, skill_index = self.env.get_oracle_action(obs)
                 count, max_steps = 0, self.SUBTASK_RESET_MAX_STEPS[self.subtask]
                 #2 不断拿施教动作去step  直到subtak的index发生变化 或者总步长达到-step不改 之前检查了
                 #检查点4 检查是示教运行到某个子任务之前
-                breakpoint()
+                #breakpoint()
+                
                 while skill_index < self.SUBTASK_RESET_INDEX[self.subtask] and count < max_steps:
                     obs, reward, done, info = self.env.step(action)
                     action, skill_index = self.env.get_oracle_action(obs)
@@ -160,7 +161,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                     #之前的那个子任务的goal信息 需要用之前子任务写在这个类中的信息来拿到  但是是临时的 只是为了判断是否成功  所以使用context manager
                 
                 #检查点5 检查任务临时切换和奖励计算结果
-                breakpoint()
+ 
                 with self.switch_subtask():
                     obs_ = self._replace_goal_with_subgoal(obs.copy())  # in case repeatedly replace goal
                     success = self.compute_reward(obs_['achieved_goal'], obs_['desired_goal']) + 1
@@ -210,7 +211,11 @@ class KukagraspSLWrapper(SkillLearningWrapper):
 
         if len(ag.shape) == 1:
             #还是需要原来的奖励函数的
-            goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
+            if self.subtask != 'release':
+                goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
+            else :
+                goal_reach = self.env.compute_reward(ag[3:6], g[:3], None) + 1
+                
             # 在原来的奖励函数的基础上加碰撞条件的奖励 
             contact_cond = np.all(ag[-1:]==g[-1:])#注意切片的问题
             #print(f"看看是不是切片的问题{ag[-2:]}")

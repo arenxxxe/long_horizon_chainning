@@ -117,7 +117,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 goal--物体最终落地之后的位置 
                 """
                 #改变了之后 物体的位置也是会改变的 
-                goal = [0.4039 , 0.5577 ,-0.991]
+                goal = [ 0.42426854 , 0.54978078 ,-0.99100976]
                 np_goal=np.array(goal)
                 return np_goal.copy()
         
@@ -175,7 +175,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #3 根据路点 设置子目标--物体移动的中间位置 动了才能叫作子目标 而不是末端执行器的 
                 lift_object_goal=[lift_object_wp[0],lift_object_wp[1],lift_object_wp[2]]
                 
-                release_object_goal=[release_object_wp[0],release_object_wp[1],release_object_wp[2]]
+                release_object_goal=[self.goal[0],self.goal[1],self.goal[2]]
 
                 self.subgoals=[lift_object_goal,release_object_goal]
                 
@@ -405,7 +405,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()
-                        #time.sleep(1.0 / 240.0)
+                        time.sleep(1.0 / 240.0)
            
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取
