@@ -405,7 +405,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()
-                        time.sleep(1.0 / 240.0)
+                        #time.sleep(1.0 / 480.0)
            
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取
@@ -506,7 +506,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         if np.linalg.norm(delta_pos) * 0.01 / scale_factor < 2e-3 and np.abs(delta_yaw) < np.deg2rad(2.):
                                 #print(f"第{i+1}个路点已经执行完毕")
                                 if i == 5:
-                                        print("最后一个路点不会归零")
+                                        #print("最后一个路点不会归零")
+                                        pass
 
 
 

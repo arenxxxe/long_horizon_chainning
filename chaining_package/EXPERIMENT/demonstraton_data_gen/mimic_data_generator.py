@@ -47,7 +47,7 @@ SUBTASK_END = {
 
 def main():
     #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode= 'human')  # 'human' 'rgb_array'
+    env = gym.make(args.env, render_mode= 'rgb_array')  # 'human' 'rgb_array'
 
     env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
     #检查1 ：env与wrapper成功初始化

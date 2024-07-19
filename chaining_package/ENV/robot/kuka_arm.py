@@ -134,7 +134,7 @@ class Kuka:
 
       endEffectorPos.extend([self.endEffectorAngle])
       if not hasattr(self, "has_run"):
-        print("这段代码仅执行一次")
+        #print("这段代码仅执行一次")
         
         endEffectorPos[2]-=0.4
         self.endEffectorPos[2]-=0.4

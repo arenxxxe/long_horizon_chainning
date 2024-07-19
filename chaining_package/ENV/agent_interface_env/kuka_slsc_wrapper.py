@@ -109,6 +109,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         return self.SUBTASK_STEPS[self.subtask]
 
     def step(self, action):
+        print("搜集数据")
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
