@@ -115,36 +115,29 @@ class Kuka:
       ee_joint_postion_left=(p.getJointState(self.kukaUid,8))[0]
       ee_joint_open_angle=ee_joint_postion_right-ee_joint_postion_left
       return actualEndEffectorPos,ee_joint_open_angle
+  @property
+  def functor_ee_pos(self):
+    return self.endEffectorPos.copy()
+  @property
+  def ee_angle(self):
+    return self.endEffectorAngle
   
-  def applyAction(self, target_ee):
+
+
+  def applyAction(self, delta_commands:list):
 
     #1 逆运动学控制模式 只需要输入末端执行器期望的位姿
     if (self.useInverseKinematics):
-      #目标位置转化为微分的目标 坐标相减得到相对量 目标坐标比原坐标大 减出来正数 原坐标+这个正数*微分量
-      dv=1
-      #写死的endeffector位置有问题 实时获取吧
 
-      import numpy as np
-      np_target_ee=np.array([target_ee[0],target_ee[1],target_ee[2],target_ee[3]])
-      # self.endEffectorPosOrn=self.getObservation()
-      # endEffectorPos=self.endEffectorPosOrn[0:3]
-      # endEffectorPos=endEffectorPos.copy()
-      
-      endEffectorPos=self.endEffectorPos.copy()
-
-      endEffectorPos.extend([self.endEffectorAngle])
+      #奇怪的偏移
       if not hasattr(self, "has_run"):
         #print("这段代码仅执行一次")
         
-        endEffectorPos[2]-=0.4
         self.endEffectorPos[2]-=0.4
         self.has_run = True
       
-      np_endEffectorPosOrn=np.array( endEffectorPos)
-      np_relative_posorn=np_target_ee-np_endEffectorPosOrn
-  
-      np_motorCommands=np_relative_posorn*dv
-      motorCommands=np_motorCommands.tolist()
+
+      motorCommands=delta_commands
       # print(np_endEffectorPosOrn[3])
       #print(f"targetee{target_ee}")
       # eeobs,_=self.getEE_pos()
@@ -158,7 +151,7 @@ class Kuka:
       #需要拿到关键数据   我给入某个dz下去 实际上的z方向上面的变化是多少？
       dz = motorCommands[2] *0.05
       da = motorCommands[3]
-      fingerAngle = target_ee[4]
+      self.fingerAngle = delta_commands[4]
       
       #da_angle=p.getJointState(self.kukaUid,7)
 
@@ -269,12 +262,12 @@ class Kuka:
       p.setJointMotorControl2(self.kukaUid,
                               8,
                               p.POSITION_CONTROL,
-                              targetPosition=-fingerAngle,
+                              targetPosition=-self.fingerAngle  ,
                               force=self.fingerAForce)
       p.setJointMotorControl2(self.kukaUid,
                               11,
                               p.POSITION_CONTROL,
-                              targetPosition=fingerAngle,
+                              targetPosition=self.fingerAngle   ,
                               force=self.fingerBForce)
 
       p.setJointMotorControl2(self.kukaUid,

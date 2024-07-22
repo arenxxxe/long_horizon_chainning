@@ -326,41 +326,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                         time.sleep(1.0 / 30.0)    
                                         #print(f"最终的位置：{p.getBasePositionAndOrientation(self.obj_ids['rigid'][0])} ",flush=True,end=" ")                                    
 
-        #def _meet_contact_constraint_requirement(self) -> bool:
-                #拿到物体的位置
-                # pose = get_link_pose(self.obj_id, -1)
-                # #高于目标的z轴的都认为需要加这个限制 
-                # return pose[0][2] > self.goal[2] + 0.01 * self.SCALING 
-        
-        #def constrain_contact(self) -> bool:
-                # self._contact_constraint=None
-                # if self._contact_constraint is None:
 
-                # # the grippers activate; to check if they can grasp the object
-                # # TODO: check whether the constraint may cause side effects
-                # psm = self.psm1 if self._activated == 0 else self.psm2
-                # if self._meet_contact_constraint_requirement():
-                # body_pose = p.getLinkState(psm.body, psm.EEF_LINK_INDEX)
-                # obj_pose = p.getBasePositionAndOrientation(self.obj_id)
-                # world_to_body = p.invertTransform(body_pose[0], body_pose[1])
-                # obj_to_body = p.multiplyTransforms(world_to_body[0],
-                #                                         world_to_body[1],
-                #                                         obj_pose[0], obj_pose[1])
-
-                # self._contact_constraint = p.createConstraint(
-                #         parentBodyUniqueId=psm.body,
-                #         parentLinkIndex=psm.EEF_LINK_INDEX,
-                #         childBodyUniqueId=self.obj_id,
-                #         childLinkIndex=-1,
-                #         jointType=p.JOINT_FIXED,
-                #         jointAxis=(0, 0, 0),
-                #         parentFramePosition=obj_to_body[0],
-                #         parentFrameOrientation=obj_to_body[1],
-                #         childFramePosition=(0, 0, 0),
-                #         childFrameOrientation=(0, 0, 0))
-                # # TODO: check the maxForce; very subtle
-                # p.changeConstraint(self._contact_constraint, maxForce=20)        
-                # pass
                 
         def step(self, action: np.ndarray):
                 """
@@ -381,7 +347,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 obs, reward, done, info=super().step(action)
                 return obs, reward, done, info
 
-        def _set_action(self, action):
+        def _set_action(self, action:np.ndarray):
                 """
                 处于的流程: B-3-2 机器人设置动作
                 输入： np_array:acton
@@ -389,8 +355,21 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 目的: 进行一次完整的仿真步进成功执行步骤
                 TODO  
                 """
-                   
-                list_action=action.tolist() 
+                #TODO 计算差别--乘以系数
+                #TODO  根据差值的量级 试验不同的放缩的因子
+                 #TODO 确定观察和运动控制里面的状态追踪 每一步能差多大？  
+                
+                functor_ee_pos=np.array(self._kuka.functor_ee_pos)
+
+                action[2]+=0.02#给进来是末端中心点期望位姿 但是机械臂执行需要末端关节位置 
+                delta_ee_pos=action[0:3]-functor_ee_pos
+                delta_ee_angle=np.array([action[3]-self._kuka.ee_angle])
+
+                delta_action=np.concatenate([delta_ee_pos,delta_ee_angle,action[-1:]])
+                factor_dv= 0.0000001
+                factor_delta_action=delta_action*factor_dv
+
+                list_action=factor_delta_action.tolist() 
 
                
 
@@ -401,7 +380,6 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #一次动60  是源代码的一次动作的仿真步
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [list_action[0],list_action[1],list_action[2]-self.ee_offset], (0, 0, 0, 1))
 
-                list_action[2]+=0.02#因为pybullet奇怪的逆运动学计算 差为0.02 不确定是kuka机械臂的问题还是所有机械臂共性问题
                 for i in range(60):
                         self._kuka.applyAction(list_action)
                         p.stepSimulation()

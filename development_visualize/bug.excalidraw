@@ -15592,8 +15592,8 @@
     },
     {
       "type": "arrow",
-      "version": 130,
-      "versionNonce": 854142684,
+      "version": 132,
+      "versionNonce": 1974096186,
       "isDeleted": false,
       "id": "NuxmbFfW1PkEb8EKDGjWx",
       "fillStyle": "solid",
@@ -15602,11 +15602,11 @@
       "roughness": 1,
       "opacity": 100,
       "angle": 0,
-      "x": -1689.6129590010712,
+      "x": -1689.6176519288317,
       "y": 4592.304282403549,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
-      "width": 56.95235074253446,
+      "width": 56.9559428016928,
       "height": 76.74257343981208,
       "seed": 1152036188,
       "groupIds": [],
@@ -15615,7 +15615,7 @@
         "type": 2
       },
       "boundElements": [],
-      "updated": 1721205498231,
+      "updated": 1721653227217,
       "link": null,
       "locked": false,
       "startBinding": {
@@ -15637,7 +15637,7 @@
           0
         ],
         [
-          56.95235074253446,
+          56.9559428016928,
           -76.74257343981208
         ]
       ]
@@ -16200,6 +16200,219 @@
       "originalText": "疑惑：这个步进的step如何进行控制呢？",
       "lineHeight": 1.25,
       "baseline": 18
+    },
+    {
+      "type": "text",
+      "version": 141,
+      "versionNonce": 375709670,
+      "isDeleted": false,
+      "id": "mrQM5OyuuiYw6-L2sxyFV",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "angle": 0,
+      "x": -2106.280740647088,
+      "y": 5823.154761904762,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "width": 296.3797607421875,
+      "height": 25,
+      "seed": 1776477242,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "boundElements": [],
+      "updated": 1721653691940,
+      "link": null,
+      "locked": false,
+      "fontSize": 20,
+      "fontFamily": 1,
+      "text": "bug:改成相对式的输入出现大问题",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "bug:改成相对式的输入出现大问题",
+      "lineHeight": 1.25,
+      "baseline": 18
+    },
+    {
+      "id": "lx62rntZvP4GUfuiThmJM",
+      "type": "text",
+      "x": -1791.424193609328,
+      "y": 5703.154761904762,
+      "width": 289.999755859375,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 233777702,
+      "version": 73,
+      "versionNonce": 1976492582,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "BydNMOU1CnPOte10W01EG",
+          "type": "arrow"
+        },
+        {
+          "id": "YZ9JUYp46SaKF_qn78tGg",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1721653735793,
+      "link": null,
+      "locked": false,
+      "text": "现象：一直在下降 没有左右移动",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 18,
+      "containerId": null,
+      "originalText": "现象：一直在下降 没有左右移动",
+      "lineHeight": 1.25
+    },
+    {
+      "id": "BydNMOU1CnPOte10W01EG",
+      "type": "arrow",
+      "x": -1818.0908602759948,
+      "y": 5806.488095238095,
+      "width": 118.33333333333326,
+      "height": 78.33333333333303,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 2
+      },
+      "seed": 1083062630,
+      "version": 8,
+      "versionNonce": 377566330,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1721653733913,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          118.33333333333326,
+          -78.33333333333303
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": {
+        "elementId": "lx62rntZvP4GUfuiThmJM",
+        "focus": 0.21021254598057879,
+        "gap": 1
+      },
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "YZ9JUYp46SaKF_qn78tGg",
+      "type": "arrow",
+      "x": -1574.7575269426616,
+      "y": 5703.154761904762,
+      "width": 105,
+      "height": 55,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 2
+      },
+      "seed": 1204555450,
+      "version": 6,
+      "versionNonce": 2044309222,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1721653735793,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          105,
+          -55
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "lx62rntZvP4GUfuiThmJM",
+        "focus": 0.2830875134477323,
+        "gap": 1
+      },
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow"
+    },
+    {
+      "id": "9zbZiaNeK4nPACySqZzQX",
+      "type": "text",
+      "x": -1419.7575269426616,
+      "y": 5618.154761904762,
+      "width": 333.5197448730469,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 505820346,
+      "version": 43,
+      "versionNonce": 339918374,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1721653756522,
+      "link": null,
+      "locked": false,
+      "text": "pybullet接口处的指令变化如何变化？",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "baseline": 18,
+      "containerId": null,
+      "originalText": "pybullet接口处的指令变化如何变化？",
+      "lineHeight": 1.25
     }
   ],
   "appState": {
