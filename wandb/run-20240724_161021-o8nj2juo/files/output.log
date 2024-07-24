@@ -1,0 +1,225 @@
+/home/wyq/anaconda3/envs/viskill/lib/python3.8/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+ -> step: 0, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.1293
+ -> step: 1, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0481
+ -> step: 2, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0581
+ -> step: 3, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0612
+ -> step: 4, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0598
+ -> step: 5, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0594
+ -> step: 6, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0593
+ -> step: 7, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0594
+ -> step: 8, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0605
+ -> step: 9, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0632
+ -> step: 10, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0616
+ -> step: 11, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0602
+ -> step: 12, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0601
+ -> step: 13, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0608
+ -> step: 14, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0618
+ -> step: 15, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0621
+ -> step: 16, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0631
+ -> step: 17, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0628
+ -> step: 18, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0627
+ -> step: 19, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0630
+ -> step: 20, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0619
+ -> step: 21, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0633
+ -> step: 22, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0623
+ -> step: 23, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0621
+ -> step: 24, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0629
+ -> step: 25, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0651
+ -> step: 26, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0640
+ -> step: 27, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0637
+ -> step: 28, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0697
+ -> step: 29, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0642
+ -> step: 30, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0644
+ -> step: 31, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0634
+ -> step: 32, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0638
+ -> step: 33, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0644
+ -> step: 34, action: [0.59   0.16   0.3763 0.     0.3   ]
+Traceback (most recent call last):
+  File "/home/wyq/anaconda3/envs/viskill/bin/kuka_grasp_test", line 33, in <module>
+    sys.exit(load_entry_point('sw-experiment', 'console_scripts', 'kuka_grasp_test')())
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 586, in main
+    env.test()
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 543, in test
+    time.sleep(0.05)
+KeyboardInterrupt
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0689
+ -> step: 35, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0648
+ -> step: 36, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0647
+ -> step: 37, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0645
+ -> step: 38, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0666
+ -> step: 39, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0674
+ -> step: 40, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0676
+ -> step: 41, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0695
+ -> step: 42, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0685

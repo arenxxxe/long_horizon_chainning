@@ -1,0 +1,127 @@
+{
+    "os": "Linux-5.15.0-113-generic-x86_64-with-glibc2.17",
+    "python": "3.8.19",
+    "heartbeatAt": "2024-07-24T09:11:34.196250",
+    "startedAt": "2024-07-24T09:11:28.224883",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/wyq/anaconda3/envs/viskill/bin/kuka_grasp_test",
+    "codePathLocal": null,
+    "git": {
+        "remote": "https://github.com/arenxxxe/long_horizon_chainning.git",
+        "commit": "cc9f577a02e183b5966c4fecc7d26df4d13e8d53"
+    },
+    "email": "qinsongwei90@gmail.com",
+    "root": "/home/wyq/SW/long_horizon_chainning",
+    "host": "wyq",
+    "username": "wyq",
+    "executable": "/home/wyq/anaconda3/envs/viskill/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3078.819875,
+        "min": 800.0,
+        "max": 4825.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 4418.634,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 4508.021,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 4502.539,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 4459.425,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4800.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 883.9007263183594,
+            "used": 593.9034118652344
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4070 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4070 Ti",
+            "memory_total": 12878610432
+        }
+    ],
+    "memory": {
+        "total": 62.624629974365234
+    }
+}

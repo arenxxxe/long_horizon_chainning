@@ -37,7 +37,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
         ASSET_DIR_PATH=os.path.abspath("./chaining_package/ENV/3d_asset/3d_model/kuka_grasp")
         
         #调整各种位置和大小的东西 其实没啥用处
-        ee_offset=0.25
+        ee_offset=0.255
         SCALING = 1.
         #A 完成上层调用逻辑     env = KukaGraspEnv() 
         #TODO 已经完成书写
@@ -355,35 +355,40 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 目的: 进行一次完整的仿真步进成功执行步骤
                 TODO  
                 """
-                #TODO 计算差别--乘以系数
-                #TODO  根据差值的量级 试验不同的放缩的因子
-                 #TODO 确定观察和运动控制里面的状态追踪 每一步能差多大？  
+ 
+
+                #进来的action  是一个相对量 
+
+
                 
-                functor_ee_pos=np.array(self._kuka.functor_ee_pos)
+                eeobs,_=self._kuka.getEE_pos() #真实的末端位置
+                #print(f"eeobs{eeobs[2]}")
+                functor_ee_pos=np.array(eeobs)
+                print(functor_ee_pos)
+                ee_action=np.concatenate([functor_ee_pos+action[:3],action[-2:-1],action[-1:]])#得到现在真正要前进的位置
 
-                action[2]+=0.02#给进来是末端中心点期望位姿 但是机械臂执行需要末端关节位置 
-                delta_ee_pos=action[0:3]-functor_ee_pos
-                delta_ee_angle=np.array([action[3]-self._kuka.ee_angle])
+                #ee_action[2]+=0.0225 #奇怪的0.02偏移
 
-                delta_action=np.concatenate([delta_ee_pos,delta_ee_angle,action[-1:]])
-                factor_dv= 0.0000001
-                factor_delta_action=delta_action*factor_dv
-
-                list_action=factor_delta_action.tolist() 
-
-               
-
-                assert len(action) == self.action_size
+                ee_action=np.round(ee_action,4)
+                assert len(ee_action) == self.action_size
                 #如果是示教动作  全是0的时候说明示教路点已经走完 不应该允许再往下下发动作指令并仿真
 
-                
-                #一次动60  是源代码的一次动作的仿真步
-                p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [list_action[0],list_action[1],list_action[2]-self.ee_offset], (0, 0, 0, 1))
+                # wandb.log({"x": delta_ee_pos[0],
+                #            "y": delta_ee_pos[1],
+                #            "z" :delta_ee_pos[2],
 
+                           
+                #            })
+                #一次不知道动多少 但是 循环结束  必须在ee_action的位置 
+                p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [ee_action[0],ee_action[1],ee_action[2]-self.ee_offset], (0, 0, 0, 1))
+                print(ee_action)
                 for i in range(60):
-                        self._kuka.applyAction(list_action)
+                        self._kuka.applyAction(ee_action)
                         p.stepSimulation()
-                        #time.sleep(1.0 / 480.0)
+                        time.sleep(1.0 / 30.0)
+
+ 
+                
            
         def _step_callback(self):
                 #源代码中 用来进行模拟力封闭抓取的 思路就是使用pybullet的约束 直接把物体锁死在末端执行器上面 实现稳定抓取
@@ -485,21 +490,38 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                 #print(f"第{i+1}个路点已经执行完毕")
                                 if i == 5:
                                         #print("最后一个路点不会归零")
-                                        pass
-
-
-
-
-
-
-                                
+                                        pass                           
                                 self._waypoints[i] = None if i< len(self._waypoints)-1 else self._waypoints[i]
                         #5 没到达位置 继续执行原来路点
                         break
-                return np.array(action),i
+
+                                # 进来的是期望走到的位姿态
+                if i >=2 :
+                       print(f"看看为什么反复的转 动作{action[3]} 标号")
+                #目的： 切分微分路点 
+                
+                eeobs,_=self._kuka.getEE_pos() #真实的末端位置
+                #print(f"eeobs{eeobs[2]}")
+                functor_ee_pos=np.array(eeobs)
+                #print(eeobs)
+                #print(action)
+                #真实要达到的位置 减去真实在的位置
+                delta_ee_pos=action[0:3]-functor_ee_pos
+
+                delta_ee_pos= np.clip(delta_ee_pos, self.action_space.low[0:3], self.action_space.high[0:3])
+                delta_ee_pos*=0.4 
+
+                delta_ee_angle=np.array([action[3]])
+
+                delta_action=np.concatenate([delta_ee_pos,delta_ee_angle,action[-1:]])
+                factor_dv= 1
+                #一系列放缩  施教的路点切分为一系列的小路点去执行
+                factor_delta_action=delta_action*factor_dv
+
+                return factor_delta_action,i
         
         #B 完成上层调用逻辑     env.test()    
-        def test(self, horizon=250):
+        def test(self, horizon=5000):
                 """
                 B 上层调用逻辑     env.test() 
                 输入： dic:obs
@@ -558,8 +580,25 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
 
 ##############原始的环境测试代码
-def main():
+import wandb
+import random
+from omegaconf import DictConfig, OmegaConf
+import hydra
 
+@hydra.main(version_base=None, config_path="wandb_test_conf", config_name="config")     
+def wandb_init(cfg : DictConfig) -> None:
+    # wandb启动
+    
+    wandb.init(
+        # set the wandb project where this run will be logged
+        project=cfg.project,
+
+        # track hyperparameters and run metadata
+        config=dict(cfg.config)
+    )
+
+def main():
+        #wandb_init()
         env = KukaGraspEnv()  # create one process and corresponding env
         env.test()
         rgb=env.render()

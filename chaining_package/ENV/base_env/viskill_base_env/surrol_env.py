@@ -82,7 +82,7 @@ class SurRoLEnv(gym.Env):
         obs = self._get_obs()
 
 
-        self.action_space = spaces.Box(-2, 2, shape=(self.action_size,), dtype='float32')
+        self.action_space = spaces.Box(-1, 1, shape=(self.action_size,), dtype='float32')
         if isinstance(obs, np.ndarray):
             # gym.Env
             self.observation_space = spaces.Box(-np.inf, np.inf, shape=obs.shape, dtype='float32')
@@ -102,7 +102,15 @@ class SurRoLEnv(gym.Env):
         # action should have a shape of (action_size, )
         if len(action.shape) > 1:
             action = action.squeeze(axis=-1)
-        action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        action = np.clip(action, self.action_space.low*2, self.action_space.high*2)
+        # import wandb
+
+        # wandb.log({"x":action[0],
+        #     "y":action[1],
+        #     "z":action[2]
+            
+        #     })
         # time0 = time.time()
         self._set_action(action)
         # time1 = time.time()

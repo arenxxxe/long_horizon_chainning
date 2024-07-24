@@ -1,0 +1,192 @@
+2024-07-24 16:17:00,739 INFO    StreamThr :182936 [internal.py:wandb_internal():86] W&B internal server running at pid: 182936, started at: 2024-07-24 16:17:00.739398
+2024-07-24 16:17:00,740 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: status
+2024-07-24 16:17:00,741 INFO    WriterThread:182936 [datastore.py:open_for_write():87] open: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/run-yns1soig.wandb
+2024-07-24 16:17:00,741 DEBUG   SenderThread:182936 [sender.py:send():379] send: header
+2024-07-24 16:17:00,745 DEBUG   SenderThread:182936 [sender.py:send():379] send: run
+2024-07-24 16:17:04,122 INFO    SenderThread:182936 [dir_watcher.py:__init__():211] watching files in: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files
+2024-07-24 16:17:04,123 INFO    SenderThread:182936 [sender.py:_start_run_threads():1124] run started: yns1soig with start time 1721809020.739329
+2024-07-24 16:17:04,129 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: check_version
+2024-07-24 16:17:04,130 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: check_version
+2024-07-24 16:17:06,403 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:17:06,406 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: run_start
+2024-07-24 16:17:06,427 DEBUG   HandlerThread:182936 [system_info.py:__init__():26] System info init
+2024-07-24 16:17:06,428 DEBUG   HandlerThread:182936 [system_info.py:__init__():41] System info init done
+2024-07-24 16:17:06,428 INFO    HandlerThread:182936 [system_monitor.py:start():194] Starting system monitor
+2024-07-24 16:17:06,428 INFO    SystemMonitor:182936 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-07-24 16:17:06,428 INFO    HandlerThread:182936 [system_monitor.py:probe():214] Collecting system info
+2024-07-24 16:17:06,429 INFO    SystemMonitor:182936 [interfaces.py:start():190] Started cpu monitoring
+2024-07-24 16:17:06,429 INFO    SystemMonitor:182936 [interfaces.py:start():190] Started disk monitoring
+2024-07-24 16:17:06,429 INFO    SystemMonitor:182936 [interfaces.py:start():190] Started gpu monitoring
+2024-07-24 16:17:06,430 INFO    SystemMonitor:182936 [interfaces.py:start():190] Started memory monitoring
+2024-07-24 16:17:06,430 INFO    SystemMonitor:182936 [interfaces.py:start():190] Started network monitoring
+2024-07-24 16:17:06,453 DEBUG   HandlerThread:182936 [system_info.py:probe():150] Probing system
+2024-07-24 16:17:06,457 DEBUG   HandlerThread:182936 [system_info.py:_probe_git():135] Probing git
+2024-07-24 16:17:06,469 DEBUG   HandlerThread:182936 [system_info.py:_probe_git():143] Probing git done
+2024-07-24 16:17:06,469 DEBUG   HandlerThread:182936 [system_info.py:probe():198] Probing system done
+2024-07-24 16:17:06,469 DEBUG   HandlerThread:182936 [system_monitor.py:probe():223] {'os': 'Linux-5.15.0-113-generic-x86_64-with-glibc2.17', 'python': '3.8.19', 'heartbeatAt': '2024-07-24T08:17:06.453289', 'startedAt': '2024-07-24T08:17:00.737115', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/wyq/anaconda3/envs/viskill/bin/kuka_grasp_test', 'codePathLocal': None, 'git': {'remote': 'https://github.com/arenxxxe/long_horizon_chainning.git', 'commit': 'cc9f577a02e183b5966c4fecc7d26df4d13e8d53'}, 'email': 'qinsongwei90@gmail.com', 'root': '/home/wyq/SW/long_horizon_chainning', 'host': 'wyq', 'username': 'wyq', 'executable': '/home/wyq/anaconda3/envs/viskill/bin/python', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3042.7519375, 'min': 800.0, 'max': 4825.0}, 'cpu_freq_per_core': [{'current': 4305.518, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 4480.884, 'min': 800.0, 'max': 4900.0}, {'current': 4495.399, 'min': 800.0, 'max': 4800.0}, {'current': 4508.386, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 3393.844, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}], 'disk': {'/': {'total': 883.9007263183594, 'used': 593.8948364257812}}, 'gpu': 'NVIDIA GeForce RTX 4070 Ti', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 4070 Ti', 'memory_total': 12878610432}], 'memory': {'total': 62.624629974365234}}
+2024-07-24 16:17:06,469 INFO    HandlerThread:182936 [system_monitor.py:probe():224] Finished collecting system info
+2024-07-24 16:17:06,469 INFO    HandlerThread:182936 [system_monitor.py:probe():227] Publishing system info
+2024-07-24 16:17:06,469 DEBUG   HandlerThread:182936 [system_info.py:_save_conda():207] Saving list of conda packages installed into the current environment
+2024-07-24 16:17:07,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/conda-environment.yaml
+2024-07-24 16:17:08,123 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/conda-environment.yaml
+2024-07-24 16:17:08,188 DEBUG   HandlerThread:182936 [system_info.py:_save_conda():222] Saving conda packages done
+2024-07-24 16:17:08,189 INFO    HandlerThread:182936 [system_monitor.py:probe():229] Finished publishing system info
+2024-07-24 16:17:08,190 DEBUG   SenderThread:182936 [sender.py:send():379] send: files
+2024-07-24 16:17:08,190 INFO    SenderThread:182936 [sender.py:_save_file():1390] saving file wandb-metadata.json with policy now
+2024-07-24 16:17:08,240 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: python_packages
+2024-07-24 16:17:08,241 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: stop_status
+2024-07-24 16:17:08,241 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: python_packages
+2024-07-24 16:17:08,241 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: stop_status
+2024-07-24 16:17:08,243 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:17:09,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/wandb-metadata.json
+2024-07-24 16:17:09,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/requirements.txt
+2024-07-24 16:17:09,456 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:10,033 DEBUG   SenderThread:182936 [sender.py:send():379] send: telemetry
+2024-07-24 16:17:10,033 DEBUG   SenderThread:182936 [sender.py:send():379] send: exit
+2024-07-24 16:17:10,033 INFO    SenderThread:182936 [sender.py:send_exit():586] handling exit code: 1
+2024-07-24 16:17:10,033 INFO    SenderThread:182936 [sender.py:send_exit():588] handling runtime: 2
+2024-07-24 16:17:10,034 INFO    SenderThread:182936 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:17:10,034 INFO    SenderThread:182936 [sender.py:send_exit():594] send defer
+2024-07-24 16:17:10,034 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:10,034 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,035 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 0
+2024-07-24 16:17:10,035 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,035 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 0
+2024-07-24 16:17:10,035 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 1
+2024-07-24 16:17:10,035 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,035 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 1
+2024-07-24 16:17:10,035 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,035 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 1
+2024-07-24 16:17:10,035 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 2
+2024-07-24 16:17:10,035 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,035 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 2
+2024-07-24 16:17:10,035 INFO    HandlerThread:182936 [system_monitor.py:finish():203] Stopping system monitor
+2024-07-24 16:17:10,035 INFO    HandlerThread:182936 [interfaces.py:finish():202] Joined cpu monitor
+2024-07-24 16:17:10,036 INFO    HandlerThread:182936 [interfaces.py:finish():202] Joined disk monitor
+2024-07-24 16:17:10,036 DEBUG   SystemMonitor:182936 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-07-24 16:17:10,036 DEBUG   SystemMonitor:182936 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-07-24 16:17:10,036 DEBUG   SystemMonitor:182936 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-07-24 16:17:10,077 INFO    HandlerThread:182936 [interfaces.py:finish():202] Joined gpu monitor
+2024-07-24 16:17:10,078 INFO    HandlerThread:182936 [interfaces.py:finish():202] Joined memory monitor
+2024-07-24 16:17:10,078 INFO    HandlerThread:182936 [interfaces.py:finish():202] Joined network monitor
+2024-07-24 16:17:10,078 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,078 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 2
+2024-07-24 16:17:10,078 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 3
+2024-07-24 16:17:10,078 DEBUG   SenderThread:182936 [sender.py:send():379] send: stats
+2024-07-24 16:17:10,078 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,078 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 3
+2024-07-24 16:17:10,078 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,078 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 3
+2024-07-24 16:17:10,078 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 4
+2024-07-24 16:17:10,078 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,078 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 4
+2024-07-24 16:17:10,079 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 4
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 5
+2024-07-24 16:17:10,079 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,079 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 5
+2024-07-24 16:17:10,079 DEBUG   SenderThread:182936 [sender.py:send():379] send: summary
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:17:10,079 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 5
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 6
+2024-07-24 16:17:10,079 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,079 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 6
+2024-07-24 16:17:10,079 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,079 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 6
+2024-07-24 16:17:10,081 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:17:10,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/wandb-summary.json
+2024-07-24 16:17:10,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/output.log
+2024-07-24 16:17:10,443 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 7
+2024-07-24 16:17:10,443 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:10,443 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 7
+2024-07-24 16:17:10,443 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:10,443 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 7
+2024-07-24 16:17:10,456 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:11,115 INFO    wandb-upload_0:182936 [upload_job.py:push():131] Uploaded file /tmp/tmptmzhcqwdwandb/p83s2tep-wandb-metadata.json
+2024-07-24 16:17:11,124 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/config.yaml
+2024-07-24 16:17:12,037 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 8
+2024-07-24 16:17:12,037 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:12,037 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:12,037 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 8
+2024-07-24 16:17:12,037 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:12,037 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 8
+2024-07-24 16:17:12,037 INFO    SenderThread:182936 [job_builder.py:build():318] Attempting to build job artifact
+2024-07-24 16:17:12,037 INFO    SenderThread:182936 [job_builder.py:_get_source_type():455] is repo sourced job
+2024-07-24 16:17:12,037 WARNING SenderThread:182936 [job_builder.py:_log_if_verbose():210] No program path found, not creating job artifact. See https://docs.wandb.ai/guides/launch/create-job
+2024-07-24 16:17:12,038 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 9
+2024-07-24 16:17:12,038 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:12,038 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 9
+2024-07-24 16:17:12,038 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:12,038 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 9
+2024-07-24 16:17:12,038 INFO    SenderThread:182936 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-07-24 16:17:12,125 INFO    Thread-12 :182936 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/output.log
+2024-07-24 16:17:12,125 INFO    SenderThread:182936 [dir_watcher.py:finish():388] scan: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files
+2024-07-24 16:17:12,125 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/wandb-summary.json wandb-summary.json
+2024-07-24 16:17:12,125 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/output.log output.log
+2024-07-24 16:17:12,125 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/wandb-metadata.json wandb-metadata.json
+2024-07-24 16:17:12,127 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/conda-environment.yaml conda-environment.yaml
+2024-07-24 16:17:12,128 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/requirements.txt requirements.txt
+2024-07-24 16:17:12,130 INFO    SenderThread:182936 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/config.yaml config.yaml
+2024-07-24 16:17:12,131 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 10
+2024-07-24 16:17:12,131 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:12,131 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 10
+2024-07-24 16:17:12,133 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:12,133 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 10
+2024-07-24 16:17:12,133 INFO    SenderThread:182936 [file_pusher.py:finish():172] shutting down file pusher
+2024-07-24 16:17:12,457 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:12,458 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:13,022 INFO    wandb-upload_1:182936 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/output.log
+2024-07-24 16:17:13,458 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:13,458 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:14,128 INFO    wandb-upload_2:182936 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/conda-environment.yaml
+2024-07-24 16:17:14,459 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:14,459 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:14,537 INFO    wandb-upload_0:182936 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/wandb-summary.json
+2024-07-24 16:17:15,061 INFO    wandb-upload_3:182936 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/requirements.txt
+2024-07-24 16:17:15,068 INFO    wandb-upload_4:182936 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/files/config.yaml
+2024-07-24 16:17:15,268 INFO    Thread-11 :182936 [sender.py:transition_state():614] send defer: 11
+2024-07-24 16:17:15,268 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:15,269 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 11
+2024-07-24 16:17:15,269 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:15,269 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 11
+2024-07-24 16:17:15,269 INFO    SenderThread:182936 [file_pusher.py:join():178] waiting for file pusher
+2024-07-24 16:17:15,269 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 12
+2024-07-24 16:17:15,269 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:15,269 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 12
+2024-07-24 16:17:15,269 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:15,269 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 12
+2024-07-24 16:17:15,269 INFO    SenderThread:182936 [file_stream.py:finish():614] file stream finish called
+2024-07-24 16:17:15,460 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:15,733 INFO    SenderThread:182936 [file_stream.py:finish():618] file stream finish is done
+2024-07-24 16:17:15,733 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 13
+2024-07-24 16:17:15,733 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:15,733 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:15,733 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 13
+2024-07-24 16:17:15,733 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:15,733 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 13
+2024-07-24 16:17:15,734 INFO    SenderThread:182936 [sender.py:transition_state():614] send defer: 14
+2024-07-24 16:17:15,734 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: defer
+2024-07-24 16:17:15,734 DEBUG   SenderThread:182936 [sender.py:send():379] send: final
+2024-07-24 16:17:15,734 INFO    HandlerThread:182936 [handler.py:handle_request_defer():172] handle defer: 14
+2024-07-24 16:17:15,734 DEBUG   SenderThread:182936 [sender.py:send():379] send: footer
+2024-07-24 16:17:15,734 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: defer
+2024-07-24 16:17:15,734 INFO    SenderThread:182936 [sender.py:send_request_defer():610] handle sender defer: 14
+2024-07-24 16:17:15,734 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:15,734 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:15,734 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:17:15,734 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: poll_exit
+2024-07-24 16:17:15,735 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: server_info
+2024-07-24 16:17:15,735 DEBUG   SenderThread:182936 [sender.py:send_request():406] send_request: server_info
+2024-07-24 16:17:15,736 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: get_summary
+2024-07-24 16:17:15,736 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: sampled_history
+2024-07-24 16:17:15,736 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:17:16,074 INFO    MainThread:182936 [wandb_run.py:_footer_history_summary_info():3936] rendering history
+2024-07-24 16:17:16,075 INFO    MainThread:182936 [wandb_run.py:_footer_history_summary_info():3968] rendering summary
+2024-07-24 16:17:16,075 INFO    MainThread:182936 [wandb_run.py:_footer_sync_info():3895] logging synced files
+2024-07-24 16:17:16,075 DEBUG   HandlerThread:182936 [handler.py:handle_request():146] handle_request: shutdown
+2024-07-24 16:17:16,075 INFO    HandlerThread:182936 [handler.py:finish():866] shutting down handler
+2024-07-24 16:17:16,735 INFO    WriterThread:182936 [datastore.py:close():296] close: /home/wyq/SW/long_horizon_chainning/chaining_package/ENV/wandb/run-20240724_161700-yns1soig/run-yns1soig.wandb
+2024-07-24 16:17:17,074 INFO    SenderThread:182936 [sender.py:finish():1546] shutting down sender
+2024-07-24 16:17:17,074 INFO    SenderThread:182936 [file_pusher.py:finish():172] shutting down file pusher
+2024-07-24 16:17:17,075 INFO    SenderThread:182936 [file_pusher.py:join():178] waiting for file pusher

@@ -1,0 +1,454 @@
+/home/wyq/anaconda3/envs/viskill/lib/python3.8/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+ -> step: 0, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0416
+ -> step: 1, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0472
+ -> step: 2, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0580
+ -> step: 3, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0607
+ -> step: 4, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0593
+ -> step: 5, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0593
+ -> step: 6, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0604
+ -> step: 7, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0595
+ -> step: 8, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0593
+ -> step: 9, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0603
+ -> step: 10, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0606
+ -> step: 11, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0604
+ -> step: 12, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0595
+ -> step: 13, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0606
+ -> step: 14, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0619
+ -> step: 15, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0624
+ -> step: 16, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0627
+ -> step: 17, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0627
+ -> step: 18, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0623
+ -> step: 19, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0633
+ -> step: 20, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0628
+ -> step: 21, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0627
+ -> step: 22, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0619
+ -> step: 23, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0629
+ -> step: 24, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0639
+ -> step: 25, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0634
+ -> step: 26, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0638
+ -> step: 27, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0647
+ -> step: 28, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0636
+ -> step: 29, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0650
+ -> step: 30, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0639
+ -> step: 31, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0645
+ -> step: 32, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0642
+ -> step: 33, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0643
+ -> step: 34, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0645
+ -> step: 35, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0644
+ -> step: 36, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0642
+ -> step: 37, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0649
+ -> step: 38, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0636
+ -> step: 39, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0649
+ -> step: 40, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0636
+ -> step: 41, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0641
+ -> step: 42, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0652
+ -> step: 43, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0640
+ -> step: 44, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0659
+ -> step: 45, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0640
+ -> step: 46, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0635
+ -> step: 47, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0640
+ -> step: 48, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0644
+ -> step: 49, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0657
+ -> step: 50, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0647
+ -> step: 51, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0642
+ -> step: 52, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0651
+ -> step: 53, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0646
+ -> step: 54, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0641
+ -> step: 55, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0644
+ -> step: 56, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0789
+ -> step: 57, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0693
+ -> step: 58, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0726
+ -> step: 59, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0770
+ -> step: 60, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0862
+ -> step: 61, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0737
+ -> step: 62, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0730
+ -> step: 63, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0678
+ -> step: 64, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0668
+ -> step: 65, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0651
+ -> step: 66, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0646
+ -> step: 67, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0693
+ -> step: 68, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0655
+ -> step: 69, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0659
+ -> step: 70, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0652
+ -> step: 71, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0639
+ -> step: 72, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0635
+ -> step: 73, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0648
+ -> step: 74, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0647
+ -> step: 75, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0646
+ -> step: 76, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0638
+Traceback (most recent call last):
+  File "/home/wyq/anaconda3/envs/viskill/bin/kuka_grasp_test", line 33, in <module>
+    sys.exit(load_entry_point('sw-experiment', 'console_scripts', 'kuka_grasp_test')())
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 585, in main
+    env.test()
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 530, in test
+    obs, reward, done, info = self.step(action)
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 347, in step
+    obs, reward, done, info=super().step(action)
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/base_env/viskill_base_env/surrol_env.py", line 107, in step
+    self._set_action(action)
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/task_env/kuka_grasp_env.py", line 388, in _set_action
+    self._kuka.applyAction(list_action)
+  File "/home/wyq/SW/long_horizon_chainning/chaining_package/ENV/robot/kuka_arm.py", line 224, in applyAction
+    jointPoses = p.calculateInverseKinematics(self.kukaUid,
+KeyboardInterrupt
+ -> step: 77, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0641
+ -> step: 78, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0643
+ -> step: 79, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0640
+ -> step: 80, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0646
+ -> step: 81, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0730
+ -> step: 82, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0643
+ -> step: 83, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0649
+ -> step: 84, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0650
+ -> step: 85, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0647
+ -> step: 86, action: [0.59   0.16   0.3763 0.     0.3   ]
+奖励-1.0
+ -> achieved goal: [0. 0. 0.]
+ -> desired goal: [ 0.4243  0.5498 -0.991 ]
+ -> step time: 0.0636
+ -> step: 87, action: [0.59   0.16   0.3763 0.     0.3   ]

@@ -1,0 +1,425 @@
+2024-07-24 16:19:18,136 INFO    StreamThr :190760 [internal.py:wandb_internal():86] W&B internal server running at pid: 190760, started at: 2024-07-24 16:19:18.135753
+2024-07-24 16:19:18,136 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status
+2024-07-24 16:19:18,138 INFO    WriterThread:190760 [datastore.py:open_for_write():87] open: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/run-22fva394.wandb
+2024-07-24 16:19:18,138 DEBUG   SenderThread:190760 [sender.py:send():379] send: header
+2024-07-24 16:19:18,141 DEBUG   SenderThread:190760 [sender.py:send():379] send: run
+2024-07-24 16:19:21,029 INFO    SenderThread:190760 [dir_watcher.py:__init__():211] watching files in: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files
+2024-07-24 16:19:21,029 INFO    SenderThread:190760 [sender.py:_start_run_threads():1124] run started: 22fva394 with start time 1721809158.135662
+2024-07-24 16:19:21,034 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: check_version
+2024-07-24 16:19:21,034 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: check_version
+2024-07-24 16:19:24,055 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:24,066 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: run_start
+2024-07-24 16:19:24,086 DEBUG   HandlerThread:190760 [system_info.py:__init__():26] System info init
+2024-07-24 16:19:24,086 DEBUG   HandlerThread:190760 [system_info.py:__init__():41] System info init done
+2024-07-24 16:19:24,086 INFO    HandlerThread:190760 [system_monitor.py:start():194] Starting system monitor
+2024-07-24 16:19:24,086 INFO    SystemMonitor:190760 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-07-24 16:19:24,086 INFO    HandlerThread:190760 [system_monitor.py:probe():214] Collecting system info
+2024-07-24 16:19:24,087 INFO    SystemMonitor:190760 [interfaces.py:start():190] Started cpu monitoring
+2024-07-24 16:19:24,087 INFO    SystemMonitor:190760 [interfaces.py:start():190] Started disk monitoring
+2024-07-24 16:19:24,087 INFO    SystemMonitor:190760 [interfaces.py:start():190] Started gpu monitoring
+2024-07-24 16:19:24,088 INFO    SystemMonitor:190760 [interfaces.py:start():190] Started memory monitoring
+2024-07-24 16:19:24,088 INFO    SystemMonitor:190760 [interfaces.py:start():190] Started network monitoring
+2024-07-24 16:19:24,127 DEBUG   HandlerThread:190760 [system_info.py:probe():150] Probing system
+2024-07-24 16:19:24,131 DEBUG   HandlerThread:190760 [system_info.py:_probe_git():135] Probing git
+2024-07-24 16:19:24,137 DEBUG   HandlerThread:190760 [system_info.py:_probe_git():143] Probing git done
+2024-07-24 16:19:24,137 DEBUG   HandlerThread:190760 [system_info.py:probe():198] Probing system done
+2024-07-24 16:19:24,137 DEBUG   HandlerThread:190760 [system_monitor.py:probe():223] {'os': 'Linux-5.15.0-113-generic-x86_64-with-glibc2.17', 'python': '3.8.19', 'heartbeatAt': '2024-07-24T08:19:24.128033', 'startedAt': '2024-07-24T08:19:18.133073', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/wyq/anaconda3/envs/viskill/bin/kuka_grasp_test', 'codePathLocal': None, 'git': {'remote': 'https://github.com/arenxxxe/long_horizon_chainning.git', 'commit': 'cc9f577a02e183b5966c4fecc7d26df4d13e8d53'}, 'email': 'qinsongwei90@gmail.com', 'root': '/home/wyq/SW/long_horizon_chainning', 'host': 'wyq', 'username': 'wyq', 'executable': '/home/wyq/anaconda3/envs/viskill/bin/python', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 2841.371625, 'min': 800.0, 'max': 4825.0}, 'cpu_freq_per_core': [{'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 4610.951, 'min': 800.0, 'max': 4900.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 4289.349, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 4564.594, 'min': 800.0, 'max': 4800.0}, {'current': 4503.448, 'min': 800.0, 'max': 4800.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 2500.0, 'min': 800.0, 'max': 4900.0}, {'current': 2500.0, 'min': 800.0, 'max': 4800.0}, {'current': 4564.242, 'min': 800.0, 'max': 4800.0}], 'disk': {'/': {'total': 883.9007263183594, 'used': 593.8744773864746}}, 'gpu': 'NVIDIA GeForce RTX 4070 Ti', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 4070 Ti', 'memory_total': 12878610432}], 'memory': {'total': 62.624629974365234}}
+2024-07-24 16:19:24,137 INFO    HandlerThread:190760 [system_monitor.py:probe():224] Finished collecting system info
+2024-07-24 16:19:24,137 INFO    HandlerThread:190760 [system_monitor.py:probe():227] Publishing system info
+2024-07-24 16:19:24,137 DEBUG   HandlerThread:190760 [system_info.py:_save_conda():207] Saving list of conda packages installed into the current environment
+2024-07-24 16:19:25,030 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/conda-environment.yaml
+2024-07-24 16:19:25,655 DEBUG   HandlerThread:190760 [system_info.py:_save_conda():222] Saving conda packages done
+2024-07-24 16:19:25,656 INFO    HandlerThread:190760 [system_monitor.py:probe():229] Finished publishing system info
+2024-07-24 16:19:25,657 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:25,657 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-metadata.json with policy now
+2024-07-24 16:19:25,703 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: python_packages
+2024-07-24 16:19:25,703 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: python_packages
+2024-07-24 16:19:25,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: stop_status
+2024-07-24 16:19:25,704 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: stop_status
+2024-07-24 16:19:25,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:19:26,030 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/conda-environment.yaml
+2024-07-24 16:19:26,030 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-metadata.json
+2024-07-24 16:19:26,030 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/requirements.txt
+2024-07-24 16:19:29,106 DEBUG   SenderThread:190760 [sender.py:send():379] send: telemetry
+2024-07-24 16:19:29,106 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:29,845 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:29,845 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:30,031 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json
+2024-07-24 16:19:30,031 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:30,032 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media
+2024-07-24 16:19:30,032 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:30,750 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/eyqjhsdk-wandb-metadata.json
+2024-07-24 16:19:32,031 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:33,108 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/r8jhg6u0-media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json
+2024-07-24 16:19:33,126 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:33,168 INFO    wandb-upload_0:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp624ndqga
+2024-07-24 16:19:35,056 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYxODczOQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': None}}
+2024-07-24 16:19:35,056 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:35,056 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json with policy now
+2024-07-24 16:19:35,056 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:35,057 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:35,057 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:35,058 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:36,032 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:36,033 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:36,266 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:36,267 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:36,271 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:36,465 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/huyjz7tj-media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json
+2024-07-24 16:19:37,033 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json
+2024-07-24 16:19:37,033 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:38,061 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/yqv8ny18-media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json
+2024-07-24 16:19:38,412 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:38,417 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:38,524 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpalfbanms
+2024-07-24 16:19:39,033 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json
+2024-07-24 16:19:39,034 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:40,381 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTEyMA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYxODczOQ==', 'versionIndex': 0}}}
+2024-07-24 16:19:40,381 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:40,381 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json with policy now
+2024-07-24 16:19:40,381 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:40,382 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:40,382 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:40,383 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:40,383 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:40,703 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: stop_status
+2024-07-24 16:19:40,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:19:41,034 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:41,369 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:41,415 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:41,427 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/2cf5dfri-media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json
+2024-07-24 16:19:42,034 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:42,034 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json
+2024-07-24 16:19:42,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:42,988 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/z57cv3gm-media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json
+2024-07-24 16:19:43,229 INFO    wandb-upload_2:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp8oi9x4xt
+2024-07-24 16:19:44,049 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:44,054 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:44,161 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/qvzfbgvi-media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json
+2024-07-24 16:19:44,773 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTQyMA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTEyMA==', 'versionIndex': 1}}}
+2024-07-24 16:19:44,773 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:44,773 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json with policy now
+2024-07-24 16:19:44,773 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:44,773 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:44,774 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:44,774 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: stop_status
+2024-07-24 16:19:45,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:45,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json
+2024-07-24 16:19:45,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:45,241 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:45,740 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/ots8h408-media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json
+2024-07-24 16:19:45,866 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:45,870 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:46,032 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/234clusq-media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json
+2024-07-24 16:19:46,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:46,035 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json
+2024-07-24 16:19:46,036 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:46,918 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/lp41x7sl-media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json
+2024-07-24 16:19:47,348 INFO    wandb-upload_2:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp5lhdgvbn
+2024-07-24 16:19:48,869 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTc2Mg==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTQyMA==', 'versionIndex': 2}}}
+2024-07-24 16:19:48,871 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:49,260 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:49,265 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:49,389 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:49,389 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json with policy now
+2024-07-24 16:19:49,389 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:49,389 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:49,390 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:49,391 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:50,036 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:50,036 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/config.yaml
+2024-07-24 16:19:50,036 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json
+2024-07-24 16:19:50,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:50,475 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/o4d169ou-media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json
+2024-07-24 16:19:50,978 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/bxzvq53c-media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json
+2024-07-24 16:19:51,272 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:51,277 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:51,767 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpybyomb9c
+2024-07-24 16:19:52,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:52,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json
+2024-07-24 16:19:52,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:53,224 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:53,229 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:53,321 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDAwOQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYxOTc2Mg==', 'versionIndex': 3}}}
+2024-07-24 16:19:53,321 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:53,321 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json with policy now
+2024-07-24 16:19:53,322 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:53,322 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:53,322 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:53,322 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:54,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:54,037 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json
+2024-07-24 16:19:54,038 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:54,445 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/tcunt4cu-media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json
+2024-07-24 16:19:54,496 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/oguedk07-media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json
+2024-07-24 16:19:55,623 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp8w5en923
+2024-07-24 16:19:55,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: stop_status
+2024-07-24 16:19:55,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:19:56,028 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:56,038 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:56,038 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json
+2024-07-24 16:19:56,038 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:56,075 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:56,228 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/5d2iifcr-media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json
+2024-07-24 16:19:57,101 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDMwNQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDAwOQ==', 'versionIndex': 4}}}
+2024-07-24 16:19:57,101 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:19:57,102 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:19:57,102 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json with policy now
+2024-07-24 16:19:57,102 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:19:57,102 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:19:57,103 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:19:57,103 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:19:58,038 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:19:58,039 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:19:58,233 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/mybmfwiy-media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json
+2024-07-24 16:19:58,235 INFO    wandb-upload_3:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/lobn2lle-media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json
+2024-07-24 16:19:58,958 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:19:58,963 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:19:59,039 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json
+2024-07-24 16:19:59,039 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:19:59,637 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp3hllp59p
+2024-07-24 16:20:00,154 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/089ovr8j-media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json
+2024-07-24 16:20:00,629 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:00,634 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:00,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:01,039 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json
+2024-07-24 16:20:01,040 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:01,162 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDU2Nw==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDMwNQ==', 'versionIndex': 5}}}
+2024-07-24 16:20:01,162 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:01,162 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json with policy now
+2024-07-24 16:20:01,162 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:01,162 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:01,162 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:01,163 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:02,040 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:02,166 INFO    wandb-upload_3:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/qq58hg39-media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json
+2024-07-24 16:20:02,167 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/a9z8spbc-media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json
+2024-07-24 16:20:02,668 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:02,673 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:03,040 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json
+2024-07-24 16:20:03,040 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:03,507 INFO    wandb-upload_0:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpnja81own
+2024-07-24 16:20:03,939 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/ny3q5fr6-media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json
+2024-07-24 16:20:04,040 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:04,283 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:04,287 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:04,944 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDgyOA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDU2Nw==', 'versionIndex': 6}}}
+2024-07-24 16:20:04,944 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:04,944 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json with policy now
+2024-07-24 16:20:04,944 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:04,944 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:04,945 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:04,946 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:04,946 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:05,041 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:05,041 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json
+2024-07-24 16:20:05,041 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:05,710 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:05,907 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/rfke2d3u-media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json
+2024-07-24 16:20:05,972 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/2wt5t3gz-media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json
+2024-07-24 16:20:06,111 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:06,115 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:07,042 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json
+2024-07-24 16:20:07,042 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:07,363 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpwpyu22xl
+2024-07-24 16:20:07,907 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/qpm56yly-media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json
+2024-07-24 16:20:08,042 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:08,414 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:08,419 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:08,864 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTA2OA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMDgyOA==', 'versionIndex': 7}}}
+2024-07-24 16:20:08,864 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:08,864 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json with policy now
+2024-07-24 16:20:08,865 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:08,865 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:08,865 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:08,866 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: stop_status
+2024-07-24 16:20:09,042 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:09,042 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json
+2024-07-24 16:20:09,043 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:09,282 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:09,835 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/f1pkwkll-media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json
+2024-07-24 16:20:09,887 INFO    wandb-upload_3:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/4ys7gue4-media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json
+2024-07-24 16:20:10,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: stop_status
+2024-07-24 16:20:10,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: internal_messages
+2024-07-24 16:20:11,341 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:11,383 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:11,488 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp0fiqshds
+2024-07-24 16:20:12,043 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:12,043 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json
+2024-07-24 16:20:12,044 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:13,136 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTM2MA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTA2OA==', 'versionIndex': 8}}}
+2024-07-24 16:20:13,137 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:13,137 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json with policy now
+2024-07-24 16:20:13,137 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:13,137 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:13,138 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:13,139 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:13,140 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:13,977 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:13,981 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/tuz13gkc-media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json
+2024-07-24 16:20:13,981 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:14,044 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:14,044 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json
+2024-07-24 16:20:14,045 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:14,068 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/z2btfeu6-media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json
+2024-07-24 16:20:14,925 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/16dxliv3-media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json
+2024-07-24 16:20:15,142 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmplwv5lfyx
+2024-07-24 16:20:15,704 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:16,045 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:16,654 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTYxMQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTM2MA==', 'versionIndex': 9}}}
+2024-07-24 16:20:16,655 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:16,655 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json with policy now
+2024-07-24 16:20:16,655 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:16,655 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:16,655 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:16,656 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:17,045 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:17,782 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/0lr5qrzb-media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json
+2024-07-24 16:20:17,886 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: log_artifact
+2024-07-24 16:20:17,887 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: partial_history
+2024-07-24 16:20:18,046 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_created():271] file/dir created: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_18_aa138b22d5fa438be9c0.table.json
+2024-07-24 16:20:18,046 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table
+2024-07-24 16:20:19,276 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp8xez3zw3
+2024-07-24 16:20:19,528 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/wa30pzha-media/table/函数中的末端位姿状态_18_aa138b22d5fa438be9c0.table.json
+2024-07-24 16:20:20,047 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:20,534 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: poll_exit
+2024-07-24 16:20:20,657 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTg4MQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTYxMQ==', 'versionIndex': 10}}}
+2024-07-24 16:20:20,657 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:20,658 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:20,658 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json with policy now
+2024-07-24 16:20:20,658 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:20,658 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:20,659 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:20,659 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:21,047 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:21,570 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/paclyd9h-media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json
+2024-07-24 16:20:22,047 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:22,839 INFO    wandb-upload_1:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpdhwjbge8
+2024-07-24 16:20:24,089 DEBUG   SystemMonitor:190760 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-07-24 16:20:24,573 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjE1MA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMTg4MQ==', 'versionIndex': 11}}}
+2024-07-24 16:20:24,573 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:24,573 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json with policy now
+2024-07-24 16:20:24,573 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:24,573 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:24,573 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:24,574 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:25,048 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:25,534 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:25,924 INFO    wandb-upload_3:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/ozz9ceo1-media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json
+2024-07-24 16:20:26,049 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:27,519 INFO    wandb-upload_0:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpr19dk221
+2024-07-24 16:20:28,983 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjQxOQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjE1MA==', 'versionIndex': 12}}}
+2024-07-24 16:20:28,983 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:28,983 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:28,983 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json with policy now
+2024-07-24 16:20:28,984 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:28,984 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:28,985 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:28,985 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:29,050 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:30,376 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/vuewn1i7-media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json
+2024-07-24 16:20:30,535 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:31,645 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpmi20ykid
+2024-07-24 16:20:32,051 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:33,040 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjc1OQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjQxOQ==', 'versionIndex': 13}}}
+2024-07-24 16:20:33,040 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:33,040 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json with policy now
+2024-07-24 16:20:33,040 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:33,040 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:33,041 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:33,041 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:33,051 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:34,086 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/qx26tskq-media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json
+2024-07-24 16:20:35,536 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:35,660 INFO    wandb-upload_2:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpsnfn4v6w
+2024-07-24 16:20:36,052 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:37,297 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzAxNw==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMjc1OQ==', 'versionIndex': 14}}}
+2024-07-24 16:20:37,297 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:37,297 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json with policy now
+2024-07-24 16:20:37,297 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:37,297 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:37,298 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:37,298 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:37,298 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: stop_status
+2024-07-24 16:20:37,884 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:38,053 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:38,345 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/9v8csvac-media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json
+2024-07-24 16:20:40,053 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:40,078 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpuqnnw73c
+2024-07-24 16:20:40,537 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:41,628 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzMyMQ==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzAxNw==', 'versionIndex': 15}}}
+2024-07-24 16:20:41,628 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:41,628 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json with policy now
+2024-07-24 16:20:41,629 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:41,629 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:41,629 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:41,629 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:42,054 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:42,547 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/khlt3124-media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json
+2024-07-24 16:20:43,933 INFO    wandb-upload_2:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmpgnwip8jz
+2024-07-24 16:20:44,055 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:44,104 INFO    memory    :190760 [interfaces.py:monitor():140] Process proc.memory.rssMB has exited.
+2024-07-24 16:20:44,105 DEBUG   SystemMonitor:190760 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-07-24 16:20:44,105 DEBUG   SystemMonitor:190760 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-07-24 16:20:45,340 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzU4Mw==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzMyMQ==', 'versionIndex': 16}}}
+2024-07-24 16:20:45,340 DEBUG   SenderThread:190760 [sender.py:send():379] send: files
+2024-07-24 16:20:45,341 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: status_report
+2024-07-24 16:20:45,341 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json with policy now
+2024-07-24 16:20:45,341 DEBUG   SenderThread:190760 [sender.py:send():379] send: history
+2024-07-24 16:20:45,341 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: summary_record
+2024-07-24 16:20:45,341 INFO    SenderThread:190760 [sender.py:_save_file():1390] saving file wandb-summary.json with policy end
+2024-07-24 16:20:45,342 DEBUG   SenderThread:190760 [sender.py:send_request():406] send_request: log_artifact
+2024-07-24 16:20:45,538 DEBUG   HandlerThread:190760 [handler.py:handle_request():146] handle_request: keepalive
+2024-07-24 16:20:46,055 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:46,378 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /tmp/tmp36ieyx2fwandb/b7g15icq-media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json
+2024-07-24 16:20:47,209 WARNING StreamThr :190760 [internal.py:is_dead():414] Internal process exiting, parent pid 190707 disappeared
+2024-07-24 16:20:47,209 ERROR   StreamThr :190760 [internal.py:wandb_internal():152] Internal process shutdown.
+2024-07-24 16:20:47,341 INFO    WriterThread:190760 [datastore.py:close():296] close: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/run-22fva394.wandb
+2024-07-24 16:20:47,416 INFO    wandb-upload_3:190760 [upload_job.py:push():89] Uploaded file /home/wyq/.local/share/wandb/artifacts/staging/tmp2mvzweuc
+2024-07-24 16:20:47,538 INFO    HandlerThread:190760 [handler.py:finish():866] shutting down handler
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [system_monitor.py:finish():203] Stopping system monitor
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [interfaces.py:finish():202] Joined cpu monitor
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [interfaces.py:finish():202] Joined disk monitor
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [interfaces.py:finish():202] Joined gpu monitor
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [interfaces.py:finish():202] Joined memory monitor
+2024-07-24 16:20:47,539 INFO    HandlerThread:190760 [interfaces.py:finish():202] Joined network monitor
+2024-07-24 16:20:48,056 INFO    Thread-12 :190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:48,976 INFO    SenderThread:190760 [sender.py:send_request_log_artifact():1456] logged artifact run-22fva394- - {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzgxOA==', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjMxNTc1ODI4Mw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6MTAyOTYyMzU4Mw==', 'versionIndex': 17}}}
+2024-07-24 16:20:48,976 INFO    SenderThread:190760 [sender.py:finish():1546] shutting down sender
+2024-07-24 16:20:51,181 INFO    SenderThread:190760 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-07-24 16:20:52,057 INFO    SenderThread:190760 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:52,058 INFO    SenderThread:190760 [dir_watcher.py:finish():388] scan: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files
+2024-07-24 16:20:52,058 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json wandb-summary.json
+2024-07-24 16:20:52,058 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log output.log
+2024-07-24 16:20:52,058 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-metadata.json wandb-metadata.json
+2024-07-24 16:20:52,060 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/conda-environment.yaml conda-environment.yaml
+2024-07-24 16:20:52,061 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/requirements.txt requirements.txt
+2024-07-24 16:20:52,063 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/config.yaml config.yaml
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json media/table/函数中的末端位姿状态_14_855dd4d1884fe874d1fd.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json media/table/函数中的末端位姿状态_17_813b47e6f7139f789a68.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json media/table/函数中的末端位姿状态_10_3268cd6120baa8a1a55e.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json media/table/函数中的末端位姿状态_16_2a571af9362be6c53e73.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json media/table/函数中的末端位姿状态_12_868ad3a099c633b828e4.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json media/table/函数中的末端位姿状态_15_cd6d89e724a20fd74955.table.json
+2024-07-24 16:20:52,066 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json media/table/函数中的末端位姿状态_11_1f1a4ead3b78356a940a.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json media/table/函数中的末端位姿状态_5_a06084cd6455e0277cf8.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json media/table/函数中的末端位姿状态_7_bf0510f472726db5723f.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json media/table/函数中的末端位姿状态_2_a61b105b70f9a3994c91.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json media/table/函数中的末端位姿状态_6_52edf7f917cebec1ddd1.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json media/table/函数中的末端位姿状态_3_973e56a50773f5cb35cd.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json media/table/函数中的末端位姿状态_1_e339614bff630656eea1.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json media/table/函数中的末端位姿状态_8_d79dd3194b9e00aa28a0.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json media/table/函数中的末端位姿状态_9_9e2404f4c930057328aa.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json media/table/函数中的末端位姿状态_13_13b74d449df3e7c254ee.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_18_aa138b22d5fa438be9c0.table.json media/table/函数中的末端位姿状态_18_aa138b22d5fa438be9c0.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json media/table/函数中的末端位姿状态_0_9b5cb82c30925e75b41a.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [dir_watcher.py:finish():402] scan save: /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json media/table/函数中的末端位姿状态_4_3c9f0fdaa51b6ef0e92a.table.json
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [file_pusher.py:finish():172] shutting down file pusher
+2024-07-24 16:20:52,067 INFO    SenderThread:190760 [file_pusher.py:join():178] waiting for file pusher
+2024-07-24 16:20:52,887 INFO    wandb-upload_2:190760 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/conda-environment.yaml
+2024-07-24 16:20:52,890 INFO    wandb-upload_1:190760 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/wandb-summary.json
+2024-07-24 16:20:53,030 INFO    wandb-upload_0:190760 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/output.log
+2024-07-24 16:20:54,335 INFO    wandb-upload_3:190760 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/requirements.txt
+2024-07-24 16:20:54,367 INFO    wandb-upload_4:190760 [upload_job.py:push():131] Uploaded file /home/wyq/SW/long_horizon_chainning/wandb/run-20240724_161918-22fva394/files/config.yaml
+2024-07-24 16:20:54,571 INFO    SenderThread:190760 [file_stream.py:finish():614] file stream finish called
+2024-07-24 16:20:54,915 INFO    SenderThread:190760 [file_stream.py:finish():618] file stream finish is done

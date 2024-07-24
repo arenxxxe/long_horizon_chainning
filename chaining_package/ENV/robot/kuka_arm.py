@@ -10,7 +10,6 @@ import copy
 import math
 import pybullet_data
 
-
 class Kuka:
 
   def __init__(self, urdfRootPath=pybullet_data.getDataPath(), timeStep=0.01):
@@ -117,41 +116,57 @@ class Kuka:
       return actualEndEffectorPos,ee_joint_open_angle
   @property
   def functor_ee_pos(self):
-    return self.endEffectorPos.copy()
+          #奇怪的偏移
+    # if not hasattr(self, "has_run"):
+    #   #print("这段代码仅执行一次")
+      
+    #   self.endEffectorPos[2]-=0.4
+    #   self.has_run = True
+    pybullet_api_action=self.endEffectorPos.copy()
+
+    return pybullet_api_action
   @property
   def ee_angle(self):
     return self.endEffectorAngle
   
 
 
-  def applyAction(self, delta_commands:list):
+  def applyAction(self, z_fake_desired_delta_ee_pos:np.ndarray):
 
     #1 逆运动学控制模式 只需要输入末端执行器期望的位姿
     if (self.useInverseKinematics):
-
+      #print(z_fake_desired_delta_ee_pos)
       #奇怪的偏移
-      if not hasattr(self, "has_run"):
-        #print("这段代码仅执行一次")
+      # if not hasattr(self, "has_run"):
+      #   #print("这段代码仅执行一次")
         
-        self.endEffectorPos[2]-=0.4
-        self.has_run = True
-      
+      #   self.endEffectorPos[2]-=0.4
+      #   self.has_run = True
+      #进来的目标位姿 但是这次设定之后 然后step一次 认为就达到了这个动作位置的 所以需要试 一次step究竟要多少？
+      #breakpoint()
+      # step_factor=0.001
+      # real_pos=self.functor_ee_pos
+      # real_pos[2]-=0.04
+      # functor_ee_pos=real_pos
 
-      motorCommands=delta_commands
+      # motorCommands=(z_fake_desired_delta_ee_pos[:3]-functor_ee_pos) * step_factor
+      # motorCommands=motorCommands.tolist()
+      #print(self.endEffectorPos)
+      #breakpoint()
       # print(np_endEffectorPosOrn[3])
       #print(f"targetee{target_ee}")
-      # eeobs,_=self.getEE_pos()
-      # print(f"eeobs{eeobs[2]}")
+
       #print(self.endEffectorPos[2])
       #print(self.endEffectorPos[2])
 
-      dx = motorCommands[0]
-      dy = motorCommands[1]
+      #dx = motorCommands[0]* step_factor
+      #dy = motorCommands[1]* step_factor
       #关键认知：dz是来增内部的这个self.endEffectorPos 增一点 变化一点 和外界的真实的东西完全的脱离耦合的 dz越少 代表着什么？ 代表着主观上认为 一次是往 末端执行器目标位姿方向变化一点点
       #需要拿到关键数据   我给入某个dz下去 实际上的z方向上面的变化是多少？
-      dz = motorCommands[2] *0.05
-      da = motorCommands[3]
-      self.fingerAngle = delta_commands[4]
+      # dz =  motorCommands[2]* step_factor
+      #da=(z_fake_desired_delta_ee_pos[3]-self.ee_angle)*step_factor
+      
+      self.fingerAngle = z_fake_desired_delta_ee_pos[4]
       
       #da_angle=p.getJointState(self.kukaUid,7)
 
@@ -159,10 +174,10 @@ class Kuka:
       #print("pos[2] (getLinkState(kukaEndEffectorIndex)")
       #print(actualEndEffectorPos[2])
 
-      if abs(dx)<0.0001:
-        dx=0
+      # if abs(dx)<0.0001:
+      #   dx=0
       
-      self.endEffectorPos[0] = self.endEffectorPos[0] + dx
+      self.endEffectorPos[0] = z_fake_desired_delta_ee_pos[0]
       
       #工作空间限制
       # if (self.endEffectorPos[0] > 0.56):
@@ -170,9 +185,11 @@ class Kuka:
       # if (self.endEffectorPos[0] < 0.50):
       #   self.endEffectorPos[0] = 0.50
 
-      if abs(dy)<0.0001:
-        dy=0
-      self.endEffectorPos[1] = self.endEffectorPos[1] + dy
+      # if abs(dy)<0.0001:
+      #   dy=0
+
+
+      self.endEffectorPos[1] = z_fake_desired_delta_ee_pos[1]
       #工作空间限制
       # if (self.endEffectorPos[1] < -0.17):
       #   self.endEffectorPos[1] = -0.17
@@ -184,12 +201,16 @@ class Kuka:
       #print("actualEndEffectorPos[2]")
       #print(actualEndEffectorPos[2])
       #if (dz<0 or actualEndEffectorPos[2]<0.5):
-      dz=dz
+      # dz=dz
       
-      if abs(dz)<0.1e-10:
-        dz=0
+      # if abs(dz)<0.1e-10:
+      #   dz=0
+
+
+
       # print(dz)
-      self.endEffectorPos[2] = self.endEffectorPos[2] + dz
+      self.endEffectorPos[2] = z_fake_desired_delta_ee_pos[2]
+
       
       #print(f"位置{self.endEffectorPos[2]} dz{dz}")
       #工作空间限制
@@ -200,9 +221,18 @@ class Kuka:
       #print(self.endEffectorPos[2])
   
 
-      self.endEffectorAngle = self.endEffectorAngle + da
+      self.endEffectorAngle = z_fake_desired_delta_ee_pos[3]
 
-      pos = self.endEffectorPos
+      pos = self.endEffectorPos.copy()
+      pos[2]+=0.02
+      #print(pos)
+      # import wandb
+      #breakpoint()
+      # wandb.log({"x":pos[0],
+      #       "y":pos[1],
+      #       "z":pos[2]
+            
+      #       })
       #print( pos )
       orn = p.getQuaternionFromEuler([0, -math.pi, 0])  # -math.pi,yaw])
       
@@ -283,10 +313,11 @@ class Kuka:
                               force=self.fingerTipForce)
     #不需要： 一个一个关节控制
     else:
-      for action in range(len(motorCommands)):
-        motor = self.motorIndices[action]
-        p.setJointMotorControl2(self.kukaUid,
-                                motor,
-                                p.POSITION_CONTROL,
-                                targetPosition=motorCommands[action],
-                                force=self.maxForce)
+      # for action in range(len(motorCommands)):
+      #   motor = self.motorIndices[action]
+      #   p.setJointMotorControl2(self.kukaUid,
+      #                           motor,
+      #                           p.POSITION_CONTROL,
+      #                           targetPosition=motorCommands[action],
+      #                           force=self.maxForce)
+      pass
