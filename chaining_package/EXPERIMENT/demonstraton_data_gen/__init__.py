@@ -9,5 +9,5 @@ from gym.envs.registration import register
 register(
     id='KukaGrasp-v0',
     entry_point='chaining_package.ENV.task_env.kuka_grasp_env:KukaGraspEnv',
-    max_episode_steps=40,
+    max_episode_steps=120,
 )

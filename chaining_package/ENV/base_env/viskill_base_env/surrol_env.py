@@ -137,6 +137,10 @@ class SurRoLEnv(gym.Env):
 
     def reset(self):
         # reset scene in the corresponding file
+
+        #必须这么做 每次分配的id是变化的 不清空 一直递增把内存爆了不说 拿过时的id调pybullet接口肯定出错
+        self.obj_ids = {'fixed': [], 'rigid': [], 'deformable': []}
+
         p.resetSimulation()
         p.setGravity(0, 0, -9.81)
         p.configureDebugVisualizer(lightPosition=(10.0, 0.0, 10.0))

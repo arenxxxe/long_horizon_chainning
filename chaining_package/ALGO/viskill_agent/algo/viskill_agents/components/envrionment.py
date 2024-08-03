@@ -498,6 +498,12 @@ def make_env(cfg):
             env = MatchBoardSCWrapper(env, cfg.init_subtask, output_raw_obs=False)
         else:
             env = MatchBoardSLWrapper(env, cfg.subtask, output_raw_obs=False)
+    elif cfg.task == 'KukaGrasp-v0' :
+            from chaining_package.ENV.agent_interface_env.kuka_slsc_wrapper import KukagraspSLWrapper
+            if cfg.skill_chaining:
+               raise NotImplementedError
+            else:
+                env = KukagraspSLWrapper(env, cfg.subtask, output_raw_obs=False)
     else:
         raise NotImplementedError
     return env

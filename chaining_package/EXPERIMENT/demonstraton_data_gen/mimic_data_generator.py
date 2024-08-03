@@ -24,6 +24,7 @@ parser.add_argument('--subtask', type=str,
 args = parser.parse_args()
 
 
+
 actions = []
 observations = []
 infos = []
@@ -65,6 +66,7 @@ def main():
 
     if args.steps is None:
         args.steps = env.max_episode_steps #拿到的是子任务的
+
     #检查3 ：env.max_episode_steps属性
     #breakpoint() #没看到明显的问题
     print()
@@ -93,10 +95,10 @@ def main():
 
     storage_path=os.path.join(parent_dir_path,"data_storage")
     folder = os.path.join(storage_path, 'demonstration_data')
-    breakpoint()
+    #breakpoint()
     np.savez_compressed(os.path.join(folder, file_name),
                         actions=actions, observations=observations, terminals=terminals, gt_actions=gt_actions)  # save the file
-
+    
     if args.video:
         video_name = "video"
         video_name += args.env + ".mp4"

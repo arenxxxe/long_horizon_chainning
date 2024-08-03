@@ -6,7 +6,7 @@ defaults:
 cwd: ${hydra:runtime.output_dir}
 
 # Training params
-n_train_steps: 2_000_001
+n_train_steps: 2_000_001_000
 n_eval: 400
 n_save: 160
 n_log: 4000
@@ -19,8 +19,8 @@ checkpoint_frequency: 20_000
 update_epoch: 80
 batch_size: 128
 device: cuda:0
-seed: 1
-task: BiPegTransfer-v0
+seed: 2
+task: 'KukaGrasp-v0'
 subtask: grasp
 postfix: null
 skill_chaining: False
@@ -29,7 +29,7 @@ n_eval_episodes: 8
 save_buffer: False
 
 use_wb: True
-project_name: chaning_everything
+project_name: chaining_everything
 entity_name: qinsongwei90
 
 mpi: {rank: null, is_chef: null, num_workers: null}
@@ -43,4 +43,4 @@ hydra:
   sweeper:
     params:
       seed: 1,2,3,4,5
-      subtask: grasp,handover,release
+      subtask: grasp,release

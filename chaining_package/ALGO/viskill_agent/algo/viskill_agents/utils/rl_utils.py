@@ -101,7 +101,7 @@ class ReplayCacheGT(ReplayCache):
     
 def init_demo_buffer(cfg, buffer, agent, subtask=None, update_normalizer=True):
     '''Load demonstrations into buffer and initilaize normalizer'''
-    demo_path = os.path.join(os.getcwd(),'surrol/data/demo')
+    demo_path = "/home/wyq/SW/long_horizon_chainning/chaining_package/EXPERIMENT/data_storage/demonstration_data"
     file_name = "data_"
     file_name += cfg.task
     file_name += "_" + 'random'

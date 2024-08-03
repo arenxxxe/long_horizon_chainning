@@ -41,7 +41,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
         SCALING = 1.
         #A 完成上层调用逻辑     env = KukaGraspEnv() 
         #TODO 已经完成书写
-        def __init__(self,render_mode='human'):
+        def __init__(self,render_mode='rgb_array'):
                 
                 #1设置渲染模式 开启bullet服务器--无需修改
                 #2 相机参数设置-无需修改
@@ -117,7 +117,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 goal--物体最终落地之后的位置 
                 """
                 #改变了之后 物体的位置也是会改变的 
-                goal = [ 0.42426854 , 0.54978078 ,-0.99100976]
+                goal = [  0.43232573 , 0.53585135 ,-0.991011 ]
                 np_goal=np.array(goal)
                 return np_goal.copy()
         
@@ -133,6 +133,9 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 list: self.subgoals 物体移动子目标
                 """
                 #1 路点可视化 用导入的红色圆球 注意scaling大一点 不然看不到 可以搞多个
+
+                #print(self.obj_ids)
+
                 red_point_init_pos=list(p.getBasePositionAndOrientation(self.obj_ids['rigid'][0])[0])
 
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], red_point_init_pos, (0, 0, 0, 1))
@@ -364,7 +367,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 eeobs,_=self._kuka.getEE_pos() #真实的末端位置
                 #print(f"eeobs{eeobs[2]}")
                 functor_ee_pos=np.array(eeobs)
-                print(functor_ee_pos)
+                #print(functor_ee_pos)
                 ee_action=np.concatenate([functor_ee_pos+action[:3],action[-2:-1],action[-1:]])#得到现在真正要前进的位置
 
                 #ee_action[2]+=0.0225 #奇怪的0.02偏移
@@ -381,11 +384,11 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #            })
                 #一次不知道动多少 但是 循环结束  必须在ee_action的位置 
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [ee_action[0],ee_action[1],ee_action[2]-self.ee_offset], (0, 0, 0, 1))
-                print(ee_action)
-                for i in range(60):
+                #print(ee_action)
+                for i in range(15):
                         self._kuka.applyAction(ee_action)
                         p.stepSimulation()
-                        time.sleep(1.0 / 30.0)
+                        #time.sleep(1.0 / 240.0)
 
  
                 
@@ -496,8 +499,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         break
 
                                 # 进来的是期望走到的位姿态
-                if i >=2 :
-                       print(f"看看为什么反复的转 动作{action[3]} 标号")
+                # if i >=2 :
+                #        print(f"看看为什么反复的转 动作{action[3]} 标号")
                 #目的： 切分微分路点 
                 
                 eeobs,_=self._kuka.getEE_pos() #真实的末端位置

@@ -61,9 +61,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     }    
     #子任务步长env step的步长吧--完成
     SUBTASK_STEPS = {
-        'grasp': 20,
+        'grasp': 60,
 
-        'release': 20
+        'release':60
     }
     #与reset有关 源代码逻辑是除了开始的任务 后面的任务都写进来  不管了--完成
     SUBTASK_RESET_INDEX = {
@@ -74,7 +74,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #重置到一个子任务开始状态 环境首先需要执行多少步--完成
     SUBTASK_RESET_MAX_STEPS = {
 
-        'release': 20
+        'release': 60
     }
     #对之前任务的了解-完成
     SUBTASK_PREV_SUBTASK = {
@@ -109,7 +109,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         return self.SUBTASK_STEPS[self.subtask]
 
     def step(self, action):
-        print("搜集数据")
+        #print("搜集数据")
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
@@ -130,6 +130,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def reset(self):
         #1 这个命令调用 可能是在子任务中 可能是整个任务 --不改
         self.subtask = self._start_subtask
+
         #2 第一个任务走这里
         if self.subtask not in self.SUBTASK_RESET_INDEX.keys():
             obs = self.env.reset() 
@@ -169,7 +170,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
 
         if self._output_raw_obs: return self._replace_goal_with_subgoal(obs), obs
         else: return self._replace_goal_with_subgoal(obs)
-    #TODO 未完成
+
     def _replace_goal_with_subgoal(self, obs):
         """Replace ag and g"""
         #检查点6 检查子目标拿的对不对
@@ -185,11 +186,11 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #抓取的时候达到的目的  是两个机械臂的位置
 
         if self.subtask == 'grasp':
-            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3],obs['achieved_goal'], [kukacol]])
+            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3],[kukacol]])
         #释放的时候大概率是物体位置反正无所谓了  不行再改了  
             
         elif self.subtask == 'release':
-            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3], obs['achieved_goal'], [kukacol]])
+            obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol]])
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
         #这两个goal需要同样的维度吗？从源代码看 并不是
         #检查点8  检查传入参数id是否正确  接触信息是否获取到
@@ -212,20 +213,19 @@ class KukagraspSLWrapper(SkillLearningWrapper):
 
         if len(ag.shape) == 1:
             #还是需要原来的奖励函数的
+
             if self.subtask != 'release':
                 goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
             else :
-                goal_reach = self.env.compute_reward(ag[3:6], g[:3], None) + 1
+
+                goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
+                #print(f"到达的位置：{ag[:3]} \n 期望到达的位置{g[:3]}")
                 
             # 在原来的奖励函数的基础上加碰撞条件的奖励 
             contact_cond = np.all(ag[-1:]==g[-1:])#注意切片的问题
             #print(f"看看是不是切片的问题{ag[-2:]}")
             reward = (goal_reach and contact_cond) - 1
             #TODO 出bug了 施教动作到不了位置
-            
-            
-           
-
         else:
             if self.subtask == 'release':
                 goal_reach = self.env.compute_reward(ag[:,-5:-2], g[:,-5:-2], None).reshape(-1, 1) + 1

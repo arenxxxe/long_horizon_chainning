@@ -8,7 +8,7 @@ defaults:
 cwd: ${hydra:runtime.output_dir}
 
 # Training params
-task: BiPegTransfer-v0
+task: 'KukaGrasp-v0'
 init_subtask: grasp
 subtask: ${init_subtask}
 postfix: null
@@ -35,8 +35,8 @@ use_demo_buffer: True
 ckpt_episode: latest
 
 use_wb: True
-project_name: chaning_everything
-entity_name: qinsongwei90
+project_name: chaining_everything
+entity_name:  qinsongwei90
 
 mpi: {rank: null, is_chef: null, num_workers: null}
 # Working space
