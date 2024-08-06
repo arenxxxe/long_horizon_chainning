@@ -104,7 +104,7 @@ class SkillLearningTrainer(BaseTrainer):
         
         
         while train_until_episode(self.global_episode):
-            print("正常训练")
+            #print("正常训练")
             import wandb
             #监控这几个内存情况
             memory_trace={
