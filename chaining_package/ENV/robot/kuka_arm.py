@@ -9,10 +9,16 @@ import numpy as np
 import copy
 import math
 import pybullet_data
-
+from memory_profiler import profile
 class Kuka:
 
+
   def __init__(self, urdfRootPath=pybullet_data.getDataPath(), timeStep=0.01):
+
+
+
+
+
     self.urdfRootPath = urdfRootPath
     self.timeStep = timeStep
     self.maxVelocity = .35
@@ -42,18 +48,26 @@ class Kuka:
     self.reset()
 
   def reset(self):
-
+    #1 导入
     objects = p.loadSDF(os.path.join(self.urdfRootPath, "kuka_iiwa/kuka_with_gripper2.sdf"))
     self.kukaUid = objects[0]
+
+
+
     #for i in range (p.getNumJoints(self.kukaUid)):
     #  print(p.getJointInfo(self.kukaUid,i))
-    p.resetBasePositionAndOrientation(self.kukaUid, [-0.100000, 0.000000, 0.070000],
+    p.resetBasePositionAndOrientation(self.kukaUid, [-0.000000, 0.000000, 0.070000],
                                       [0.000000, 0.000000, 0.000000, 1.000000])
     self.jointPositions = [
-        0.006418, 0.413184, -0.011401, -1.589317, 0.005379, 1.137684, -0.006539, 0.000048,
+        0.006418, 0.413184, -0.011401, -1.589317, 0.005379, 1.137684, -0.006539, 1.500000,
         -0.299912, 0.000000, -0.000043, 0.299960, 0.000000, -0.000200
     ]
     self.numJoints = p.getNumJoints(self.kukaUid)
+
+
+
+
+    #3正常reset
     for jointIndex in range(self.numJoints):
       p.resetJointState(self.kukaUid, jointIndex, self.jointPositions[jointIndex])
       p.setJointMotorControl2(self.kukaUid,
@@ -62,16 +76,24 @@ class Kuka:
                               targetPosition=self.jointPositions[jointIndex],
                               force=self.maxForce)
 
-    self.trayUid = p.loadURDF(os.path.join(self.urdfRootPath, "tray/tray.urdf"), 0.640000,
-                              0.075000, 0.0000, 0.000000, 0.000000, 1.000000, 0.000000)
+
+    # self.trayUid = p.loadURDF(os.path.join(self.urdfRootPath, "tray/tray.urdf"), 0.640000,
+    #                           0.075000, 0.0000, 0.000000, 0.000000, 1.000000, 0.000000)
     #self.endEffectorPos = [0.537, 0.0, 0.5]
+ 
+
+
+    #初始的末端执行器旋转
+
+
+
     state = p.getLinkState(self.kukaUid, self.kukaEndEffectorIndex)
     self.endEffectorPos = list(state[0])
-    self.endEffectorAngle = 0
+    self.endEffectorAngle = 1.5
 
     self.motorNames = []
     self.motorIndices = []
-    
+    self.fingerAngle=0.3
     for i in range(self.numJoints):
       jointInfo = p.getJointInfo(self.kukaUid, i)
       qIndex = jointInfo[3]
@@ -80,6 +102,8 @@ class Kuka:
         #print(jointInfo[1])
         self.motorNames.append(str(jointInfo[1]))
         self.motorIndices.append(i)
+
+
 
   def getActionDimension(self):
     if (self.useInverseKinematics):
@@ -129,6 +153,9 @@ class Kuka:
   def ee_angle(self):
     return self.endEffectorAngle
   
+  @property
+  def last_action(self):
+    return [self.endEffectorAngle,self.fingerAngle ]
 
 
   def applyAction(self, z_fake_desired_delta_ee_pos:np.ndarray):
@@ -143,7 +170,6 @@ class Kuka:
       #   self.endEffectorPos[2]-=0.4
       #   self.has_run = True
       #进来的目标位姿 但是这次设定之后 然后step一次 认为就达到了这个动作位置的 所以需要试 一次step究竟要多少？
-      #breakpoint()
       # step_factor=0.001
       # real_pos=self.functor_ee_pos
       # real_pos[2]-=0.04
@@ -152,7 +178,6 @@ class Kuka:
       # motorCommands=(z_fake_desired_delta_ee_pos[:3]-functor_ee_pos) * step_factor
       # motorCommands=motorCommands.tolist()
       #print(self.endEffectorPos)
-      #breakpoint()
       # print(np_endEffectorPosOrn[3])
       #print(f"targetee{target_ee}")
 
@@ -227,7 +252,7 @@ class Kuka:
       pos[2]+=0.02
       #print(pos)
       # import wandb
-      #breakpoint()
+
       # wandb.log({"x":pos[0],
       #       "y":pos[1],
       #       "z":pos[2]
@@ -235,7 +260,6 @@ class Kuka:
       #       })
       #print( pos )
       orn = p.getQuaternionFromEuler([0, -math.pi, 0])  # -math.pi,yaw])
-      
       if (self.useNullSpace == 1):
         if (self.useOrientation == 1):
           jointPoses = p.calculateInverseKinematics(self.kukaUid, self.kukaEndEffectorIndex, pos,
@@ -257,6 +281,7 @@ class Kuka:
                                                     orn,
                                                     jointDamping=self.jd
                                                     ,maxNumIterations=200)
+          
         else:
           jointPoses = p.calculateInverseKinematics(self.kukaUid, self.kukaEndEffectorIndex, pos)
 
@@ -276,7 +301,7 @@ class Kuka:
                                   maxVelocity=self.maxVelocity,
                                   positionGain=0.3,
                                   velocityGain=1)
-      
+
       else:
         #reset the joint state (ignoring all dynamics, not recommended to use during simulation)
         for i in range(self.numJoints):

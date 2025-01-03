@@ -25,7 +25,7 @@ RENDER_HEIGHT = 720
 RENDER_WIDTH = 960
 
 
-
+from memory_profiler import profile
 
 from chaining_package.ENV.base_env.viskill_base_env.surrol_goalenv import SurRoLGoalEnv
 from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import reset_camera
@@ -55,12 +55,13 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #10 仿真时间间隙-- 无需修正
                 #man what can i say?  初始化的时候也是要拿obs 来做观察空间参数的初始化的
                 self.touch_object_once=False
+                
                 super().__init__(render_mode=render_mode)
 
         @property
         def action_size(self):
                 return 5 #xyz 末端执行器关节旋转 +夹爪开合
- 
+        
         def _env_setup(self): 
                 """
                 处于的流程: A-6 场景设置
@@ -72,28 +73,40 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #1 设置相机
                 
                 # camera
-                if self._render_mode == 'human':
-                        reset_camera(yaw=90.0, pitch=-30.0, dist=2 * self.SCALING,
+                #改变角度拍摄更加清楚
+                if self._render_mode == "rgb_array":
+                        reset_camera(yaw=90.0, pitch=-5.0, dist=2 * self.SCALING,
                                         target=(-0.05 * self.SCALING, 0, 0.36 * self.SCALING))
-
+                if self._render_mode == "human":
+                        reset_camera(yaw=90.0, pitch=-5.0, dist=2 * self.SCALING,
+                                target=(-0.05 * self.SCALING-0.3, 0, 0.36 * self.SCALING))
                 #2 部署机器人和场景物体
                 #2a 封装好的kuka机器人
                 self._urdfRoot=os.path.abspath("./chaining_package/ENV/3d_asset/3d_model/kuka_grasp")
                 
                 self._timeStep = 1. / 240.
-                self._kuka = Kuka(urdfRootPath=self._urdfRoot, timeStep=self._timeStep)
-                self.kuka_body=self._kuka.kukaUid
-                #2b 桌子
-                p.loadURDF(os.path.join(self._urdfRoot, "table/table.urdf"), 0.5000000, 0.00000, -0.63000,
-                        0.000000, 0.000000, 0.0, 1.0)
+
+                #去掉2 
+                # p.loadURDF(os.path.join(self._urdfRoot, "table/table.urdf"), 0.5000000, 0.00000, -0.63000,
+                #         0.000000, 0.000000, 0.0, 1.0)
                 #2c  随机扔几个物块
-                xpos = 0.55 + 0.12 * 0.5
-                ypos = 0 + 0.2 * 0.8
+                self.init_block_xpos = 0.6320828071580811  
+                self.init_block_ypos = -0.001113897653747268  
                 ang = 3.14 * 0.5 + 3.1415925438 * 0.5
                 orn = p.getQuaternionFromEuler([0, 0, ang])
-
-                self.blockUid = p.loadURDF(os.path.join(self._urdfRoot, "block.urdf"), xpos, ypos, 0.014,
+                self.init_stacked_block_xpos=self.init_block_xpos+0.12 * 0.5
+                self.init_stacked_block_ypos=self.init_block_ypos+0.2 * 0.8
+                #机械臂抓的
+                self.blockUid = p.loadURDF(os.path.join(self._urdfRoot, "block.urdf"),self.init_block_xpos, self.init_block_ypos, 0.014,
                                         orn[0], orn[1], orn[2], orn[3])
+                #被抓的
+                self.stacked_block= p.loadURDF(os.path.join(self._urdfRoot, "blue_block.urdf"), self.init_stacked_block_xpos , self.init_stacked_block_ypos ,0,
+                        orn[0], orn[1], orn[2], orn[3])
+                                #去掉1 
+                #self._kuka = Kuka(urdfRootPath=self._urdfRoot, timeStep=self._timeStep)
+                
+                #self.kuka_body=self._kuka.kukaUid
+
                 self.obj_ids['rigid'].append(self.blockUid)
 
                 #3 导入显式路点的那个小红点模型
@@ -101,9 +114,10 @@ class KukaGraspEnv(SurRoLGoalEnv):
                                 globalScaling=self.SCALING*10)
                 self.obj_ids['fixed'].append(obj_id)  # 0
                 #简单测试区域 前面的东西认为是没问题的
-        
-                self.goal=self._sample_goal()
-                self._sample_goal_callback()
+                #直接拿上个动作
+                #self.last_ee_action=self._kuka.last_action
+                # self.goal=self._sample_goal()
+                # self._sample_goal_callback()
                 #self.kuka_action_control_test()
                         
         def _sample_goal(self):
@@ -117,7 +131,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 goal--物体最终落地之后的位置 
                 """
                 #改变了之后 物体的位置也是会改变的 
-                goal = [  0.43232573 , 0.53585135 ,-0.991011 ]
+                goal = [ 0.685 ,0.168 ,0.0750]
                 np_goal=np.array(goal)
                 return np_goal.copy()
         
@@ -158,28 +172,63 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 init_object_posx=init_object_pos[0][0]-0.02
                 ee,joint_angle=self._kuka.getEE_pos()
                 lift_pos=ee[2]
-                
-                open_close=[-0.035,0.3]
-                                #1.1 先定位
-                above_object_wp=[init_object_posx,init_object_posy,lift_pos-0.1,0,open_close[1]]
-                                #1.2 接近物体
-                reach_object_wp=[init_object_posx,init_object_posy,init_object_pos[0][2]+self.ee_offset,1.5,open_close[1]]                                
-                                #1.3 抓取
-                grasp_object_wp=[init_object_posx,init_object_posy,init_object_pos[0][2]+self.ee_offset,1.5,open_close[0]]                                
-                
-                                #1.4 抬升
-                lift_object_wp=[init_object_posx,init_object_posy,lift_pos,1.5,open_close[0]]
-                                #2.1 移动
-                move_object_wp=[init_object_pos[0][0]-0.2,init_object_pos[0][1]+0.4,lift_pos,1.5,open_close[0]]
-                                #2.2 释放
-                release_object_wp=[init_object_pos[0][0]-0.2,init_object_pos[0][1]+0.4,lift_pos,1.5,open_close[1]]
+                #噪声
 
+                #noise_vector=[-0.0022,0.0119,0.0027]#起码这个点可用
+                #范围 x：-0.0022 --- 0.0044
+                #范围 y : 0.004 ----- 0.0119
+                #范围 z : 0.0027 ---- 0.004
+                # x_range=[-0.0022 ,0.0044]
+                # y_range=[0.003,0.0110]
+                # z_range=[0.0027,0.004]
+                x_range=[-0.0022 ,0.0022]
+                y_range=[0.003,0.0040]
+                z_range=[0.0027,0.004]
+                noise_vector=np.array([np.random.uniform(x_range[0],x_range[1]),
+                                       np.random.uniform(y_range[0],y_range[1]),
+                                       np.random.uniform(z_range[0],z_range[1])
+                                       ])
+                #debug
+                #noise_vector=np.array([0,0,0])
+                
+                noise_vector_expand=np.pad(noise_vector,(0,2),"constant",constant_values=0)
+                #print(f"此时的向
+                # 量{noise_vector}")
+                self.open_close=[-0.035,0.3]
+                open_close=[-0.035,0.3]
+                self.desired_ee_yaw=[0,1.5]
+                # 0.5开 转1.5 -0.5 关 转0
+                ####重要原则 一条路径上 两个路点只能有同一个xyz目标
+                                #1.1 先定位
+                above_object_wp=[init_object_posx,init_object_posy,lift_pos-0.2,0.5,0.5]
+                #above_object_wp=[init_object_posx,init_object_posy,init_object_pos[0][2]+self.ee_offset,0.5,0.5]
+                above_object_wp+=noise_vector_expand
+                                #1.2 接近物体
+                weired_z_offset=0.025
+                weired_x_offset=0.01
+                reach_object_wp=[init_object_posx-weired_x_offset,init_object_posy,init_object_pos[0][2]+self.ee_offset-weired_z_offset,0.5,0.5]   
+                reach_object_wp+=noise_vector_expand                             
+                                #1.3 抓取
+                grasp_object_wp=[init_object_posx-weired_x_offset,init_object_posy,init_object_pos[0][2]+self.ee_offset-weired_z_offset,0.5,-0.5]    
+                #grasp_object_wp+=noise_vector_expand                            
+                                #1.4 抬升
+                lift_object_wp=[init_object_posx,init_object_posy,lift_pos,0.5,-0.5]
+                lift_object_wp+=noise_vector_expand
+                                #2.1 移动
+                move_object_wp=[self.init_stacked_block_xpos-0.03,self.init_stacked_block_ypos+0.04,lift_pos,0.5,-0.5]
+                determine_vector=np.array([-0.0042,0.001,0.0027])
+                determinr_vector_expand=np.pad(determine_vector,(0,2),"constant",constant_values=0)
+                move_object_wp+=determinr_vector_expand
+                                #2.2 释放
+                release_object_wp=[ move_object_wp[0], move_object_wp[1], move_object_wp[2],0.5,0.5]
+
+                #release_object_wp+=determinr_vector_expand
+                
                 self._waypoints = [above_object_wp,reach_object_wp,grasp_object_wp,lift_object_wp,move_object_wp,release_object_wp] 
                 #3 根据路点 设置子目标--物体移动的中间位置 动了才能叫作子目标 而不是末端执行器的 
                 lift_object_goal=[lift_object_wp[0],lift_object_wp[1],lift_object_wp[2]]
                 
                 release_object_goal=[self.goal[0],self.goal[1],self.goal[2]]
-
                 self.subgoals=[lift_object_goal,release_object_goal]
                 
         def _get_obs(self) :
@@ -200,7 +249,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #1 机器人状态
                 object_pos, _ = p.getBasePositionAndOrientation(self.blockUid)
                 np_object_pos=np.array(object_pos)
-
+                # 拿到的是
                 self.kuka_ee_state = self._kuka.getObservation()
                                 #夹爪开合角度
                 _,joint_angle=self._kuka.getEE_pos()
@@ -231,13 +280,15 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
                 object_rel_pos1=object_pos - robot_state[0: 3]
                 np_object_rel_pos1=np.array(object_rel_pos1)
-                #参考的连接处状态
-                wp_pos=[0.6119448196512544, 0.14788242760658257, 0.2006463000460834]
-                wp_orn=list(p.getEulerFromQuaternion( (-0.00017743603891326752, -0.02160610316185721, 0.9994235856897068, -0.02618475109182154)))
-                np_wp_pos=np.array(wp_pos)
-                np_wp_orn=np.array(wp_orn)
+                #参考的连接处状态  不确定有没有用
+                # wp_pos=[0.6119448196512544, 0.14788242760658257, 0.2006463000460834]
+                # wp_orn=list(p.getEulerFromQuaternion( (-0.00017743603891326752, -0.02160610316185721, 0.9994235856897068, -0.02618475109182154)))
+                # np_wp_pos=np.array(wp_pos)
+                # np_wp_orn=np.array(wp_orn)
+                #试一试就是机械臂状态 5+3+3
+                
                 observation = np.concatenate([
-                robot_state, np_object_pos.ravel(), np_object_rel_pos1.ravel(), np_wp_pos.ravel(),np_wp_orn.ravel()
+                robot_state, np_object_pos.ravel(), np_object_rel_pos1.ravel()
                 ])
                 
                 #2  已经达成目标 无非是物体位姿
@@ -245,8 +296,10 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         #TODO 实现判断物体是否被拿着的逻辑
                 #achieved_goal = np.array(list(object_pos))
                 #触发式的  就是没有达成某个条件之前 布尔值一直是false  达成一次之后 以后全部是true
+
+
                 if not self.touch_object_once:
-                        achieved_goal=np.array([0.000000000000000001,0.000000000000000001,0.000000000000000001])#0很特殊 可能导致维度不对
+                        achieved_goal=np_ee_pos#
 
                 #3 总观察
                 obs = {
@@ -360,35 +413,47 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 """
  
 
+                #init_object_pos=p.getBasePositionAndOrientation(self.obj_ids['rigid'][0])
+                #print(f"物体位置{init_object_pos}")
+                #拿之前的动作
+                self.last_ee_action=self._kuka.last_action
                 #进来的action  是一个相对量 
-
-
-                
                 eeobs,_=self._kuka.getEE_pos() #真实的末端位置
-                #print(f"eeobs{eeobs[2]}")
                 functor_ee_pos=np.array(eeobs)
+                #开关
+                if action[4]<0:
+                        action[4]=self.open_close[0]
+                elif action[4]>=0:
+                        action[4]=self.open_close[1]
+
+                #旋转
+                if action[3]<0:
+                        action[3]=self.desired_ee_yaw[0]
+                elif action[3]>=0:
+                        action[3]=self.desired_ee_yaw[1]
+                
+
+        
+
                 #print(functor_ee_pos)
-                ee_action=np.concatenate([functor_ee_pos+action[:3],action[-2:-1],action[-1:]])#得到现在真正要前进的位置
-
-                #ee_action[2]+=0.0225 #奇怪的0.02偏移
-
+                #进来的动作默认是-1到1  那么0.1的限制 使得动作只能在0.01的数量级
+                ee_action=np.concatenate([functor_ee_pos+action[:3]*0.1,action[-2:-1],action[-1:]])#得到现在真正要前进的位置
+                #print(f"action放缩{action[:3]*0.1}\n")
+                #直接硬限制动作空间
+                ee_action[:3]=np.clip(ee_action[:3],[0.595,-0.01,0.2],[0.681,0.21,0.485])
                 ee_action=np.round(ee_action,4)
+
+
+                #加上新的限制 0.01
+                #ee_action[0:3]*=0.01
                 assert len(ee_action) == self.action_size
-                #如果是示教动作  全是0的时候说明示教路点已经走完 不应该允许再往下下发动作指令并仿真
-
-                # wandb.log({"x": delta_ee_pos[0],
-                #            "y": delta_ee_pos[1],
-                #            "z" :delta_ee_pos[2],
-
-                           
-                #            })
-                #一次不知道动多少 但是 循环结束  必须在ee_action的位置 
+                #储存上一个动作 为了0输入的动作
+                #self.last_ee_action=[action[3],action[4]]
                 p.resetBasePositionAndOrientation(self.obj_ids['fixed'][0], [ee_action[0],ee_action[1],ee_action[2]-self.ee_offset], (0, 0, 0, 1))
-                #print(ee_action)
-                for i in range(15):
+                for i in range(30):
                         self._kuka.applyAction(ee_action)
                         p.stepSimulation()
-                        #time.sleep(1.0 / 240.0)
+                        #time.sleep(1.0 / 480.0)
 
  
                 
@@ -403,7 +468,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 assert goal_a.shape == goal_b.shape
                 return np.linalg.norm(goal_a - goal_b, axis=-1)
         
-        def _is_success(self, achieved_goal, desired_goal,threshold=0.005):
+        def _is_success(self, achieved_goal, desired_goal,threshold=0.006):
                 """
                 处于的流程: B-3-8 判断是否到达最终目标
                 输入： np_array:achieved_goal, np_array:desired_goal
@@ -411,8 +476,10 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 目的: 比较现在目标和最终目标
                 TODO  
                 """
+
                 self.distance_threshold=threshold
                 d = self.goal_distance(achieved_goal, desired_goal)
+
                 return (d < self.distance_threshold).astype(np.float32)                  
 
         def compute_reward(self, achieved_goal, desired_goal, info):
@@ -470,20 +537,21 @@ class KukaGraspEnv(SurRoLGoalEnv):
                         if waypoint is None:
                                 continue
                         #2 计算当前末端执行器位置和路点位置之间的距离
-                        
+
                         action=waypoint
                         np_waypoint=np.array(waypoint)
                         #3 计算观察中的东西和路点之间的距离--取自论文源代码
                         #print(f"路点{waypoint}")
                         #print(f"末端观察{obs['observation'][0: 3]}")
-                        delta_pos=(waypoint[0: 3] - obs['observation'][0: 3]) /0.01 / 5.      
-                        delta_yaw= (waypoint[3] - obs['observation'][3]).clip(-1, 1)
+                        delta_pos=(waypoint[0: 3] - obs['observation'][0: 3]) /0.01 / 5.  
+                        if waypoint[3]<0 :
+                                actual_yaw_action=self.desired_ee_yaw[0]
+                        else:
+                                actual_yaw_action=self.desired_ee_yaw[1]
+                        delta_yaw= (actual_yaw_action - obs['observation'][3]).clip(-1, 1)
                         if np.abs(delta_pos).max() > 1:
                                 delta_pos /= np.abs(delta_pos).max()
-                        #print(f"位置原始差：{delta_pos}")
-                        #print(f"欧拉角：{obs['observation'][3]},{obs['observation'][4]},{obs['observation'][5]}")
-                        #print(f"路点旋转指令：{waypoint[3]}")
-                        #print(f"旋转原始差：{delta_yaw}")
+
                         scale_factor = 0.4
                         delta_pos *= scale_factor 
                         #print(f"位置差{np.linalg.norm(delta_pos) * 0.01 / scale_factor}")
@@ -512,7 +580,8 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 delta_ee_pos=action[0:3]-functor_ee_pos
 
                 delta_ee_pos= np.clip(delta_ee_pos, self.action_space.low[0:3], self.action_space.high[0:3])
-                delta_ee_pos*=0.4 
+                delta_ee_pos*=4 
+                #
 
                 delta_ee_angle=np.array([action[3]])
 
@@ -524,7 +593,7 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 return factor_delta_action,i
         
         #B 完成上层调用逻辑     env.test()    
-        def test(self, horizon=5000):
+        def test(self, horizon=300):
                 """
                 B 上层调用逻辑     env.test() 
                 输入： dic:obs
@@ -535,33 +604,41 @@ class KukaGraspEnv(SurRoLGoalEnv):
                 #1 reset能成功 --self.reset()
                 #2 根据观察拿示教动作 --self.get_oracle_action(obs)
                 #3 传入action 完成一次仿真步进（大概60次仿真步进 ）--self.step(action)
-                
-                steps, done = 0, False
-                
-                obs = self.reset()
-                
-                while not done and steps <= horizon: #step特指每一次仿真步进 rollout或者episode指的是从头到尾完整执行一次仿真任务
+                while True:
 
-                        tic = time.time()
-                        action,i = self.get_oracle_action(obs)
+                        steps, done = 0, False
                         
+                        obs = self.reset()
+                        
+                        while not done and steps <= horizon: #step特指每一次仿真步进 rollout或者episode指的是从头到尾完整执行一次仿真任务
 
-                        print('\n -> step: {}, action: {}'.format(steps, np.round(action, 4)))
-                        
-                        obs, reward, done, info = self.step(action)
-                        
-                        print(f"奖励{reward}")
-                        if isinstance(obs, dict):
-                                print(" -> achieved goal: {}".format(np.round(obs['achieved_goal'], 4)))
-                                print(" -> desired goal: {}".format(np.round(obs['desired_goal'], 4)))
-                        else:
-                                print(" -> achieved goal: {}".format(np.round(info['achieved_goal'], 4)))
-                        done = info['is_success'] if isinstance(obs, dict) else done
-                        steps += 1
-                        toc = time.time()
-                        print(" -> step time: {:.4f}".format(toc - tic))
-                        time.sleep(0.05)
-                print('\n -> Done: {}\n'.format(done > 0))
+                                tic = time.time()
+                                action,i = self.get_oracle_action(obs)
+
+                                #print('\n -> step: {}, action: {}'.format(steps, np.round(action, 4)))
+
+                                obs, reward, done, info = self.step(action)
+                                breakpoint()
+                                # print(f"奖励{reward}")
+                                # if isinstance(obs, dict):
+                                #         print(" -> achieved goal: {}".format(np.round(obs['achieved_goal'], 4)))
+                                #         print(" -> desired goal: {}".format(np.round(obs['desired_goal'], 4)))
+                                # else:
+                                #         print(" -> achieved goal: {}".format(np.round(info['achieved_goal'], 4)))
+                                done = info['is_success'] if isinstance(obs, dict) else done
+                                if done:
+                                        print(f"wan的步长{steps}")
+                                  
+                                steps += 1
+                                toc = time.time()
+                                #print(" -> step time: {:.4f}".format(toc - tic))
+                                time.sleep(0.05)
+
+                        #找最终的位置        
+                        object_pos, _ = p.getBasePositionAndOrientation(self.blockUid)
+                        np_object_pos=np.array(object_pos)
+                        print(f"物体最终位置{np_object_pos}")
+                        print('\n -> Done: {}\n'.format(done > 0))
 
         def seed(self, seed=None):
                 pass
@@ -582,30 +659,35 @@ class KukaGraspEnv(SurRoLGoalEnv):
 
 
 
-##############原始的环境测试代码
-import wandb
-import random
-from omegaconf import DictConfig, OmegaConf
-import hydra
+# ##############原始的环境测试代码
+# import wandb
+# import random
+# from omegaconf import DictConfig, OmegaConf
+# import hydra
 
-@hydra.main(version_base=None, config_path="wandb_test_conf", config_name="config")     
-def wandb_init(cfg : DictConfig) -> None:
-    # wandb启动
+# @hydra.main(version_base=None, config_path="wandb_test_conf", config_name="config")     
+# def wandb_init(cfg : DictConfig) -> None:
+#     # wandb启动
     
-    wandb.init(
-        # set the wandb project where this run will be logged
-        project=cfg.project,
+#     wandb.init(
+#         # set the wandb project where this run will be logged
+#         project=cfg.project,
 
-        # track hyperparameters and run metadata
-        config=dict(cfg.config)
-    )
-
+#         # track hyperparameters and run metadata
+#         config=dict(cfg.config)
+#     )
+     
 def main():
         #wandb_init()
-        env = KukaGraspEnv()  # create one process and corresponding env
-        env.test()
-        rgb=env.render()
-        import pdb;pdb.set_trace()
+
+        env = KukaGraspEnv(render_mode="human")  # create one process and corresponding env
+
+
+        #env.test()
+
+
+
+
 
 #     env.close()
 #     time.sleep(2)

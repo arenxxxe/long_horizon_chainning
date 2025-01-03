@@ -481,8 +481,12 @@ class MatchBoardSCWrapper(MatchBoardSLWrapper, BiPegTransferSCWrapper):
 
 
 #-----------------------------Make envrionment-----------------------------
-def make_env(cfg):
-    env = gym.make(cfg.task)
+def make_env(cfg,state_save_id=0):
+    if True:
+        env = gym.make(cfg.task,state_save_id=state_save_id)
+    else :
+        env = gym.make(cfg.task,state_save_id=state_save_id,render_mode='human')
+       
     if cfg.task == 'BiPegTransfer-v0':
         if cfg.skill_chaining:
             env = BiPegTransferSCWrapper(env, cfg.init_subtask, output_raw_obs=False)
@@ -504,6 +508,15 @@ def make_env(cfg):
                raise NotImplementedError
             else:
                 env = KukagraspSLWrapper(env, cfg.subtask, output_raw_obs=False)
+    elif cfg.task == 'PandaGrasp-v0' :
+            from chaining_package.ENV.agent_interface_env.panda_interface_env import PandaGraspSLWrapper
+            from chaining_package.ENV.agent_interface_env.panda_interface_env import PandaGraspSCWrapper
+
+            if cfg.skill_chaining:
+                env = PandaGraspSCWrapper(env, cfg.init_subtask, output_raw_obs=False)
+
+            else:
+                env = PandaGraspSLWrapper(env, cfg.subtask, output_raw_obs=False)
     else:
         raise NotImplementedError
     return env

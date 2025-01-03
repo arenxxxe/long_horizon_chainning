@@ -165,6 +165,7 @@ class HER_sampler:
         
         # to get the params to re-compute reward
         transitions['r'] = self.reward_func(transitions['ag_next'], transitions['g'], None)
+
         if len(transitions['r'].shape) == 1:
             transitions['r'] = np.expand_dims(transitions['r'], 1)
         transitions = {k: transitions[k].reshape(batch_size, *transitions[k].shape[1:]) for k in transitions.keys()}
@@ -178,7 +179,15 @@ class HER_sampler_seq(HER_sampler):
         rollout_batch_size = episode_batch['actions'].shape[0]
         batch_size = batch_size_in_transitions
         # select which rollouts and which timesteps to be used
+        #打补丁 不知道为什么下来会是元组
+        # if rollout_batch_size<0:
+        #     breakpoint()
+        # if isinstance(rollout_batch_size, (tuple, list)) and len(rollout_batch_size) == 1:
+        #     rollout_batch_size = rollout_batch_size[0]
+        
         episode_idxs = np.random.randint(0, rollout_batch_size, batch_size)
+        # episode_idxs = np.random.randint(0,batch_size,rollout_batch_size )
+
         t_samples = np.random.randint(T-1, size=batch_size)   # from T to T-1
         transitions = {key: episode_batch[key][episode_idxs, t_samples].copy() for key in episode_batch.keys()}
 
@@ -193,11 +202,12 @@ class HER_sampler_seq(HER_sampler):
         future_ag = episode_batch['ag'][episode_idxs[her_indexes], future_t]
         transitions['g'][her_indexes] = future_ag
         # to get the params to re-compute reward
+        #oint()
         transitions['r'] = self.reward_func(transitions['ag_next'], transitions['g'], None)
         if len(transitions['r'].shape) == 1:
             transitions['r'] = np.expand_dims(transitions['r'], 1)
         transitions = {k: transitions[k].reshape(batch_size, *transitions[k].shape[1:]) for k in transitions.keys()}
-
+        #breakpoint()
         return transitions
     
 

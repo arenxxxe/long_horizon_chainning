@@ -37,6 +37,7 @@ class Every:
         if self._every is None:
             return False
         every = self._every // self._action_repeat
+        #print(self._every)
         if step % every == 0:
             return True
         return False

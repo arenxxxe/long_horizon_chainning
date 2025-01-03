@@ -51,7 +51,9 @@ class HierachicalAgent(BaseAgent):
         
         if self.cfg.agent.update_sl_agent:
             for subtask in self.subtasks:
-                sl_metrics = prefix_dict(self.sl_agent[subtask].update(sl_buffer[subtask]), 'sl_' + subtask + '_')
+                # sl_metrics = prefix_dict(self.sl_agent[subtask].update(sl_buffer[subtask]), 'sl_' + subtask + '_')
+                sl_metrics = prefix_dict(self.sl_agent[subtask].update(sl_buffer[subtask], sl_demo_buffer[subtask]), 'sl_' + subtask + '_')
+
                 metrics.update(sl_metrics)
         return metrics
 
@@ -63,6 +65,9 @@ class HierachicalAgent(BaseAgent):
                 self._last_sc_action = obs['desired_goal'][:-self.len_cond]
             else:
                 self._last_sc_action = self.sc_agent.get_action(obs['observation'], subtask, noise=noise)
+            # print(f"{subtask}的目标 :  {self._last_sc_action }")
+            # print(f"{subtask}的观察 :  {len(obs['observation'])}")
+            # self._last_sc_action = self.sc_agent.get_action(obs['observation'], subtask, noise=noise)
             output.is_sc_step = True
             self.curr_subtask = subtask
         else:

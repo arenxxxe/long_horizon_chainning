@@ -4,8 +4,15 @@ from contextlib import contextmanager
 import gym
 import numpy as np
 import torch
-from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import (pairwise_collision,
-                                         pairwise_link_collision)
+
+
+def pairwise_collision(bullet_client,body1, body2, max_distance=0):  # 10000
+    # getContactPoints
+    # return len(p.getClosestPoints(bodyA=body1, bodyB=body2, distance=max_distance)) != 0
+
+    return bullet_client.getContactPoints(body1, body2) != ()
+
+
 from memory_profiler import profile
 
 def approx_collision(goal_a, goal_b, th=0.025):
@@ -51,46 +58,46 @@ class SkillLearningWrapper(gym.Wrapper):
 
 
 #-----------------------------Kukagrasp-v0-v0-----------------------------
-class KukagraspSLWrapper(SkillLearningWrapper):
+class PandaGraspSLWrapper(SkillLearningWrapper):
     '''Wrapper for skill learning'''
     #子任务顺序--完成
     SUBTASK_ORDER = {
         'grasp': 0,
-
-        'release':1 
+        'move':1,
+        'release':2
     }    
     #子任务步长env step的步长吧--完成
     SUBTASK_STEPS = {
-        'grasp': 80,
-
-        'release':40
+        'grasp': 20,
+        'move':35,
+        'release':5
     }
     #需要reset到的子任务的开始路点是多少？
     SUBTASK_RESET_INDEX = {
-
-        'release': 4 #第四个路点
+        'move':3,
+        'release': 5
     }
     
     #重置到一个子任务开始状态 环境首先需要执行多少步--完成
     SUBTASK_RESET_MAX_STEPS = {
-
-        'release': 80
+        'move':20,
+        'release': 55
     }
     #对之前任务的了解-完成
     SUBTASK_PREV_SUBTASK = {
-
-        'release': 'grasp'
+        'move':'grasp',
+        'release': 'move'
     }
     #对下一个任务的了解--完成
     SUBTASK_NEXT_SUBTASK = {
-        'grasp': 'release'
-
+        'grasp': 'move',
+        'move':'release'
     }
     #子任务的接触条件--完成--
     #根据源代码  认为是在这个动作中 要不要接触物体的一种指引  如果你机械臂在这个动作中 需要最终抓到物体 那就是1 不要 那就是0
     SUBTASK_CONTACT_CONDITION = {
         'grasp': [1],
-
+        'move':[1],
         'release': [ 0]
     }
     #最后一个子任务--完成
@@ -99,6 +106,12 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         super().__init__(env, subtask, output_raw_obs)
         self.done_subtasks = {key: False for key in self.SUBTASK_STEPS.keys()}
         self.find_reward=False
+        if subtask =='grasp':
+            self.env.env.grasp_or_release=True
+        elif subtask =='move':
+            self.env.env.grasp_or_release=False    
+        elif subtask =='release':
+            self.env.env.grasp_or_release=False
         #检查点1 初始化效果
         #breakpoint() #2 就是设置了一些属性 也看不出对不对
 
@@ -114,10 +127,11 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
-        
-        #print(f"到达的目标{next_obs_['achieved_goal']}  \n 期望到达的目标{next_obs_['desired_goal']}")
+        # if self.env.env.state_save_id ==1:
+        # print(f"到达的目标{next_obs_['achieved_goal']}  \n 期望到达的目标{next_obs_['desired_goal']}")
+
         reward = self.compute_reward(next_obs_['achieved_goal'], next_obs_['desired_goal'])
-        #print(f"此时的奖励{reward}")
+        # print(f"此时的奖励{reward}")
         info['is_success'] = reward + 1
         done = self._elapsed_steps == self.max_episode_steps
         # save groud truth goal
@@ -127,7 +141,9 @@ class KukagraspSLWrapper(SkillLearningWrapper):
   
         if self._output_raw_obs: return next_obs_, reward, done, info, next_obs
         else: return next_obs_, reward, done, info,
-    #TODO 施工中
+    
+    # @profile(stream=open('接口环境的env reset泄漏问题.txt','w'))
+
     def reset(self):
         #1 这个命令调用 可能是在子任务中 可能是整个任务 --不改
         self.subtask = self._start_subtask
@@ -142,7 +158,6 @@ class KukagraspSLWrapper(SkillLearningWrapper):
             while not success:
                 #检查点2 重置效果
                 #breakpoint()
-
                 obs = self.env.reset() 
                 self.subtask = self._start_subtask
                 self._elapsed_steps = 0 
@@ -150,6 +165,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                 #检查点3 示教动作
                 #breakpoint()
                 action, skill_index = self.env.get_oracle_action(obs)
+
                 count, max_steps = 0, self.SUBTASK_RESET_MAX_STEPS[self.subtask]
                 #2 不断拿施教动作去step  直到subtak的index发生变化 或者总步长达到-step不改 之前检查了
                 #检查点4 检查是示教运行到某个子任务之前
@@ -158,15 +174,23 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                     obs, reward, done, info = self.env.step(action)
                     action, skill_index = self.env.get_oracle_action(obs)
                     count += 1
+
+                # print(f"执行完reset的step之后 skill_index是多少  {skill_index}")
+
                 #到这里的时候 可以认为是 执行了 前面的所有的子任务的施教技能  
                 #3 在这里需要知道什么？ 需要知道究竟前面的施教执行成功没有  真正的核心不是replace 而是 comutereward  
                     #之前的那个子任务的goal信息 需要用之前子任务写在这个类中的信息来拿到  但是是临时的 只是为了判断是否成功  所以使用context manager
                 
                 #检查点5 检查任务临时切换和奖励计算结果
- 
+
+
                 with self.switch_subtask():
                     obs_ = self._replace_goal_with_subgoal(obs.copy())  # in case repeatedly replace goal
                     success = self.compute_reward(obs_['achieved_goal'], obs_['desired_goal']) + 1
+                #     print(f"执行完reset的step之后 到达的目标 {obs_['achieved_goal']}")
+                #     print(f"执行完reset的step之后 期望的目标 {obs_['desired_goal']}")
+                # print(f"reset是否成功?  {success}")
+                # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         if self._output_raw_obs: return self._replace_goal_with_subgoal(obs), obs
         else: return self._replace_goal_with_subgoal(obs)
@@ -175,31 +199,38 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         """Replace ag and g"""
         #检查点6 检查子目标拿的对不对
         #breakpoint() 设函数里面 别设外面
-        subgoal = self._subgoal()   
+        subgoal = self._subgoal()  
+        # print(f"subgoal {subgoal}") 
         #添加奇怪的接触信息  
         #检查点7 检查传入参数id是否正确  接触信息是否获取到  
         #breakpoint() # 第一次检查完毕 正常
+
+        contact = pairwise_collision(self.env.env._p,self.env.blockUid, self.env.pandauid) #所谓的body 源代码拿得是什么东西？psm1的body  这东西怎么来的？loadurdf文件返回的   机器人在pybullet中的uid sdf
         
-        kukacol = pairwise_collision(self.env.blockUid, self.env.kuka_body) #所谓的body 源代码拿得是什么东西？psm1的body  这东西怎么来的？loadurdf文件返回的   机器人在pybullet中的uid sdf
-        #print(f"有没有撞倒？{kukacol}")
+        # print(f"有没有撞倒？{kukacol}")
         #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
         #抓取的时候达到的目的  是两个机械臂的位置
-        if kukacol == 1 :
+        if contact == 1 :
             self.find_reward =True
         else :
             self.find_reward =False
+        # if self.env.env.state_save_id ==1:
+        #     breakpoint()
+        # if self.subtask == 'grasp':
+        #     obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol,]])
+        # if self.subtask == 'move':
+        #     obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol,]])
 
-        if self.subtask == 'grasp':
-            obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3],[kukacol]])
-
-        #释放的时候大概率是物体位置反正无所谓了  不行再改了  
-            
-        elif self.subtask == 'release':
-            obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol]])
-        
+        # #释放的时候大概率是物体位置反正无所谓了  不行再改了      
+        # elif self.subtask == 'release':
+        #     obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol,]])
+        # if self.subtask=='move':
+        #     breakpoint()
+        obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[contact,]])
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
+        # print(f"现在的任务 {self.subtask}  期望的目标:{obs['desired_goal']} 达到的目标{obs['achieved_goal']}")
         
-
+        # obs['desired_goal'] =np.round(obs['desired_goal'] ,4)
         #这两个goal需要同样的维度吗？从源代码看 并不是
         #检查点8  检查传入参数id是否正确  接触信息是否获取到
         #breakpoint() #并未检查出问题 两个goal 一个是7维度 一个四维度 看不出区别
@@ -258,11 +289,18 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         return reward
 
 
-class KukagraspSCWrapper(KukagraspSLWrapper):
+class PandaGraspSCWrapper(PandaGraspSLWrapper):
     '''Wrapper for skill chaining.'''
     MAX_ACTION_RANGE = 4.
     REWARD_SCALE = 30.
     def step(self, action):
+        #保证底下拿上来的obs里面的achieved goal是对的 
+        if self.subtask =='grasp':
+            self.env.env.grasp_or_release=True
+        elif self.subtask =='move':
+            self.env.env.grasp_or_release=False    
+        elif self.subtask =='release':
+            self.env.env.grasp_or_release=False
         next_obs, reward, done, info = self.env.step(action)
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
@@ -320,22 +358,39 @@ class KukagraspSCWrapper(KukagraspSLWrapper):
     #---------------------------Reward---------------------------
     def compute_reward(self, ag, g, info=None):
         """Compute reward that indicates the success of subtask"""
+
         if len(ag.shape) == 1:
-            if self.subtask == 'release':
-                goal_reach = self.env.compute_reward(ag[-5:-2], g[-5:-2], None) + 1
-            else:
-                goal_reach = self.env.compute_reward(ag[:-2], g[:-2], None) + 1
-            contact_cond = np.all(ag[-2:]==g[-2:])
+
+
+            goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
+
+
+
+            contact_cond = np.all(ag[-1:]==g[-1:])
             reward = (goal_reach and contact_cond) - 1
         else:
-            if self.subtask == 'release':
-                goal_reach = self.env.compute_reward(ag[:,-5:-2], g[:,-5:-2], None).reshape(-1, 1) + 1
-            else:
-                goal_reach = self.env.compute_reward(ag[:,:-2], g[:,:-2], None).reshape(-1, 1) + 1
-            if self.subtask == 'grasp':
-                raise NotImplementedError
-            contact_cond = np.all(ag[:, -2:]==g[:, -2:], axis=1).reshape(-1, 1)
+            #batch的数据
+            goal_reach = self.env.compute_reward(ag[:,:3], g[:,:3], None).reshape(-1, 1) + 1
+            contact_cond = np.all(ag[:,-1:]==g[:,-1:], axis=1).reshape(-1, 1)
             reward = np.all(np.hstack([goal_reach, contact_cond]), axis=1) - 1.
+
+        
+        # if len(ag.shape) == 1:
+        #     if self.subtask == 'release':
+        #         goal_reach = self.env.compute_reward(ag[-5:-2], g[-5:-2], None) + 1
+        #     else:
+        #         goal_reach = self.env.compute_reward(ag[:-2], g[:-2], None) + 1
+        #     contact_cond = np.all(ag[-2:]==g[-2:])
+        #     reward = (goal_reach and contact_cond) - 1
+        # else:
+        #     if self.subtask == 'release':
+        #         goal_reach = self.env.compute_reward(ag[:,-5:-2], g[:,-5:-2], None).reshape(-1, 1) + 1
+        #     else:
+        #         goal_reach = self.env.compute_reward(ag[:,:-2], g[:,:-2], None).reshape(-1, 1) + 1
+        #     if self.subtask == 'grasp':
+        #         raise NotImplementedError
+        #     contact_cond = np.all(ag[:, -2:]==g[:, -2:], axis=1).reshape(-1, 1)
+        #     reward = np.all(np.hstack([goal_reach, contact_cond]), axis=1) - 1.
         return reward + 1
 
     def goal_adapator(self, goal, subtask, device=None):

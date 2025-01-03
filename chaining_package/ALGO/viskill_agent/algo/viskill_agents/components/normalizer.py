@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 
-
 class Normalizer:
+    
     def __init__(self, size, eps=1e-2, default_clip_range=np.inf):
         self.size = size
         self.eps = eps

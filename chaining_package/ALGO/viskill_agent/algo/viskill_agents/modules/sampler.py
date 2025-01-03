@@ -1,9 +1,10 @@
 from ..utils.general_utils import AttrDict, listdict2dictlist
 from ..utils.rl_utils import ReplayCache, ReplayCacheGT
-
+from memory_profiler import profile
 
 class Sampler:
     """Collects rollouts from the environment using the given agent."""
+
     def __init__(self, env, agent, max_episode_len):
         self._env = env
         self._agent = agent
@@ -20,17 +21,27 @@ class Sampler:
     def sample_action(self, obs, is_train):
         return self._agent.get_action(obs, noise=is_train)
     
-    def sample_episode(self, is_train, render=False):
+
+    def sample_episode(self, is_train, render=False,eval_true=False):
         """Samples one episode from the environment."""
+        
         self.init()
+
         episode, done = [], False
         while not done and self._episode_step < self._max_episode_len:
+            if eval_true==True:
+                print(f"达成{done}")
+                print(f"周期达到{self._episode_step < self._max_episode_len}")
+                print(f"循环条件{not done and self._episode_step < self._max_episode_len}")
             action = self.sample_action(self._obs, is_train)
             if action is None:
                 break
             if render:
                 render_obs = self._env.render('rgb_array')
             obs, reward, done, info = self._env.step(action)
+            # if eval_true==True:
+            #     print(reward)
+            #     print('\n')
             episode.append(AttrDict(
                 reward=reward,
                 success=info['is_success'],
@@ -43,18 +54,20 @@ class Sampler:
             # update stored observation
             self._obs = obs
             self._episode_step += 1
-
+        # if eval_true==True:
+                
+        #     print("这是一个完整的episdoe步长的奖励")
         episode[-1].done = True     # make sure episode is marked as done at final time step
         rollouts = self._episode_cache.pop()
         assert self._episode_step == self._max_episode_len
         return listdict2dictlist(episode), rollouts, self._episode_step
+    # @profile(stream=open('采样函数泄漏.txt','w'))
 
     def _episode_reset(self, global_step=None):
         """Resets sampler at the end of an episode."""
         self._episode_step, self._episode_reward = 0, 0.
         self._obs = self._reset_env()
         self._episode_cache.store_obs(self._obs)
-
     def _reset_env(self):
         return self._env.reset()
 
@@ -86,6 +99,9 @@ class HierarchicalSampler(Sampler):
                 self.reward_since_last_sc = 0
 
             obs, reward, done, info = self._env.step(agent_output.sl_action)
+            
+            # print(f"达成的目标: {obs['achieved_goal']} 期望的目标： {obs['desired_goal']}  奖励：{reward}")
+            
             self.reward_since_last_sc += reward
             if info['subtask_done']:
                 if not done:
@@ -129,7 +145,9 @@ class HierarchicalSampler(Sampler):
             self._obs = obs
             self._episode_step += 1
 
+
         assert self._episode_step == self._max_episode_len
+
         for subtask in self._env_params.subtasks:
             if subtask not in prev_subtask_succ.keys():
                 sl_episode[subtask] = self._episode_cache[subtask].pop()
@@ -144,7 +162,6 @@ class HierarchicalSampler(Sampler):
             sc_transitions=sc_transitions,
             sc_succ_transitions=sc_succ_transitions)
         )
-        
         return sc_episode, sl_episode, self._episode_step
 
     def _episode_reset(self, global_step=None):

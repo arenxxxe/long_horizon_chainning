@@ -13,6 +13,7 @@ from termcolor import colored
 
 from ..utils.general_utils import flatten_dict, np2obj, prefix_dict
 from ..utils.vis_utils import add_captions_to_seq
+from memory_profiler import profile
 
 #----------------------Termnial Logger----------------------
 formatter = colorlog.ColoredFormatter(
@@ -50,6 +51,7 @@ if not logger.handlers:
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
+import memory_profiler
 
 #----------------------WandB Logger----------------------
 class WandBLogger:
@@ -104,7 +106,7 @@ class WandBLogger:
         fig is a matplotlib figure handle."""
         img = wandb.Image(fig)
         wandb.log({name: img}) if step is None else wandb.log({name: img}, step=step)
-
+    # @profile(stream=open('logger输出泄漏.txt','w'))
     def log_outputs(self, logging_stats, rollout_storage, log_images, step, is_train=False, log_videos=True, log_video_caption=False):
         """Visualizes/logs all training outputs."""
         self.log_scalar_dict(logging_stats, prefix='train' if is_train else 'eval', step=step)

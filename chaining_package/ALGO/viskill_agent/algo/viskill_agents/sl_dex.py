@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 from .utils.general_utils import AttrDict
 from .sl_ddpgbc import SkillLearningDDPGBC
-
+from memory_profiler import profile
 
 class SkillLearningDEX(SkillLearningDDPGBC):
     def __init__(
@@ -90,13 +90,13 @@ class SkillLearningDEX(SkillLearningDDPGBC):
             act_dist=act_dist.mean().item()
         )
         return metrics
-
+    
     def update(self, replay_buffer, demo_buffer):
         for i in range(self.update_epoch):
             # sample from replay buffer 
             obs, action, reward, done, next_obs, next_action = self.get_samples(replay_buffer)
             obs_, action_, reward_, done_, next_obs_, next_action_ = self.get_samples(demo_buffer)
-
+            #breakpoint()
             with torch.no_grad():
                 next_action_out = self.actor_target(next_obs)
                 target_V = self.critic_target(next_obs, next_action_out)
@@ -133,6 +133,9 @@ class SkillLearningDEX(SkillLearningDDPGBC):
 
             action_out = self.actor(obs)
             action_out_ = self.actor(obs_)
+
+
+
             Q_out = self.critic(obs, action_out)
             Q_out_ = self.critic(obs_, action_out_)
 
@@ -150,7 +153,11 @@ class SkillLearningDEX(SkillLearningDDPGBC):
 
             # Refer to https://arxiv.org/pdf/1709.10089.pdf
             actor_loss = - (Q_out + self.aux_weight * intr2).mean()
+            with open("actorloss.txt",'a') as file:
+                file.write(f"\n实际部分:  {actor_loss}\n")
             actor_loss += -(Q_out_ + self.aux_weight * intr3).mean()
+            with open("actorloss.txt",'a') as file:
+                file.write(f"\n施教数据部分:  {actor_loss}\n")
 
             actor_loss += action_out.pow(2).mean()
             actor_loss += action_out_.pow(2).mean()
