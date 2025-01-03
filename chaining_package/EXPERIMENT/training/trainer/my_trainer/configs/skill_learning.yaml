@@ -6,10 +6,10 @@ defaults:
 cwd: ${hydra:runtime.output_dir}
 
 # Training params
-n_train_steps: 2_000_001_000
-n_eval: 400
-n_save: 160
-n_log: 4000
+n_train_steps: 50_000_000
+n_eval: 4000
+n_save: 1600
+n_log: 40000
 num_demo: 200
 eval_frequency: 2_000
 n_seed_steps: 200
@@ -19,9 +19,9 @@ checkpoint_frequency: 20_000
 update_epoch: 80
 batch_size: 128
 device: cuda:0
-seed: 4
-task: 'KukaGrasp-v0'
-subtask: grasp
+seed: 1
+task: 'PandaGrasp-v0'
+subtask: release
 postfix: null
 skill_chaining: False
 dont_save: False
@@ -29,7 +29,7 @@ n_eval_episodes: 8
 save_buffer: False
 
 use_wb: True
-project_name: chaining_everything
+project_name: panda_skill_learning
 entity_name: qinsongwei90
 
 mpi: {rank: null, is_chef: null, num_workers: null}

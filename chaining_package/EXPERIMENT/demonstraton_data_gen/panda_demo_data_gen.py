@@ -1,3 +1,5 @@
+0
+
 """
 Data generation for the case of Psm Envs and demonstrations.
 Refer to
@@ -9,11 +11,11 @@ import time
 import numpy as np
 import imageio
 from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.const import ROOT_DIR_PATH
-from chaining_package.ENV.agent_interface_env.kuka_slsc_wrapper import KukagraspSLWrapper
+from chaining_package.ENV.agent_interface_env.panda_interface_env import PandaGraspSLWrapper
 import gym
 
 parser = argparse.ArgumentParser(description='generate demonstrations for imitation')
-parser.add_argument('--env', type=str, required=False,default='KukaGrasp-v0',
+parser.add_argument('--env', type=str, required=False,default='PandaGrasp-v0',
                     help='the environment to generate demonstrations')
 parser.add_argument('--video', action='store_true',
                     help='whether or not to record video')
@@ -25,32 +27,66 @@ args = parser.parse_args()
 
 
 
-actions = []
-observations = []
-infos = []
-terminals = []
-images = []  # record video
-masks = []
-gt_actions = []
+
 global success_counter 
 
 #开始的路点index-完成
 SUBTASK_START = {
     'grasp': 0,
+    'move':3
 }
 
-#结束的路点index-完成
+#下一个任务的开始路点  最终任务如果只有一个那就写结束的就行了 
+#实际上目的是一件事：超出子任务的路点 你该怎么把他设置为0 让机械臂不动了
 SUBTASK_END = {
-    'grasp': 4,
+    'grasp': 3,
+    'move':5,
     'release': 5
 }
-
-
+actions = []
+observations = []
+infos = []
+terminals = []
+images = []  # record 0video
+masks = []
+gt_actions = []
 def main():
-    #1 gym make的链路给我打通
-    env = gym.make(args.env, render_mode= 'human' )  # 'human' 'rgb_array'
+    global actions, observations, infos, terminals, images, masks, gt_actions
 
-    env = KukagraspSLWrapper(env, output_raw_obs=True, subtask=args.subtask)
+    # 重置全局变量
+    actions = []
+    observations = []
+    infos = []
+    terminals = []
+    images = []
+    masks = []
+    gt_actions = []
+    #1 gym make的链路给我打通
+    # train_env = gym.make(args.env, render_mode= 'rgb_array' ,state_save_id=0)  # 'human' 'rgb_array'
+
+    # train_env = PandaGraspSLWrapper(train_env, output_raw_obs=True, subtask=args.subtask)
+    eval_env = gym.make(args.env, render_mode= 'human',state_save_id=1)  # 'human' 'rgb_array'
+
+    eval_env = PandaGraspSLWrapper(eval_env, output_raw_obs=True, subtask=args.subtask)
+    # test(train_env)
+        #1 gym make的链路给我打通
+    # print("训练环境结束  开始测试环境..........................")
+    # 重置全局变量
+    actions = []
+    observations = []
+    infos = []
+    terminals = []
+    images = []
+    masks = []
+    gt_actions = []
+    test(eval_env)
+
+
+
+
+
+def test(env):
+
     #检查1 ：env与wrapper成功初始化
     #breakpoint() #1完成
     num_itr = 200 if not args.video else 10 #不用视频数据200次 要的话10次？
@@ -63,7 +99,8 @@ def main():
     #breakpoint() #3 reset没看到明显的问题
     print("Reset!")
     init_time = time.time()
-
+    # if env.env.env.state_save_id==1:
+    #     breakpoint()
     if args.steps is None:
         args.steps = env.max_episode_steps #拿到的是子任务的
 
@@ -97,7 +134,7 @@ def main():
 
     storage_path=os.path.join(parent_dir_path,"data_storage")
     folder = os.path.join(storage_path, 'demonstration_data')
-    #breakpoint()
+    # breakpoint()
     np.savez_compressed(os.path.join(folder, file_name),
                         actions=actions, observations=observations, terminals=terminals, gt_actions=gt_actions)  # save the file
     if args.video:
@@ -139,6 +176,7 @@ def goToGoal(env, last_obs_, last_obs):
     while time_step < min(env.max_episode_steps, args.steps):
         #检查7 ：检查示教动作的接口
         action, i = env.get_oracle_action(obs)
+        # action=np.round(action,4)
 
         #print(time_step)
         #准备到结束动作了 开始记录每次返回的施教动作
@@ -151,24 +189,31 @@ def goToGoal(env, last_obs_, last_obs):
         #     print(f"actions[4]:{action[4]}  \n")
         #     print(f"此时的奖励{reward}\n")
         #     print(f"此时的info{info['is_success']}\n")
-        #     print(f"此时的i{i}")
+        # print(f"此时的i{i}")
         if i == SUBTASK_END[args.subtask]:
 
             #最后一定要用0来停 不然数据有问题
-            info['is_success'] = 1
+            # info['is_success'] = 1
             
             if args.subtask == 'grasp':
 
-                action = np.array([0,0,0,0,0],dtype=np.float32) 
-                action[3]=0.5
-                action[4]=-0.5
+                action = np.array([0,0,0,0],dtype=np.float32) 
+                action[3]=-0.5
+
                 #print(f"动作在{action}\n")
+
+            elif args.subtask == 'move':
+
+                action = np.array([0,0,0,0],dtype=np.float32) 
+                action[3]=-0.5
+                
+                # print(action)
+                    
 
             elif args.subtask == 'release':
                 if success:
-                    action = np.array([0,0,0,0,0],dtype=np.float32) 
+                    action = np.array([0,0,0,0],dtype=np.float32) 
                     action[3]=0.5
-                    action[4]=0.5
                 
                 #print(action)
 
@@ -192,7 +237,8 @@ def goToGoal(env, last_obs_, last_obs):
 
         # with open(f"{args.subtask}的奖励设置.txt","a") as file:
         #     file.write(f"第{time_step}步长：奖励是{reward}\n")    
-        # print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
+        # if i>=3:
+        #     print(f" -> obs: {obs}, reward: {reward}, done: {done}, info: {info}.")
         time_step += 1
         #print(f"时间步{time_step}对应的动作id{i}")
         #print(reward, i)
@@ -219,6 +265,7 @@ def goToGoal(env, last_obs_, last_obs):
         last_obs_ = obs_
         
     print("Episode time used: {:.2f}s\n".format(time.time() - episode_init_time))
+    print(f"成功没有？{success}")
     if success:
 
         actions.append(episode_acs)

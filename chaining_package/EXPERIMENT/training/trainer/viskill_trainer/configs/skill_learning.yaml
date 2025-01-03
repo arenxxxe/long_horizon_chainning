@@ -21,7 +21,7 @@ batch_size: 128
 device: cuda:0
 seed: 1
 task: BiPegTransfer-v0
-subtask: grasp
+subtask: release
 postfix: null
 skill_chaining: False
 dont_save: False

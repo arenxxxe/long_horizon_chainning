@@ -46,7 +46,7 @@ eval_true=False
 #     return decorater
 
 
-class SkillLearningTrainer(BaseTrainer):
+class EVAL(BaseTrainer):
     def _setup(self):
         self._setup_env()       # Environment
         self._setup_buffer()    # Relay buffer
@@ -60,8 +60,8 @@ class SkillLearningTrainer(BaseTrainer):
     def _setup_env(self):
         #一个env配置一个client
 
-        self.train_env = make_env(self.cfg,state_save_id=0)
-        self.eval_env = make_env(self.cfg,state_save_id=1)
+        self.train_env = make_env(self.cfg,state_save_id=1)
+        self.eval_env = make_env(self.cfg,state_save_id=0)
         self.env_params = get_env_params(self.train_env, self.cfg)
 
 
@@ -83,7 +83,7 @@ class SkillLearningTrainer(BaseTrainer):
     def _setup_logger(self):
         # update_mpi_config(self.cfg)
         if self.is_chef:
-            exp_name = f"新切三任务_修正第一任务的subgoal_{self.cfg.task}_{self.cfg.subtask}__{self.cfg.agent.name}__seed{self.cfg.seed}"
+            exp_name = f"EVAL_1_{self.cfg.task}_{self.cfg.subtask}__{self.cfg.agent.name}__seed{self.cfg.seed}"
             if self.cfg.postfix is not None:
                 exp_name =  exp_name + '__' + self.cfg.postfix 
             self.wb = WandBLogger(exp_name=exp_name, project_name=self.cfg.project_name, entity=self.cfg.entity_name, \
@@ -112,10 +112,10 @@ class SkillLearningTrainer(BaseTrainer):
         set_seed_everywhere(self.cfg.seed)
         #没有chekpoint直接注释掉
         self.best_checkpoint_episode=0
-        # self.load_checkpoint()
+        self.load_checkpoint()
 
     def load_checkpoint(self):
-        self.best_checkpoint_episode=CheckpointHandler.load_checkpoint(self.model_dir,self.agent,self.device,episode="latest")
+        self.best_checkpoint_episode=CheckpointHandler.load_checkpoint(self.model_dir,self.agent,self.device,episode="best")
     
 
     def train(self):
@@ -145,15 +145,15 @@ class SkillLearningTrainer(BaseTrainer):
 
 
 
-            self._train_episode(log_every_episodes, seed_until_steps)
+            # self._train_episode(log_every_episodes, seed_until_steps)
 
 
 
 
             #print(self.global_episode)
-            if eval_every_episodes(self.global_episode):
-                print("开始测试")
-                score = self.eval()
+            # if eval_every_episodes(self.global_episode):
+            print("开始测试")
+            score = self.eval()
 
             if not self.cfg.dont_save and save_every_episodes(self.global_episode) and self.is_chef:
                 filename =  CheckpointHandler.get_ckpt_name(self.global_episode+self.best_checkpoint_episode)
@@ -204,21 +204,21 @@ class SkillLearningTrainer(BaseTrainer):
         ########################################################## 不认为下面这句的泄漏有问题 因为这东西增很少
         rollout_status = rollout_storage.rollout_stats()
 
-        with open("训练期奖励记录.txt","a") as file:
-                file.write(f"第{self.global_episode}rollout记录完成 总的奖励是{rollout_status.avg_reward}\n")
+        # with open("训练期奖励记录.txt","a") as file:
+        #         file.write(f"第{self.global_episode}rollout记录完成 总的奖励是{rollout_status.avg_reward}\n")
 
         self._global_step += int(env_steps)
         self._global_episode += int(1)
 
         # save to buffer
         self.buffer.store_episode(rollouts)
-        self.agent.update_normalizer(rollouts)          
+        # self.agent.update_normalizer(rollouts)          
 
         # update policy
-        if not seed_until_steps(ep_start_step):
-            if self.is_chef:
-        ########################################################## 不认为是主要增长源头
-                metrics = self.agent.update(self.buffer, self.demo_buffer)
+        # if not seed_until_steps(ep_start_step):
+        #     if self.is_chef:
+        # ########################################################## 不认为是主要增长源头
+        #         metrics = self.agent.update(self.buffer, self.demo_buffer)
        
 
         #     if self.use_multiple_workers:
@@ -273,15 +273,15 @@ class SkillLearningTrainer(BaseTrainer):
         eval_rollout_storage = RolloutStorage()
         for _ in range(self.cfg.n_eval_episodes):
             eval_true=True
-            if eval_true:
-                print("刚进测试")
+            # if eval_true:
+            #     #print("刚进测试")
 
             # episode, _, env_steps = self.eval_sampler.sample_episode(is_train=False, render=True,eval_true=eval_true)
             episode, _, env_steps = self.eval_sampler.sample_episode(is_train=False, render=True)
 
             eval_rollout_storage.append(episode)
-        if eval_true:
-            print("出了采样器了")
+        # if eval_true:
+        #     print("出了采样器了")
 
         eval_true=False
         rollout_status = eval_rollout_storage.rollout_stats()
@@ -337,3 +337,15 @@ class SkillLearningTrainer(BaseTrainer):
     @property
     def use_multiple_workers(self):
         return True
+    
+
+import hydra    
+@hydra.main(version_base=None, config_path="../my_trainer/configs", config_name="skill_learning")
+def main(cfg):
+
+    exp = EVAL(cfg)
+    exp.train()
+
+if __name__ == "__main__":
+
+    main()

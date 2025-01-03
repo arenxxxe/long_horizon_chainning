@@ -8,7 +8,7 @@ defaults:
 cwd: ${hydra:runtime.output_dir}
 
 # Training params
-task: 'KukaGrasp-v0'
+task: 'PandaGrasp-v0'
 init_subtask: grasp
 subtask: ${init_subtask}
 postfix: null
@@ -24,27 +24,27 @@ update_epoch: 20
 replay_buffer_capacity: 100_000
 batch_size: 128
 
-n_train_steps: 1_000_001
-n_eval: 1600
-n_save: 800
-n_log: 9600
-n_eval_episodes: 10
+n_train_steps: 50_000_000
+n_eval: 4000
+n_save: 1600
+n_log: 40000
+n_eval_episodes: 8
 eval_frequency: 2_000
 n_seed_steps: 200
 use_demo_buffer: True
-ckpt_episode: latest
+ckpt_episode: best
 
 use_wb: True
-project_name: chaining_everything
+project_name: panda_skill_chaining
 entity_name:  qinsongwei90
 
 mpi: {rank: null, is_chef: null, num_workers: null}
 # Working space
 hydra:
   run:
-    dir: ./exp/viskill/${task}/${sc_agent.name}_${sl_agent.name}/d${num_demo}/rs${sc_agent.reward_scale}/s${seed}
+    dir: ./exp/skill_learning/${task}/${sc_agent.name}_${sl_agent.name}/d${num_demo}/rs${sc_agent.reward_scale}/s${seed}
   sweep:
-    dir: ./exp/viskill/${task}/${sc_agent.name}_${sl_agent.name}/d${num_demo}/rs${sc_agent.reward_scale}
+    dir: ./exp/skill_learning/${task}/${sc_agent.name}_${sl_agent.name}/d${num_demo}/rs${sc_agent.reward_scale}
     subdir: s${seed}
   sweeper:
     params:
