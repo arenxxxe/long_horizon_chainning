@@ -8,8 +8,8 @@ setup(
         'console_scripts':['kuka_grasp_test=chaining_package.ENV.task_env.kuka_grasp_env:main',
                            'demon_data_gen=chaining_package.EXPERIMENT.demonstraton_data_gen.mimic_data_generator:main ',
                            'skill_learn=chaining_package.EXPERIMENT.training.skilll_learning:main',
-                           'skill_chain=chaining_package.EXPERIMENT.training.skill_chaining:main'
-                           
+                           'skill_chain=chaining_package.EXPERIMENT.training.skill_chaining:main',
+                           'panda_grasp=chaining_package.ENV.task_env.panda_grasp_env:main'
                            ]
 
 

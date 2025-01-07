@@ -297,6 +297,24 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 #机械臂抓的
                 self.blockUid = self._p.loadURDF(os.path.join(self._urdfRoot, "block.urdf"),[self.init_block_xpos, self.init_block_ypos, 0.014],
                                         [orn[0], orn[1], orn[2], orn[3]])
+                
+                # 机械臂抓的第二个
+                self.blockUid2 = self._p.loadURDF(os.path.join(self._urdfRoot, "green_block.urdf"), 
+                                                [self.init_block_xpos + 0.1, self.init_block_ypos, 0.014],
+                                                [orn[0], orn[1], orn[2], orn[3]])
+                
+                # 机械臂抓的第三个
+                self.blockUid3 = self._p.loadURDF(os.path.join(self._urdfRoot, "yellow_block.urdf"),
+                                                [self.init_block_xpos - 0.1, self.init_block_ypos, 0.014], 
+                                                [orn[0], orn[1], orn[2], orn[3]])
+                # 记录黄色块的初始位置
+                self.init_yellow_block_xpos = self.init_block_xpos - 0.1
+                self.init_yellow_block_ypos = self.init_block_ypos
+                
+                # 记录绿色块的初始位置
+                self.init_green_block_xpos = self.init_block_xpos + 0.1
+                self.init_green_block_ypos = self.init_block_ypos
+
                 #被抓的
                 self.stacked_block= self._p.loadURDF(os.path.join(self._urdfRoot, "blue_block.urdf"), [self.init_stacked_block_xpos , self.init_stacked_block_ypos ,0.014],
                         [orn[0], orn[1], orn[2], orn[3]])
@@ -443,9 +461,75 @@ class PandaGraspEnv(SurRoLGoalEnv):
 
                 release_object_wp=[ move_object_wp[0], move_object_wp[1], move_object_wp[2],fake_open]
                 release_object_wp+=noise_vector_expand
+                # 抓取黄色块
+                yellow_block_above_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz, fake_open]
+                yellow_block_above_wp += noise_vector_expand
+                
+                yellow_block_reach_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_object_posz, fake_open]
+                yellow_block_reach_wp += noise_vector_expand
+                
+                yellow_block_grasp_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_object_posz, fake_close]
+                yellow_block_grasp_wp += noise_vector_expand
+                
+                # 抬起黄色块
+                yellow_block_lift_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz, fake_close]
+                yellow_block_lift_wp += noise_vector_expand
+                
+                # 移动到目标位置
+                yellow_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz, fake_close]
+                yellow_block_move_wp += noise_vector_expand
+                
+                # 放下黄色块
+                yellow_block_release_wp = [yellow_block_move_wp[0], yellow_block_move_wp[1], yellow_block_move_wp[2], fake_open]
+                yellow_block_release_wp += noise_vector_expand
+                
+                # 抓取绿色块
+                green_block_above_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz, fake_open]
+                green_block_above_wp += noise_vector_expand
+                
+                green_block_reach_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_object_posz, fake_open]
+                green_block_reach_wp += noise_vector_expand
+                
+                green_block_grasp_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_object_posz, fake_close]
+                green_block_grasp_wp += noise_vector_expand
+                
+                # 抬起绿色块
+                green_block_lift_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz, fake_close]
+                green_block_lift_wp += noise_vector_expand
+                
+                # 移动到黄色块上方
+                green_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz + 0.05, fake_close]
+                green_block_move_wp += noise_vector_expand
+                
+                # 放下绿色块
+                green_block_release_wp = [green_block_move_wp[0], green_block_move_wp[1], green_block_move_wp[2], fake_open]
+                green_block_release_wp += noise_vector_expand
+                
+                # 更新路径点
+                self._waypoints = [
+                    above_object_wp,        # 初始物体上方路点
+                    reach_object_wp,        # 接近物体路点
+                    grasp_object_wp,        # 抓取物体路点
+                    lift_object_wp,         # 抬起物体路点
+                    move_object_wp,         # 移动物体路点
+                    release_object_wp,      # 释放物体路点
+                    yellow_block_above_wp,  # 黄色块上方路点
+                    yellow_block_reach_wp,  # 接近黄色块路点
+                    yellow_block_grasp_wp,  # 抓取黄色块路点
+                    yellow_block_lift_wp,   # 抬起黄色块路点
+                    yellow_block_move_wp,   # 移动黄色块路点
+                    yellow_block_release_wp, # 释放黄色块路点
+                    green_block_above_wp,   # 绿色块上方路点
+                    green_block_reach_wp,   # 接近绿色块路点
+                    green_block_grasp_wp,   # 抓取绿色块路点
+                    green_block_lift_wp,    # 抬起绿色块路点
+                    green_block_move_wp,    # 移动绿色块路点
+                    green_block_release_wp  # 释放绿色块路点
+                ]
+
 
                 
-                self._waypoints = [above_object_wp,reach_object_wp,grasp_object_wp,lift_object_wp,move_object_wp,release_object_wp] 
+                # self._waypoints = [above_object_wp,reach_object_wp,grasp_object_wp,lift_object_wp,move_object_wp,release_object_wp] 
                 
                 grasp_object_goal=[grasp_object_wp[0],grasp_object_wp[1],grasp_object_wp[2]]
                 # lift_object_goal=[lift_object_wp[0],lift_object_wp[1],lift_object_wp[2]]
@@ -456,6 +540,25 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 release_object_goal+=noise_vector_expand[0:3]
 
                 self.subgoals=[grasp_object_goal,move_object_goal,release_object_goal]
+                # 定义各个子目标
+                yellow_block_grasp_goal = [yellow_block_grasp_wp[0], yellow_block_grasp_wp[1], yellow_block_grasp_wp[2]]
+                yellow_block_move_goal = [yellow_block_move_wp[0], yellow_block_move_wp[1], yellow_block_move_wp[2]]
+                yellow_block_release_goal = [yellow_block_release_wp[0], yellow_block_release_wp[1], yellow_block_release_wp[2]]
+                
+                green_block_grasp_goal = [green_block_grasp_wp[0], green_block_grasp_wp[1], green_block_grasp_wp[2]]
+                green_block_move_goal = [green_block_move_wp[0], green_block_move_wp[1], green_block_move_wp[2]]
+                green_block_release_goal = [green_block_release_wp[0], green_block_release_wp[1], green_block_release_wp[2]]
+                
+                # 将新的子目标添加到已有子目标数组
+                self.subgoals.extend([
+                    yellow_block_grasp_goal,
+                    yellow_block_move_goal,
+                    yellow_block_release_goal,
+                    green_block_grasp_goal,
+                    green_block_move_goal,
+                    green_block_release_goal
+                ])
+
 
                 
 
@@ -568,8 +671,8 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 # #进来的动作默认是-1到1  那么0.1的限制 使得动作只能在0.01的数量级
                 ee_action=np.concatenate([functor_ee_pos+action[:3],action[-1:]])#得到现在真正要前进的位置
                 # #print(f"action放缩{action[:3]*0.1}\n")
-                #直接硬限制动作空间
-                ee_action[:3]=np.clip(ee_action[:3],[0.6,-0.03,0.002],[0.7,0.3,0.2])
+                # #直接硬限制动作空间
+                # ee_action[:3]=np.clip(ee_action[:3],[0.6,-0.03,0.002],[0.7,0.3,0.2])
 
                 ee_action=np.round(ee_action,4)
 
@@ -674,8 +777,8 @@ class PandaGraspEnv(SurRoLGoalEnv):
                         action=waypoint
                         np_waypoint=np.array(waypoint)
                         #3 计算观察中的东西和路点之间的距离--取自论文源代码
-                        #print(f"路点{waypoint}")
-                        #print(f"末端观察{obs['observation'][0: 3]}")
+                        print(f"路点{waypoint}")
+                        print(f"末端观察{obs['observation'][0: 3]}")
                         delta_pos=(waypoint[0: 3] - obs['observation'][0: 3]) /0.01 / 5.  
 
                         if np.abs(delta_pos).max() > 1:
@@ -683,8 +786,8 @@ class PandaGraspEnv(SurRoLGoalEnv):
 
                         scale_factor = 0.4
                         delta_pos *= scale_factor 
-                        #print(f"位置差{np.linalg.norm(delta_pos) * 0.01 / scale_factor}")
-                        #print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
+                        print(f"位置差{np.linalg.norm(delta_pos) * 0.01 / scale_factor}")
+                        # print(f"旋转差{np.abs(delta_yaw)}  参考：{np.deg2rad(2.)}")
                         #4 判断是否到达位置 删路点
                         if np.linalg.norm(delta_pos) * 0.01 / scale_factor < 1e-3 :# 实际上三delta的最大值要小于0.05 这个阈值还是很大的
                                 #print(f"第{i+1}个路点已经执行完毕")
@@ -745,12 +848,11 @@ class PandaGraspEnv(SurRoLGoalEnv):
 
                 while not done and steps <= horizon: #step特指每一次仿真步进 rollout或者episode指的是从头到尾完整执行一次仿真任务
                         #######################################进行panda 抓取精确性的测试###################
-                        ee_action=np.array(self._waypoints[5])
                         
-                        if ee_action[3]<0:
-                                ee_action[3]=self.ee_close
-                        elif ee_action[3]>=0:
-                                ee_action[3]=self.ee_open
+                        # if ee_action[3]<0:
+                        #         ee_action[3]=self.ee_close
+                        # elif ee_action[3]>=0:
+                        #         ee_action[3]=self.ee_open
                         # for i in range(1000):
                         #         obs=self._get_obs()
 
@@ -760,6 +862,7 @@ class PandaGraspEnv(SurRoLGoalEnv):
                         ##############################################################################
                         tic = time.time()
                         action,i = self.get_oracle_action(obs)
+                        print(f"当前路点索引: {i}, 路点坐标: {self._waypoints[i]}")
                         # if i==5 :
                         #         print(f"现在的路点steps是{steps}")
                         #         breakpoint()
@@ -774,7 +877,7 @@ class PandaGraspEnv(SurRoLGoalEnv):
                         #         print(" -> achieved goal: {}".format(np.round(info['achieved_goal'], 4)))
                         done = info['is_success'] if isinstance(obs, dict) else done
                         if done:
-                                print(f"wan的步长{steps}")
+                                print(f"完成的步长{steps}")
                                 
                         steps += 1
                         toc = time.time()
