@@ -134,7 +134,7 @@ def init_demo_buffer(cfg, buffer, agent, subtask=None, update_normalizer=True):
 def init_sc_buffer(cfg, buffer, agent, env_params):
     '''Load demonstrations into buffer and initilaize normalizer'''
     for subtask in env_params.subtasks:
-        demo_path = os.path.join(os.getcwd(),'surrol/data/demo')
+        demo_path = os.path.join(os.getcwd(),'/home/wyq/SW/long_horizon_chainning/chaining_package/EXPERIMENT/data_storage/demonstration_data')
         file_name = "data_"
         file_name += cfg.task
         file_name += "_" + 'random'
@@ -161,7 +161,7 @@ def init_sc_buffer(cfg, buffer, agent, env_params):
                 # TODO: hide normalized
                 agent.sc_agent.o_norm[subtask].update(obs) 
 
-
+from memory_profiler import profile
 class RolloutStorage:
     """Can hold multiple rollouts, can compute statistics over these rollouts."""
     def __init__(self):
@@ -176,10 +176,14 @@ class RolloutStorage:
         assert self.rollouts    # rollout storage should not be empty
         stats = RecursiveAverageMeter()
         for rollout in self.rollouts:
+            with open("训练期奖励记录.txt","a") as file:
+                file.write(str(rollout.reward))
+                file.write("\n")
             stats.update(AttrDict(
                 avg_reward=np.stack(rollout.reward).sum(),
                 avg_success_rate=rollout.success[-1],
             ))
+        
         return stats.avg
 
     def reset(self):

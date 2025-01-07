@@ -171,8 +171,12 @@ class SkillChainingDDPG(BaseAgent):
 
     def _preproc_obs(self, o, subtask):
         o = np.clip(o, -self.clip_obs, self.clip_obs)
+
         if self.normalize and subtask != self.env_params.last_subtask:
             o = self.o_norm[subtask].normalize(o)
+        # if self.normalize :
+        #     o = self.o_norm[subtask].normalize(o)
+
         inputs = torch.tensor(o, dtype=torch.float32).to(self.device)
         return inputs
     

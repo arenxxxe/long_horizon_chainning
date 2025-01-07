@@ -28,6 +28,8 @@ class CheckpointHandler:
     @staticmethod
     def get_resume_ckpt_file(resume, path):
         episodes = CheckpointHandler.get_episode(path)
+        #手动的筛选 根据训练的结果
+        # episodes=[832]
         file_paths = [os.path.join(path, CheckpointHandler.get_ckpt_name(episode)) for episode in episodes]
         scores = [torch.load(file_path)['score'] for file_path in file_paths]
         if resume == 'latest':
@@ -55,6 +57,7 @@ class CheckpointHandler:
         if 'g_norm' in checkpt.keys() and 'o_norm' in checkpt.keys():
             agent.g_norm = checkpt['g_norm']
             agent.o_norm = checkpt['o_norm']
+        return max_episode
 
 
 def save_cmd(base_dir):

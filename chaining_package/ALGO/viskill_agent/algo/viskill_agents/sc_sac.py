@@ -101,6 +101,9 @@ class SkillChainingSAC(SkillChainingDDPG):
     def get_action(self, state, subtask, noise=False):
         with torch.no_grad():
         #state = {key: self.to_torch(state[key].reshape([1, -1])) for key in state.keys()}  # unsqueeze
+            
+
+
             input_tensor = self._preproc_obs(state, subtask)
             dist = self.actor(input_tensor, subtask)
             if noise:

@@ -6,7 +6,7 @@ import numpy as np
 import torch
 from chaining_package.ENV.will_be_deprecated.viskill_chaos_utility.utils.pybullet_utils import (pairwise_collision,
                                          pairwise_link_collision)
-
+from memory_profiler import profile
 
 def approx_collision(goal_a, goal_b, th=0.025):
     assert goal_a.shape == goal_b.shape
@@ -61,11 +61,11 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     }    
     #子任务步长env step的步长吧--完成
     SUBTASK_STEPS = {
-        'grasp': 60,
+        'grasp': 80,
 
-        'release':60
+        'release':40
     }
-    #与reset有关 源代码逻辑是除了开始的任务 后面的任务都写进来  不管了--完成
+    #需要reset到的子任务的开始路点是多少？
     SUBTASK_RESET_INDEX = {
 
         'release': 4 #第四个路点
@@ -74,7 +74,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     #重置到一个子任务开始状态 环境首先需要执行多少步--完成
     SUBTASK_RESET_MAX_STEPS = {
 
-        'release': 60
+        'release': 80
     }
     #对之前任务的了解-完成
     SUBTASK_PREV_SUBTASK = {
@@ -98,6 +98,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
     def __init__(self, env, subtask='release', output_raw_obs=False):
         super().__init__(env, subtask, output_raw_obs)
         self.done_subtasks = {key: False for key in self.SUBTASK_STEPS.keys()}
+        self.find_reward=False
         #检查点1 初始化效果
         #breakpoint() #2 就是设置了一些属性 也看不出对不对
 
@@ -114,7 +115,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         self._elapsed_steps += 1
         next_obs_ = self._replace_goal_with_subgoal(next_obs.copy())
         
-        #print(f"到达的目标{next_obs_['achieved_goal']}   期望到达的目标{next_obs_['desired_goal']}")
+        #print(f"到达的目标{next_obs_['achieved_goal']}  \n 期望到达的目标{next_obs_['desired_goal']}")
         reward = self.compute_reward(next_obs_['achieved_goal'], next_obs_['desired_goal'])
         #print(f"此时的奖励{reward}")
         info['is_success'] = reward + 1
@@ -123,7 +124,7 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #这个东西到底是干什么的？
         with self.switch_subtask(self.LAST_SUBTASK):
             info['gt_goal'] = self._replace_goal_with_subgoal(next_obs.copy())['desired_goal']
-
+  
         if self._output_raw_obs: return next_obs_, reward, done, info, next_obs
         else: return next_obs_, reward, done, info,
     #TODO 施工中
@@ -152,7 +153,6 @@ class KukagraspSLWrapper(SkillLearningWrapper):
                 count, max_steps = 0, self.SUBTASK_RESET_MAX_STEPS[self.subtask]
                 #2 不断拿施教动作去step  直到subtak的index发生变化 或者总步长达到-step不改 之前检查了
                 #检查点4 检查是示教运行到某个子任务之前
-                #breakpoint()
                 
                 while skill_index < self.SUBTASK_RESET_INDEX[self.subtask] and count < max_steps:
                     obs, reward, done, info = self.env.step(action)
@@ -184,14 +184,22 @@ class KukagraspSLWrapper(SkillLearningWrapper):
         #print(f"有没有撞倒？{kukacol}")
         #在不同的子任务的时候  调整到达目标 接触信息加上 不一样的位置信息
         #抓取的时候达到的目的  是两个机械臂的位置
+        if kukacol == 1 :
+            self.find_reward =True
+        else :
+            self.find_reward =False
 
         if self.subtask == 'grasp':
             obs['achieved_goal'] = np.concatenate([obs['observation'][0: 3],[kukacol]])
+
         #释放的时候大概率是物体位置反正无所谓了  不行再改了  
             
         elif self.subtask == 'release':
             obs['achieved_goal'] = np.concatenate([obs['achieved_goal'],[kukacol]])
+        
         obs['desired_goal'] = np.append(subgoal, self.SUBTASK_CONTACT_CONDITION[self.subtask])
+        
+
         #这两个goal需要同样的维度吗？从源代码看 并不是
         #检查点8  检查传入参数id是否正确  接触信息是否获取到
         #breakpoint() #并未检查出问题 两个goal 一个是7维度 一个四维度 看不出区别
@@ -220,18 +228,31 @@ class KukagraspSLWrapper(SkillLearningWrapper):
 
                 goal_reach = self.env.compute_reward(ag[:3], g[:3], None) + 1
                 #print(f"到达的位置：{ag[:3]} \n 期望到达的位置{g[:3]}")
-                
+ 
             # 在原来的奖励函数的基础上加碰撞条件的奖励 
             contact_cond = np.all(ag[-1:]==g[-1:])#注意切片的问题
             #print(f"看看是不是切片的问题{ag[-2:]}")
             reward = (goal_reach and contact_cond) - 1
+            
+            # if contact_cond:
+            #     reward = (goal_reach ) - 1 +0.5
+            # else :
+            #     reward = (goal_reach ) - 1
+            # if self.find_reward:
+            #     with open("找末端抖动没奖励原因.txt","a") as file:
+            #         file.write(f"此时的goalreach奖励{goal_reach}\n")   
+            #         file.write(f"此时的contact_cond奖励{contact_cond}\n")   
+            #         file.write(f"此时的总奖励{reward}\n")  
+
+
+
             #TODO 出bug了 施教动作到不了位置
         else:
             if self.subtask == 'release':
-                goal_reach = self.env.compute_reward(ag[:,-5:-2], g[:,-5:-2], None).reshape(-1, 1) + 1
+                goal_reach = self.env.compute_reward(ag[:,:-1], g[:,:-1], None).reshape(-1, 1) + 1
             else:
-                goal_reach = self.env.compute_reward(ag[:,:-2], g[:,:-2], None).reshape(-1, 1) + 1
-            contact_cond = np.all(ag[:, -2:]==g[:, -2:], axis=1).reshape(-1, 1)
+                goal_reach = self.env.compute_reward(ag[:,:-1], g[:,:-1], None).reshape(-1, 1) + 1
+            contact_cond = np.all(ag[:, -1:]==g[:, -1:], axis=1).reshape(-1, 1)
             reward = np.all(np.hstack([goal_reach, contact_cond]), axis=1) - 1.
         
         return reward

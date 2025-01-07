@@ -59,15 +59,15 @@ class SkillChainingSACSIL(SkillChainingAWAC):
 
         for subtask in self.env_params['middle_subtasks']:
             for i in range(self.update_epoch):
-                # sample from replay buffer 
-                obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(replay_buffer, subtask)
-                action = (action / self.max_action)
+                #屏蔽掉online部分
+                # # sample from replay buffer 
+                # obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(replay_buffer, subtask)
+                # action = (action / self.max_action)
 
-                # update critic and actor
-                metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
-                if (i + 1) % self.policy_delay == 0:
-                    metrics.update(self.update_actor_and_alpha(obs, action, subtask, sil=False))
-                
+                # # update critic and actor
+                # metrics.update(self.update_critic(obs, action, reward, next_obs, sl_norm_next_obs, raw_reward, subtask))
+                # if (i + 1) % self.policy_delay == 0:
+                #     metrics.update(self.update_actor_and_alpha(obs, action, subtask, sil=False))
                 # sample from replay buffer 
                 obs, action, reward, next_obs, done, sl_norm_next_obs, raw_reward = self.get_samples(demo_buffer, subtask)
                 action = (action / self.max_action)
