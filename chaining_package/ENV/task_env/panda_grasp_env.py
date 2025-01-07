@@ -424,12 +424,12 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 x_range=[-0.0022 ,0.0022]
                 y_range=[0.003,0.0040]
                 z_range=[0.0027,0.004]
-                noise_vector=np.array([np.random.uniform(x_range[0],x_range[1]),
-                                       np.random.uniform(y_range[0],y_range[1]),
-                                       np.random.uniform(z_range[0],z_range[1])
-                                       ])
+                # noise_vector=np.array([np.random.uniform(x_range[0],x_range[1]),
+                #                        np.random.uniform(y_range[0],y_range[1]),
+                #                        np.random.uniform(z_range[0],z_range[1])
+                #                        ])
                 # debug
-                # noise_vector=np.array([0,0,0])
+                noise_vector=np.array([0,0,0])
                 
                 noise_vector_expand=np.pad(noise_vector,(0,1),"constant",constant_values=0)
 
@@ -444,6 +444,15 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 # 0.5开 转1.5 -0.5 关 转0
                 ####重要原则 一条路径上 两个路点只能有同一个xyz目标
                                 #1.1 先定位
+                # 定义每个方块的高度
+                block_height = 0.05
+                # 初始物体上方高度
+                init_above_object_posz = 0.1
+                
+                # 定义安全高度（超过最高堆叠高度）
+                safe_height = init_above_object_posz + 3.5 * block_height
+
+                # 第一个物体的路点
                 above_object_wp=[init_object_posx,init_object_posy,init_above_object_posz,fake_open]
                 above_object_wp+=noise_vector_expand
 
@@ -456,13 +465,19 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 lift_object_wp=[init_object_posx,init_object_posy,init_above_object_posz,fake_close]
                 lift_object_wp+=noise_vector_expand
 
+                # 第一个物体移动到目标位置时，z轴位置为初始高度
                 move_object_wp=[self.init_stacked_block_xpos,self.init_stacked_block_ypos,init_above_object_posz,fake_close]
                 move_object_wp+=noise_vector_expand
 
                 release_object_wp=[ move_object_wp[0], move_object_wp[1], move_object_wp[2],fake_open]
                 release_object_wp+=noise_vector_expand
-                # 抓取黄色块
-                yellow_block_above_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz, fake_open]
+                
+                # 释放后抬到安全高度
+                safe_retreat_wp1 = [move_object_wp[0], move_object_wp[1], safe_height, fake_open]
+                safe_retreat_wp1 += noise_vector_expand
+                
+                # 黄色块的路点
+                yellow_block_above_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz + 0.5*block_height, fake_open]
                 yellow_block_above_wp += noise_vector_expand
                 
                 yellow_block_reach_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_object_posz, fake_open]
@@ -471,20 +486,24 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 yellow_block_grasp_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_object_posz, fake_close]
                 yellow_block_grasp_wp += noise_vector_expand
                 
-                # 抬起黄色块
-                yellow_block_lift_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz, fake_close]
+                # 抬起黄色块到初始高度+半个方块高度
+                yellow_block_lift_wp = [self.init_yellow_block_xpos, self.init_yellow_block_ypos, init_above_object_posz + 0.5*block_height, fake_close]
                 yellow_block_lift_wp += noise_vector_expand
                 
-                # 移动到目标位置
-                yellow_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz, fake_close]
+                # 黄色块移动到目标位置时，z轴位置为初始高度+1.5个方块高度
+                yellow_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz + 1.5*block_height, fake_close]
                 yellow_block_move_wp += noise_vector_expand
                 
                 # 放下黄色块
                 yellow_block_release_wp = [yellow_block_move_wp[0], yellow_block_move_wp[1], yellow_block_move_wp[2], fake_open]
                 yellow_block_release_wp += noise_vector_expand
                 
-                # 抓取绿色块
-                green_block_above_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz, fake_open]
+                # 释放后抬到安全高度
+                safe_retreat_wp2 = [yellow_block_move_wp[0], yellow_block_move_wp[1], safe_height, fake_open]
+                safe_retreat_wp2 += noise_vector_expand
+                
+                # 绿色块的路点
+                green_block_above_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz + 0.5*block_height, fake_open]
                 green_block_above_wp += noise_vector_expand
                 
                 green_block_reach_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_object_posz, fake_open]
@@ -493,12 +512,12 @@ class PandaGraspEnv(SurRoLGoalEnv):
                 green_block_grasp_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_object_posz, fake_close]
                 green_block_grasp_wp += noise_vector_expand
                 
-                # 抬起绿色块
-                green_block_lift_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz, fake_close]
+                # 抬起绿色块到初始高度+半个方块高度
+                green_block_lift_wp = [self.init_green_block_xpos, self.init_green_block_ypos, init_above_object_posz + 0.5*block_height, fake_close]
                 green_block_lift_wp += noise_vector_expand
                 
-                # 移动到黄色块上方
-                green_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz + 0.05, fake_close]
+                # 绿色块移动到目标位置时，z轴位置为初始高度+2.5个方块高度
+                green_block_move_wp = [self.init_stacked_block_xpos, self.init_stacked_block_ypos, init_above_object_posz + 2.5*block_height, fake_close]
                 green_block_move_wp += noise_vector_expand
                 
                 # 放下绿色块
@@ -513,12 +532,14 @@ class PandaGraspEnv(SurRoLGoalEnv):
                     lift_object_wp,         # 抬起物体路点
                     move_object_wp,         # 移动物体路点
                     release_object_wp,      # 释放物体路点
+                    safe_retreat_wp1,       # 抬到安全高度
                     yellow_block_above_wp,  # 黄色块上方路点
                     yellow_block_reach_wp,  # 接近黄色块路点
                     yellow_block_grasp_wp,  # 抓取黄色块路点
                     yellow_block_lift_wp,   # 抬起黄色块路点
                     yellow_block_move_wp,   # 移动黄色块路点
                     yellow_block_release_wp, # 释放黄色块路点
+                    safe_retreat_wp2,       # 抬到安全高度
                     green_block_above_wp,   # 绿色块上方路点
                     green_block_reach_wp,   # 接近绿色块路点
                     green_block_grasp_wp,   # 抓取绿色块路点
